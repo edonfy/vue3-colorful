@@ -1,19 +1,23 @@
 <script setup lang="ts">
 import Pointer from '../src/components/Pointer'
+import Saturation from '../src/components/Saturation'
+import ColorPicker from '../src/components/ColorPicker'
+import Hue from '../src/components/Hue'
+import Alpha from '../src/components/Alpha'
+import Interactive from '../src/components/Interactive'
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <div class="dd" style="height: 50px; background-color: skyblue; position: relative;">
+  <div class="h-50px bg-sky relative">
     <Pointer :left="0.2" color="red"></Pointer>
   </div>
+
+  <Interactive>
+    <ColorPicker>
+    </ColorPicker>
+  </Interactive>
+
+
 </template>
 
 <style scoped>
