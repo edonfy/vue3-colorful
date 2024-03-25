@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue'
+import { defineComponent, computed, StyleValue } from 'vue'
 
 export default defineComponent({
   name: 'Pointer',
@@ -10,16 +10,18 @@ export default defineComponent({
   },
 
   setup(props) {
-    const { top = 0.5, left, color } = props
+    const top = computed<number>(() => {
+      return props.top !== undefined ? props.top : 0.5
+    })
 
-    const style = {
-      top: `${top * 100}%`,
-      left: `${left * 100}%`
-    }
+    const style = computed<StyleValue>(() => ({
+      top: `${top.value * 100}%`,
+      left: `${props.left * 100}%`
+    }))
 
     return () => (
-      <div class="vue3-colorful__pointer" style={style} >
-        <div class="vue3-colorful__pointer-fill" style={{ backgroundColor: color }} />
+      <div class="vue3-colorful__pointer" style={style.value} >
+        <div class="vue3-colorful__pointer-fill" style={{ backgroundColor: props.color }} />
       </div>
     )
   },

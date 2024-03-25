@@ -1,4 +1,6 @@
 import { defineComponent } from 'vue'
+import Pointer from './Pointer'
+import Interactive, { Interaction } from './Interactive'
 
 export default defineComponent({
   name: 'Saturation',
@@ -13,10 +15,12 @@ export default defineComponent({
     }
   },
 
-  setup(props, { slots }) {
+  setup(props) {
     return () => (
       <div class='vue3-colorful__saturation'>
-        {slots.default ? slots.default() : null}
+        <Interactive>
+          {(position: Interaction) => <Pointer left={position.left} top={position.top} color='green'></Pointer>}
+        </Interactive>
       </div>
     )
   }

@@ -16,7 +16,7 @@ export default defineComponent({
       <div class={'vue3-colorful'}>
         <Saturation></Saturation>
         <Hue></Hue>
-        <Alpha></Alpha>
+        <Alpha hsva={{ h: 0, s: 0, v: 0, a: 0 }}></Alpha>
       </div>
     )
   }

@@ -5,6 +5,10 @@ import ColorPicker from '../src/components/ColorPicker'
 import Hue from '../src/components/Hue'
 import Alpha from '../src/components/Alpha'
 import Interactive from '../src/components/Interactive'
+
+defineProps<{
+  testDun: (t: number) => void
+}>()
 </script>
 
 <template>
@@ -12,10 +16,8 @@ import Interactive from '../src/components/Interactive'
     <Pointer :left="0.2" color="red"></Pointer>
   </div>
 
-  <Interactive>
-    <ColorPicker>
-    </ColorPicker>
-  </Interactive>
+  <ColorPicker>
+  </ColorPicker>
 
 
 </template>

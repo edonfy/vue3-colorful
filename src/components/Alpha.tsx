@@ -1,16 +1,15 @@
-import { defineComponent } from 'vue'
+import { PropType, defineComponent } from 'vue'
 import Pointer from './Pointer'
+import { HsvaColor } from '@/types'
+import Interactive, { Interaction } from './Interactive'
 
 export default defineComponent({
   name: 'Alpha',
 
   props: {
-    hsva() {
-      return {
-        h: Number,
-        s: Number,
-        v: Number,
-      }
+    hsva: {
+      type: Object as PropType<HsvaColor>,
+      required: true
     }
   },
 
@@ -22,7 +21,9 @@ export default defineComponent({
     return () => (
       <div class={'vue3-colorful__alpha'}>
         <div class={'vue3-colorful__alpha-gradient'} style={gradientStyle}></div>
-        <Pointer left={0.2} color='green'></Pointer>
+        <Interactive>
+          {(position: Interaction) => <Pointer left={position.left} color='green'></Pointer>}
+        </Interactive>
       </div>
     )
   }

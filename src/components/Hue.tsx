@@ -1,5 +1,6 @@
 import { defineComponent } from 'vue'
 import Pointer from './Pointer'
+import Interactive, { Interaction } from './Interactive'
 
 export default defineComponent({
   name: 'Hue',
@@ -8,11 +9,12 @@ export default defineComponent({
     hue: Number,
   },
 
-
   setup(props) {
     return () => (
       <div class={'vue3-colorful__hue'}>
-        <Pointer left={0.1} color='blue'></Pointer>
+        <Interactive>
+          {(position: Interaction) => <Pointer left={position.left} color='green'></Pointer>}
+        </Interactive>
       </div>
     )
   }

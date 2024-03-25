@@ -15,7 +15,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve",
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
@@ -24,6 +23,7 @@
     /* my config */
     "allowJs": true,
     "noImplicitThis": true,
+    "jsx": "preserve",
     "types": [
       "vue/jsx"
     ],
