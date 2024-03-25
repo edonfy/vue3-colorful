@@ -7,11 +7,23 @@ export default defineComponent({
   name: 'ColorPicker',
 
   props: {
-    colorModel: String
+    modelValue: {
+      type: String,
+      default: '#ffffff'
+    },
+    colorModel: {
+      type: String,
+      default: 'rbg'
+    },
+    showAlpha: {
+      type: Boolean,
+      default: false
+    }
   },
 
-  setup() {
+  emits: ['update:modelValue'],
 
+  setup() {
     return () => (
       <div class={'vue3-colorful'}>
         <Saturation></Saturation>
