@@ -44,37 +44,33 @@ export default defineComponent({
 
       const start = (e: PointerEvent) => {
         isStart = true
+
         const position = getRelativePosition(rootRef.value!, e)
-        console.log('start', e.pageY, position)
-
-
         interation.left = position.left
         interation.top = position.top
+
+        props.onMove?.(position)
       }
 
       const move = (e: PointerEvent) => {
         e.preventDefault()
 
-        // console.log(e.clientX, isStart)
-
         if (isStart) {
           const position = getRelativePosition(rootRef.value!, e)
           interation.left = position.left
           interation.top = position.top
-        }
 
+          props.onMove?.(position)
+        }
       }
 
       const end = () => {
         isStart = false
-        console.log('end')
       }
 
       rootRef.value!.addEventListener('pointerdown', start)
       addEventListener('pointermove', move)
       addEventListener('pointerup', end)
-
-
     })
 
 

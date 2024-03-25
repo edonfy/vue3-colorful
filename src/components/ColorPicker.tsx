@@ -1,7 +1,8 @@
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import Saturation from './Saturation'
 import Hue from './Hue'
 import Alpha from './Alpha'
+import { HsvaColor } from '@/types'
 
 export default defineComponent({
   name: 'ColorPicker',
@@ -24,12 +25,29 @@ export default defineComponent({
   emits: ['update:modelValue'],
 
   setup() {
-    return () => (
-      <div class={'vue3-colorful'}>
-        <Saturation></Saturation>
-        <Hue></Hue>
-        <Alpha hsva={{ h: 0, s: 0, v: 0, a: 0 }}></Alpha>
-      </div>
-    )
+    const hsva = ref<HsvaColor>({ h: 0, s: 100, v: 100, a: 0 })
+    const hsvaChange = (color: any) => {
+      // hsva.value = color
+    }
+
+    const hueChange = (h: number) => {
+      hsva.value.h = h
+    }
+
+    const alphaChange = (a: number) => {
+      console.log(a)
+      hsva.value.a = a
+    }
+
+
+    return () => {
+      return (
+        <div class={'vue3-colorful'}>
+          <Saturation></Saturation>
+          <Hue hue={hsva.value.h} onChange={hueChange}></Hue>
+          <Alpha hsva={hsva.value} onChange={alphaChange}></Alpha>
+        </div>
+      )
+    }
   }
 })
