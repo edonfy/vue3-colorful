@@ -1,4 +1,4 @@
-import { defineComponent, computed, StyleValue } from 'vue'
+import { defineComponent, computed, CSSProperties } from 'vue'
 
 export default defineComponent({
   name: 'Pointer',
@@ -14,7 +14,7 @@ export default defineComponent({
       return props.top !== undefined ? props.top : 0.5
     })
 
-    const style = computed<StyleValue>(() => ({
+    const style = computed<CSSProperties>(() => ({
       top: `${top.value * 100}%`,
       left: `${props.left * 100}%`
     }))

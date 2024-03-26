@@ -6,6 +6,10 @@ import { resolve } from 'node:path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  define: {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    __VERSION__: JSON.stringify(require('./package.json').version),
+  },
   plugins: [
     Vue(),
     VueJsx(),
@@ -14,7 +18,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, './src/index.ts'),
-      name: 'vue3-colorful',
+      name: 'VueColorful',
     },
     rollupOptions: {
       external: ['vue'],

@@ -1,21 +1,18 @@
 <script setup lang="ts">
-import Pointer from '../src/components/Pointer'
-import Saturation from '../src/components/Saturation'
-import ColorPicker from '../src/components/ColorPicker'
-import Hue from '../src/components/Hue'
-import Alpha from '../src/components/Alpha'
-import Interactive from '../src/components/Interactive'
+import { ref } from 'vue'
+import ColorPicker, { VERSION } from '../dist/vue3-colorful'
+import type { AnyColor } from '../dist/index.d.ts'
+
+const color = ref<any>('')
 
 </script>
 
 <template>
-  <div class="h-50px bg-sky relative">
-    <Pointer :left="0.2" color="red"></Pointer>
+  <color-picker v-model="color" />
+  <ColorPicker class="mt-5" v-model="color"></ColorPicker>
+  <div>
+    color: {{ color }} {{ VERSION }}
   </div>
-
-  <ColorPicker>
-  </ColorPicker>
-
 
 </template>
 

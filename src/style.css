@@ -58,10 +58,6 @@
   background: linear-gradient(90deg, red 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, red);
 }
 
-.vue3-colorful__alpha {
-  border-radius: 0 0 8px 8px;
-}
-
 .vue3-colorful__interactive {
   position: absolute;
   left: 0;
@@ -72,4 +68,14 @@
   outline: none;
   /* Don't trigger the default scrolling behavior when the event is originating from this element */
   touch-action: none;
+}
+
+.vue3-colorful__alpha,
+.vue3-colorful__alpha-pointer {
+  background-color: #fff;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill-opacity=".05"><rect x="8" width="8" height="8"/><rect y="8" width="8" height="8"/></svg>');
+}
+
+.vue3-colorful__bottom-round {
+  border-radius: 0 0 8px 8px;
 }

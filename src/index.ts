@@ -1,12 +1,8 @@
-import type { App } from 'vue'
-import { version } from '../package.json'
+import './style.css'
+import ColorPicker from './color-picker/index'
 
-//@ts-expect-error
-const install = (app: App) => {
-  console.log('hello')
-}
+export * from './types'
 
-export default {
-  version,
-  install,
-}
+export const VERSION = __VERSION__
+
+export default ColorPicker
