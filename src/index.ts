@@ -1,5 +1,5 @@
 import './style.css'
-import ColorPicker from './color-picker/index'
+import ColorPicker from './color-picker'
 
 export * from './types'
 

@@ -49,6 +49,8 @@ export default defineComponent({
 
     watch(() => props.modelValue, () => {
       hsva.value = hslaStringToHsva(props.modelValue)
+    }, {
+      immediate: true
     })
 
 
