@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { CSSProperties, computed, ref } from 'vue'
-// import ColorPicker, { VERSION } from '../dist/vue3-colorful'
+
+import ColorPicker from '../dist/vue3-colorful'
+import '../dist/style.css'
 
 const color = ref<any>('')
 const color2 = ref<any>('')

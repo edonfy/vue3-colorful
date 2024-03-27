@@ -25,6 +25,7 @@ npm install vue3-colorful
 ```vue
 <script setup>
 import ColorPicker from 'vue3-colorful'
+import 'vue3-colorful/dist/style.css'
 
 const color = ref('')
 </script>
