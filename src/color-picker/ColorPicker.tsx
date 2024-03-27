@@ -3,7 +3,7 @@ import Saturation from './Saturation'
 import Hue from './Hue'
 import Alpha from './Alpha'
 import { HsvaColor } from '@/types'
-import { hslaStringToHsva, hsvaToHslaString } from '@/utils/covert'
+import { hsvaToHex, hsvaToRgbString, hsvaToRgbaString } from '@/utils/covert'
 
 export default defineComponent({
   name: 'ColorPicker',
@@ -15,7 +15,7 @@ export default defineComponent({
     },
     colorModel: {
       type: String,
-      default: 'hsl'
+      default: 'hex'
     },
     showAlpha: {
       type: Boolean,
@@ -26,7 +26,7 @@ export default defineComponent({
   emits: ['update:modelValue'],
 
   setup(props, { emit }) {
-    const hsva = ref<HsvaColor>({ h: 0, s: 100, v: 100, a: 0 })
+    const hsva = ref<HsvaColor>({ h: 0, s: 100, v: 100, a: 1 })
 
     const hueChange = (h: number) => {
       hsva.value.h = h
@@ -42,13 +42,24 @@ export default defineComponent({
     }
 
     watch(hsva, () => {
-      emit('update:modelValue', hsvaToHslaString(hsva.value))
+      let value = ''
+
+      const { colorModel, showAlpha } = props
+
+      if (colorModel === 'rgb') {
+        value = showAlpha ? hsvaToRgbaString(hsva.value) : hsvaToRgbString(hsva.value)
+      } else {
+        value = hsvaToHex(hsva.value)
+      }
+
+      emit('update:modelValue', value)
     }, {
-      deep: true
+      deep: true,
+      immediate: true
     })
 
     watch(() => props.modelValue, () => {
-      hsva.value = hslaStringToHsva(props.modelValue)
+      // TODO
     }, {
       immediate: true
     })
@@ -58,8 +69,8 @@ export default defineComponent({
       return (
         <div class={'vue3-colorful'}>
           <Saturation hsva={hsva.value} onChange={saturationChange}></Saturation>
-          <Hue class={{ 'vue3-colorful__bottom-round': props.showAlpha }} hue={hsva.value.h} onChange={hueChange}></Hue>
-          <Alpha class={{ 'vue3-colorful__bottom-round': !props.showAlpha }} hsva={hsva.value} onChange={alphaChange}></Alpha>
+          <Hue hue={hsva.value.h} onChange={hueChange}></Hue>
+          {props.showAlpha && <Alpha hsva={hsva.value} onChange={alphaChange}></Alpha>}
         </div>
       )
     }

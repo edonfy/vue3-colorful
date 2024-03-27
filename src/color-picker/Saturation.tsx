@@ -20,8 +20,6 @@ export default defineComponent({
 
     const handleMove = (position: Interaction) => {
       const value = {
-        h: props.hsva.h,
-        a: props.hsva.a,
         s: position.left * 100,
         v: 100 - position.top * 100,
       }

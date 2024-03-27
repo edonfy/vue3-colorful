@@ -18,7 +18,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, './src/index.ts'),
-      name: 'VueColorful',
+      name: 'vue3-colorful',
     },
     rollupOptions: {
       external: ['vue'],
@@ -35,4 +35,7 @@ export default defineConfig({
       '~': resolve(__dirname, './src'),
     }
   },
+  server: {
+    host: '0.0.0.0'
+  }
 })

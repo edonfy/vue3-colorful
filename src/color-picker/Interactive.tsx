@@ -39,6 +39,7 @@ export default defineComponent({
     let isStart = false
 
     const start = (e: PointerEvent) => {
+      e.preventDefault()
       isStart = true
 
       const position = getRelativePosition(rootRef.value!, e)
