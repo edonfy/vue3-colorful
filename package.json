@@ -1,6 +1,5 @@
 {
   "name": "vue3-colorful",
-  "private": true,
   "version": "0.0.1",
   "type": "module",
   "files": [
@@ -35,7 +34,6 @@
     "vue": "^3.4.21"
   },
   "devDependencies": {
-    "vue": "^3.4.21",
     "@edonfy/eslint-config": "^0.0.5",
     "@types/node": "^20.11.30",
     "@vitejs/plugin-vue": "^5.0.4",
@@ -43,6 +41,7 @@
     "typescript": "^5.2.2",
     "unocss": "^0.58.6",
     "vite": "^5.2.0",
+    "vue": "^3.4.21",
     "vue-tsc": "^2.0.6"
   }
 }

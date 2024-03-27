@@ -1,5 +1,9 @@
 # vue3-colorful `WIP`
 
+<p>
+A tiny Vue component for picking colors
+</p>
+
 Inspired by [react-colorful](https://omgovich.github.io/react-colorful/)
 
 
