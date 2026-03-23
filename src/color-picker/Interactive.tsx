@@ -20,31 +20,46 @@ const getRelativePosition = (node: HTMLElement, event: PointerEvent) => {
   }
 }
 
+export interface InteractiveProps {
+  onMove?: (interaction: Interaction) => void;
+  onKey?: (event: KeyboardEvent) => void;
+}
+
 export default defineComponent({
   name: 'Interactive',
 
   props: {
-    onMove: Function,
-    onKey: Function
+    onMove: {
+      type: Function as unknown as () => (interaction: Interaction) => void,
+      default: undefined
+    },
+    onKey: {
+      type: Function as unknown as () => (event: KeyboardEvent) => void,
+      default: undefined
+    }
   },
 
   setup(props, { slots }) {
     const rootRef = ref<HTMLDivElement>()
 
-    const interation = reactive<Interaction>({
+    const interaction = reactive<Interaction>({
       left: 0,
       top: 0
     })
 
     let isStart = false
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      props.onKey?.(e)
+    }
+
     const start = (e: PointerEvent) => {
       e.preventDefault()
       isStart = true
 
       const position = getRelativePosition(rootRef.value!, e)
-      interation.left = position.left
-      interation.top = position.top
+      interaction.left = position.left
+      interaction.top = position.top
 
       props.onMove?.(position)
     }
@@ -54,8 +69,8 @@ export default defineComponent({
 
       if (isStart) {
         const position = getRelativePosition(rootRef.value!, e)
-        interation.left = position.left
-        interation.top = position.top
+        interaction.left = position.left
+        interaction.top = position.top
 
         props.onMove?.(position)
       }
@@ -77,10 +92,9 @@ export default defineComponent({
       removeEventListener('pointerup', end)
     })
 
-
     return () => (
-      <div ref={rootRef} class={'vue3-colorful__interactive'}>
-        {slots.default ? slots.default(interation) : null}
+      <div ref={rootRef} class={'vue3-colorful__interactive'} tabindex={0} onKeydown={handleKeyDown}>
+        {slots.default ? slots.default(interaction) : null}
       </div>
     )
   }

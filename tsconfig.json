@@ -2,7 +2,9 @@
   "compilerOptions": {
     "target": "ES2018",
     "module": "ESNext",
-    "strict": false,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
     "declaration": true,
     "lib": [
       "ESNext",
@@ -10,6 +12,7 @@
       "DOM.Iterable"
     ],
     "jsx": "preserve",
+    "jsxImportSource": "vue",
     "outDir": "dist",
     "moduleResolution": "node",
     "skipLibCheck": true,
@@ -21,10 +24,11 @@
       "~/*": [
         "./src/*"
       ]
-    },
+    }
   },
   "include": [
     "src/**/*.ts",
+    "src/**/*.tsx",
     "src/**/*.vue"
   ],
   "exclude": [

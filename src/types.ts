@@ -28,6 +28,15 @@ export interface HsvaColor extends HsvColor {
   a: number
 }
 
-export type ObjectColor =  RgbColor | HslColor | HsvColor | RgbaColor | HslaColor | HsvaColor
+export interface CmykColor {
+  c: number,
+  m: number,
+  y: number,
+  k: number,
+}
+
+export type ObjectColor =  RgbColor | HslColor | HsvColor | RgbaColor | HslaColor | HsvaColor | CmykColor
 
 export type AnyColor = string | ObjectColor
+
+export type ColorModel = 'hex' | 'rgb' | 'hsv' | 'hsl' | 'cmyk'

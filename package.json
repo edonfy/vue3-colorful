@@ -1,7 +1,8 @@
 {
   "name": "vue3-colorful",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
+  "sideEffects": ["*.css"],
   "files": [
     "dist"
   ],
@@ -16,9 +17,14 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/vue3-colorful.js",
-      "require": "./dist/vue3-colorful.umd.cjs",
-      "types": "./dist/index.d.ts"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/vue3-colorful.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/vue3-colorful.umd.cjs"
+      }
     }
   },
   "repository": {
@@ -28,7 +34,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && vue-tsc --declaration --emitDeclarationOnly",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "peerDependencies": {
     "vue": "^3.4.21"
@@ -38,9 +46,12 @@
     "@types/node": "^20.11.30",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "@vue/test-utils": "^2.4.6",
+    "jsdom": "^29.0.1",
     "typescript": "^5.2.2",
     "unocss": "^0.58.6",
     "vite": "^5.2.0",
+    "vitest": "^4.1.0",
     "vue": "^3.4.21",
     "vue-tsc": "^2.0.6"
   }

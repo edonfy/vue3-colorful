@@ -3,12 +3,14 @@ import Vue from '@vitejs/plugin-vue'
 import VueJsx from '@vitejs/plugin-vue-jsx'
 import UnoCSS from 'unocss/vite'
 import { resolve } from 'node:path'
+import { readFileSync } from 'node:fs'
+
+const packageJson = JSON.parse(readFileSync('./package.json', 'utf-8'))
 
 // https://vitejs.dev/config/
 export default defineConfig({
   define: {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    __VERSION__: JSON.stringify(require('./package.json').version),
+    __VERSION__: JSON.stringify(packageJson.version),
   },
   plugins: [
     Vue(),
@@ -26,6 +28,7 @@ export default defineConfig({
         globals: {
           vue: 'Vue'
         },
+        exports: 'named',
       },
     }
   },

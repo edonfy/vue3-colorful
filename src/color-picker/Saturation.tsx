@@ -2,7 +2,7 @@ import { CSSProperties, PropType, computed, defineComponent } from 'vue'
 import Pointer from './Pointer'
 import Interactive, { Interaction } from './Interactive'
 import { HsvaColor } from '@/types'
-import { hsvaToHslString } from '@/utils/covert'
+import { hsvaToHslString } from '@/utils/convert'
 
 export default defineComponent({
   name: 'Saturation',
