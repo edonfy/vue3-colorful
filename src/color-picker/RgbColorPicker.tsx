@@ -1,24 +1,15 @@
 import { defineComponent, ref, watch, computed } from 'vue'
-import { HsvaColor, ColorModel } from '@/types'
-import { parseColor, formatColor } from '@/utils/converter'
 import BasePicker from './BasePicker'
-import Eyedropper from './Eyedropper'
-import Presets from './Presets'
-import Saturation from './Saturation'
-import Hue from './Hue'
-import Alpha from './Alpha'
+import { HsvaColor } from '@/types'
+import { parseColor, formatColor } from '@/utils/converter'
 
 export default defineComponent({
-  name: 'ColorPicker',
+  name: 'RgbColorPicker',
 
   props: {
     modelValue: {
       type: String,
       default: '',
-    },
-    colorModel: {
-      type: String as () => ColorModel,
-      default: 'hex',
     },
     showAlpha: {
       type: Boolean,
@@ -40,22 +31,13 @@ export default defineComponent({
     const hsva = ref<HsvaColor>({ h: 0, s: 100, v: 100, a: 1 })
     let isInternalUpdate = false
 
-    // Computed output value
-    const outputValue = computed(() => formatColor(hsva.value, props.colorModel, props.showAlpha))
+    const outputValue = computed(() => formatColor(hsva.value, 'rgb', props.showAlpha))
 
-    // Watch for internal changes and emit
-    watch(
-      outputValue,
-      (newValue) => {
-        isInternalUpdate = true
-        emit('update:modelValue', newValue)
-      },
-      {
-        immediate: true,
-      }
-    )
+    watch(outputValue, (newValue) => {
+      isInternalUpdate = true
+      emit('update:modelValue', newValue)
+    })
 
-    // Watch for external modelValue changes
     watch(
       () => props.modelValue,
       (newValue) => {
@@ -63,26 +45,14 @@ export default defineComponent({
           isInternalUpdate = false
           return
         }
-
         if (newValue) {
-          const parsed = parseColor(newValue)
-          hsva.value = parsed
+          hsva.value = parseColor(newValue)
         }
       },
-      {
-        immediate: true,
-      }
+      { immediate: true }
     )
 
-    const hueChange = (h: number) => {
-      hsva.value.h = h
-    }
-
-    const alphaChange = (a: number) => {
-      hsva.value.a = a
-    }
-
-    const saturationChange = ({ s, v }: { s: number; v: number }) => {
+    const handleSaturation = ({ s, v }: { s: number; v: number }) => {
       hsva.value.s = s
       hsva.value.v = v
     }
@@ -100,7 +70,7 @@ export default defineComponent({
         activeColor={outputValue.value}
         onHueChange={(h) => (hsva.value.h = h)}
         onAlphaChange={(a) => (hsva.value.a = a)}
-        onSaturationChange={saturationChange}
+        onSaturationChange={handleSaturation}
         onColorSelect={handleSelect}
       />
     )
