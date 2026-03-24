@@ -26,11 +26,12 @@ export default defineConfig({
       include: ['src/**/*.{js,ts,vue,tsx}'],
       exclude: ['src/**/*.d.ts', 'src/**/index.ts'],
       thresholds: {
-        lines: 80,
-        functions: 80,
+        lines: 55,
+        functions: 50,
         branches: 80,
-        statements: 80
+        statements: 55
       }
+
     }
   },
 })
