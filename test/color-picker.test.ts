@@ -149,6 +149,29 @@ describe('ColorPicker', () => {
       expect(wrapper.emitted('update:modelValue')).toBeTruthy()
     })
 
+    it('ColorInput handles empty and invalid updates and blur', async () => {
+      const wrapper = mount(ColorPicker, {
+        props: {
+          modelValue: '#ffffff',
+          showInput: true,
+        },
+      })
+      const input = wrapper.find('input')
+
+      // Invalid input
+      await input.setValue('invalid')
+      expect(input.attributes('aria-invalid')).toBe('true')
+
+      // Empty input
+      await input.setValue('')
+      expect(input.attributes('aria-invalid')).toBe('false')
+
+      // Trim on blur
+      await input.setValue(' #000000 ')
+      await input.trigger('blur')
+      expect((input.element as HTMLInputElement).value).toBe('#000000')
+    })
+
     it('parses hex color with alpha input', () => {
       const wrapper = mount(ColorPicker, {
         props: {

@@ -1,38 +1,45 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import Interactive, { Interaction } from '../src/color-picker/Interactive'
+import Interactive from '../src/color-picker/Interactive'
+import { Interaction } from '../src/composables/useInteraction'
+
+const mockRect = () =>
+  ({
+    left: 0,
+    top: 0,
+    width: 100,
+    height: 100,
+    bottom: 100,
+    right: 100,
+    x: 0,
+    y: 0,
+    toJSON: () => {},
+  }) as DOMRect
 
 describe('Interactive', () => {
+  beforeEach(() => {
+    vi.stubGlobal('requestAnimationFrame', (fn: FrameRequestCallback) => fn(Date.now()))
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
   it('renders correctly', () => {
     const wrapper = mount(Interactive)
     expect(wrapper.exists()).toBe(true)
   })
 
-  it('triggers move on mousedown', async () => {
+  it('triggers move on pointerdown', async () => {
     const wrapper = mount(Interactive)
     const el = wrapper.find('.vue3-colorful__interactive')
 
-    // Mock getBoundingClientRect
-    el.element.getBoundingClientRect = vi.fn(
-      () =>
-        ({
-          left: 0,
-          top: 0,
-          width: 100,
-          height: 100,
-          bottom: 100,
-          right: 100,
-          x: 0,
-          y: 0,
-          toJSON: () => {},
-        }) as DOMRect
-    )
+    el.element.getBoundingClientRect = vi.fn(mockRect)
 
-    await el.trigger('mousedown', {
-      clientX: 50,
-      clientY: 50,
-      button: 0,
-    })
+    el.element.dispatchEvent(
+      new PointerEvent('pointerdown', { clientX: 50, clientY: 50, bubbles: true })
+    )
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.emitted('move')).toBeTruthy()
     const emitted = wrapper.emitted('move')?.[0]?.[0] as Interaction
@@ -40,33 +47,20 @@ describe('Interactive', () => {
     expect(emitted.top).toBeCloseTo(0.5)
   })
 
-  it('triggers move on mousemove after mousedown', async () => {
+  it('triggers move on pointermove after pointerdown', async () => {
     const wrapper = mount(Interactive)
     const el = wrapper.find('.vue3-colorful__interactive')
 
-    el.element.getBoundingClientRect = vi.fn(
-      () =>
-        ({
-          left: 0,
-          top: 0,
-          width: 100,
-          height: 100,
-          bottom: 100,
-          right: 100,
-          x: 0,
-          y: 0,
-          toJSON: () => {},
-        }) as DOMRect
+    el.element.getBoundingClientRect = vi.fn(mockRect)
+
+    el.element.dispatchEvent(
+      new PointerEvent('pointerdown', { clientX: 10, clientY: 10, bubbles: true })
     )
+    await wrapper.vm.$nextTick()
 
-    await el.trigger('mousedown', { clientX: 10, clientY: 10, button: 0 })
-
-    const moveEvent = new MouseEvent('mousemove', {
-      clientX: 90,
-      clientY: 90,
-      bubbles: true,
-    })
-    window.dispatchEvent(moveEvent)
+    window.dispatchEvent(
+      new PointerEvent('pointermove', { clientX: 90, clientY: 90, bubbles: true })
+    )
 
     const emitted = wrapper.emitted('move')
     expect(emitted?.length).toBeGreaterThan(1)
@@ -74,32 +68,23 @@ describe('Interactive', () => {
     expect(lastEmitted.left).toBeCloseTo(0.9)
   })
 
-  it('stops listening on mouseup', async () => {
+  it('stops listening on pointerup', async () => {
     const wrapper = mount(Interactive)
     const el = wrapper.find('.vue3-colorful__interactive')
 
-    el.element.getBoundingClientRect = vi.fn(
-      () =>
-        ({
-          left: 0,
-          top: 0,
-          width: 100,
-          height: 100,
-          bottom: 100,
-          right: 100,
-          x: 0,
-          y: 0,
-          toJSON: () => {},
-        }) as DOMRect
+    el.element.getBoundingClientRect = vi.fn(mockRect)
+
+    el.element.dispatchEvent(
+      new PointerEvent('pointerdown', { clientX: 10, clientY: 10, bubbles: true })
+    )
+    await wrapper.vm.$nextTick()
+
+    window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true }))
+    window.dispatchEvent(
+      new PointerEvent('pointermove', { clientX: 90, clientY: 90, bubbles: true })
     )
 
-    await el.trigger('mousedown', { clientX: 10, clientY: 10, button: 0 })
-    window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
-
-    const moveEvent = new MouseEvent('mousemove', { clientX: 90, clientY: 90, bubbles: true })
-    window.dispatchEvent(moveEvent)
-
-    // Should not have a new move event after mouseup
+    // Should not have a new move event after pointerup
     expect(wrapper.emitted('move')?.length).toBe(1)
   })
 
@@ -122,7 +107,10 @@ describe('Interactive', () => {
         }) as DOMRect
     )
 
-    await el.trigger('mousedown', { clientX: 0, clientY: 200, button: 0 })
+    el.element.dispatchEvent(
+      new PointerEvent('pointerdown', { clientX: 0, clientY: 200, bubbles: true })
+    )
+    await wrapper.vm.$nextTick()
 
     const emitted = wrapper.emitted('move')?.[0]?.[0] as Interaction
     expect(emitted.left).toBe(0)

@@ -1,8 +1,8 @@
 import { computed, defineComponent } from 'vue'
 import Pointer from './Pointer'
-import Interactive, { Interaction } from './Interactive'
+import Interactive from './Interactive'
+import { Interaction } from '@/composables/useInteraction'
 import { hsvaToHslString } from '@/utils/convert'
-import { clamp } from '@/utils/clamp'
 
 export default defineComponent({
   name: 'Hue',
@@ -20,19 +20,25 @@ export default defineComponent({
 
   emits: ['change'],
 
-  setup(props, { emit }) {
+  setup(props, { emit, slots }) {
     const handleMove = (position: Interaction) => {
       const h = 360 * (props.vertical ? position.top : position.left)
       emit('change', h)
     }
 
     const handleKey = (e: KeyboardEvent) => {
-      // 360 / 100 = 3.6 per step
-      const step = e.shiftKey ? 10 : 1
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-        emit('change', clamp((props.hue - step) / 360) * 360)
-      } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
-        emit('change', clamp((props.hue + step) / 360) * 360)
+      // 10% step for Shift or Page keys
+      const isLargeStep = e.shiftKey || e.key === 'PageUp' || e.key === 'PageDown'
+      const step = isLargeStep ? 36 : 1
+
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowDown' || e.key === 'PageDown') {
+        emit('change', (((props.hue - step) % 360) + 360) % 360)
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+        emit('change', (props.hue + step) % 360)
+      } else if (e.key === 'Home') {
+        emit('change', 0)
+      } else if (e.key === 'End') {
+        emit('change', 360)
       }
     }
 
@@ -47,15 +53,25 @@ export default defineComponent({
           onKey={handleKey}
           role="slider"
           ariaLabel="Hue"
+          ariaOrientation={props.vertical ? 'vertical' : 'horizontal'}
           aria-valuenow={Math.round(props.hue)}
           aria-valuemin="0"
           aria-valuemax="360"
         >
-          <Pointer
-            left={props.vertical ? 0.5 : props.hue / 360}
-            top={props.vertical ? props.hue / 360 : 0.5}
-            color={color.value}
-          ></Pointer>
+          {slots.track?.()}
+          {slots.pointer ? (
+            slots.pointer({
+              left: props.vertical ? 0.5 : props.hue / 360,
+              top: props.vertical ? props.hue / 360 : 0.5,
+              color: color.value,
+            })
+          ) : (
+            <Pointer
+              left={props.vertical ? 0.5 : props.hue / 360}
+              top={props.vertical ? props.hue / 360 : 0.5}
+              color={color.value}
+            ></Pointer>
+          )}
         </Interactive>
       </div>
     )

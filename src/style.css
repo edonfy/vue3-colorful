@@ -107,7 +107,6 @@
 
 .vue3-colorful__alpha-gradient,
 .vue3-colorful__pointer-fill {
-  content: '';
   position: absolute;
   left: 0;
   top: 0;
@@ -261,4 +260,12 @@
   border-color: var(--vc-accent-color);
   background: var(--vc-bg-color);
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.vue3-colorful__input--invalid {
+  border-color: #ef4444 !important;
+}
+
+.vue3-colorful__input--invalid:focus {
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1) !important;
 }

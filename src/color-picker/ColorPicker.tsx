@@ -1,53 +1,23 @@
-import { defineComponent, ref, watch, computed } from 'vue'
+import { defineComponent, ref, watch, computed, PropType } from 'vue'
 import { HsvaColor, ColorModel } from '@/types'
 import { parseColor, formatColor } from '@/utils/converter'
 import BasePicker from './BasePicker'
+import { commonPickerProps } from './PickerFactory'
 
 export default defineComponent({
   name: 'ColorPicker',
 
   props: {
-    modelValue: {
-      type: String,
-      default: '',
-    },
+    ...commonPickerProps,
     colorModel: {
-      type: String as () => ColorModel,
+      type: String as PropType<ColorModel>,
       default: 'hex',
-    },
-    showAlpha: {
-      type: Boolean,
-      default: false,
-    },
-    showEyedropper: {
-      type: Boolean,
-      default: false,
-    },
-    presets: {
-      type: Array as () => string[],
-      default: () => [],
-    },
-    dark: {
-      type: Boolean,
-      default: false,
-    },
-    showInput: {
-      type: Boolean,
-      default: false,
-    },
-    colorLabel: {
-      type: String,
-      default: '',
-    },
-    vertical: {
-      type: Boolean,
-      default: false,
     },
   },
 
   emits: ['update:modelValue'],
 
-  setup(props, { emit }) {
+  setup(props, { emit, slots }) {
     const hsva = ref<HsvaColor>({ h: 0, s: 100, v: 100, a: 1 })
     let isInternalUpdate = false
 
@@ -76,8 +46,11 @@ export default defineComponent({
         }
 
         if (newValue) {
-          const parsed = parseColor(newValue)
-          hsva.value = parsed
+          try {
+            hsva.value = parseColor(newValue)
+          } catch {
+            console.warn(`[vue3-colorful] Invalid color value: ${newValue}`)
+          }
         }
       },
       {
@@ -91,7 +64,11 @@ export default defineComponent({
     }
 
     const handleSelect = (color: string) => {
-      hsva.value = parseColor(color)
+      try {
+        hsva.value = parseColor(color)
+      } catch {
+        console.warn(`[vue3-colorful] Invalid selection color: ${color}`)
+      }
     }
 
     return () => (
@@ -109,6 +86,7 @@ export default defineComponent({
         onAlphaChange={(a) => (hsva.value.a = a)}
         onSaturationChange={saturationChange}
         onColorSelect={handleSelect}
+        v-slots={slots}
       />
     )
   },

@@ -12,7 +12,7 @@ const angleUnits: Record<string, number> = {
 }
 
 /**
- * Regular expressions for parsing color strings
+ * Regular expressions for parsing color strings (Pre-compiled)
  */
 const COLOR_PATTERNS = {
   hsl: /hsla?\(?\s*(-?\d*\.?\d+)(deg|rad|grad|turn)?[,\s]+(-?\d*\.?\d+)%?[,\s]+(-?\d*\.?\d+)%?,?\s*[/\s]*(-?\d*\.?\d+)?(%)?\s*\)?/i,
@@ -33,6 +33,10 @@ export const parseHue = (value: string, unit = 'deg'): number => {
  */
 export const hexToRgba = (hex: string): RgbaColor => {
   if (hex[0] === '#') hex = hex.substring(1)
+
+  if (!/^[0-9a-fA-F]{3,8}$/.test(hex) || [5, 7].includes(hex.length)) {
+    throw new Error(`Invalid HEX color: ${hex}`)
+  }
 
   if (hex.length < 6) {
     return {
@@ -62,7 +66,7 @@ export const hexToHsva = (hex: string): HsvaColor => rgbaToHsva(hexToRgba(hex))
 export const hslaStringToHsva = (hslString: string): HsvaColor => {
   const match = COLOR_PATTERNS.hsl.exec(hslString)
 
-  if (!match) return { h: 0, s: 0, v: 0, a: 1 }
+  if (!match) throw new Error(`Invalid HSL color: ${hslString}`)
 
   return hslaToHsva({
     h: parseHue(match[1], match[2]),
@@ -124,19 +128,27 @@ export const hsvaToHslaString = (hsva: HsvaColor): string => {
 }
 
 /**
- * Memoization cache
+ * Memoization cache with LRU strategy
  */
-const cache: Record<string, RgbaColor | HslaColor> = {}
+const cache = new Map<string, RgbaColor | HslaColor>()
+const MAX_CACHE_SIZE = 100
 
 const memoize = <T extends RgbaColor | HslaColor>(
   keyPrefix: string,
   hsva: HsvaColor,
   fn: (hsva: HsvaColor) => T
 ): T => {
-  const key = `${keyPrefix}_${hsva.h}_${hsva.s}_${hsva.v}_${hsva.a}`
-  if (cache[key]) return cache[key] as T
+  const key = `${keyPrefix}_${round(hsva.h)}_${round(hsva.s)}_${round(hsva.v)}_${round(hsva.a, 2)}`
+  if (cache.has(key)) return cache.get(key) as T
+
   const result = fn(hsva)
-  cache[key] = result
+
+  if (cache.size >= MAX_CACHE_SIZE) {
+    const firstKey = cache.keys().next().value
+    if (firstKey !== undefined) cache.delete(firstKey)
+  }
+
+  cache.set(key, result)
   return result
 }
 
@@ -202,7 +214,7 @@ export const hsvaToRgbaString = (hsva: HsvaColor): string => {
 export const hsvaStringToHsva = (hsvString: string): HsvaColor => {
   const match = COLOR_PATTERNS.hsv.exec(hsvString)
 
-  if (!match) return { h: 0, s: 0, v: 0, a: 1 }
+  if (!match) throw new Error(`Invalid HSV color: ${hsvString}`)
 
   return roundHsva({
     h: parseHue(match[1], match[2]),
@@ -218,7 +230,7 @@ export const hsvaStringToHsva = (hsvString: string): HsvaColor => {
 export const rgbaStringToHsva = (rgbaString: string): HsvaColor => {
   const match = COLOR_PATTERNS.rgb.exec(rgbaString)
 
-  if (!match) return { h: 0, s: 0, v: 0, a: 1 }
+  if (!match) throw new Error(`Invalid RGB color: ${rgbaString}`)
 
   return rgbaToHsva({
     r: Number(match[1]) / (match[2] ? 100 / 255 : 1),

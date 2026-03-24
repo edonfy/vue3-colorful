@@ -22,9 +22,9 @@ describe('ColorConverter', () => {
       expect(parseColor('cmyk(0%, 0%, 0%, 0%)')).toEqual({ h: 0, s: 0, v: 100, a: 1 })
     })
 
-    it('should return default HSVA for empty or invalid input', () => {
+    it('should handle empty input and throw for invalid format', () => {
       expect(parseColor('')).toEqual({ h: 0, s: 100, v: 100, a: 1 })
-      expect(parseColor('invalid')).toEqual({ h: 0, s: 100, v: 100, a: 1 })
+      expect(() => parseColor('invalid')).toThrow()
     })
   })
 

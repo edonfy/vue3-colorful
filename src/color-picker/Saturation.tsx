@@ -1,6 +1,7 @@
 import { CSSProperties, PropType, computed, defineComponent } from 'vue'
 import Pointer from './Pointer'
-import Interactive, { Interaction } from './Interactive'
+import Interactive from './Interactive'
+import { Interaction } from '@/composables/useInteraction'
 import { HsvaColor } from '@/types'
 import { hsvaToHslString } from '@/utils/convert'
 import { clamp } from '@/utils/clamp'
@@ -17,7 +18,7 @@ export default defineComponent({
 
   emits: ['change'],
 
-  setup(props, { emit }) {
+  setup(props, { emit, slots }) {
     const handleMove = (position: Interaction) => {
       const value = {
         s: position.left * 100,
@@ -51,6 +52,18 @@ export default defineComponent({
         case 'ArrowDown':
           emit('change', { s, v: clamp(v - step, 0, 100) })
           break
+        case 'Home':
+          emit('change', { s: 0, v })
+          break
+        case 'End':
+          emit('change', { s: 100, v })
+          break
+        case 'PageUp':
+          emit('change', { s, v: 100 })
+          break
+        case 'PageDown':
+          emit('change', { s, v: 0 })
+          break
       }
     }
 
@@ -61,13 +74,23 @@ export default defineComponent({
           onKey={handleKey}
           role="slider"
           ariaLabel="Saturation and Value"
+          aria-valuenow={Math.round(props.hsva.s)}
           aria-valuetext={`Saturation ${Math.round(props.hsva.s)}%, Value ${Math.round(props.hsva.v)}%`}
         >
-          <Pointer
-            top={1 - props.hsva.v / 100}
-            left={props.hsva.s / 100}
-            color={hsvaToHslString(props.hsva)}
-          ></Pointer>
+          {slots.track?.()}
+          {slots.pointer ? (
+            slots.pointer({
+              top: 1 - props.hsva.v / 100,
+              left: props.hsva.s / 100,
+              color: hsvaToHslString(props.hsva),
+            })
+          ) : (
+            <Pointer
+              top={1 - props.hsva.v / 100}
+              left={props.hsva.s / 100}
+              color={hsvaToHslString(props.hsva)}
+            ></Pointer>
+          )}
         </Interactive>
       </div>
     )

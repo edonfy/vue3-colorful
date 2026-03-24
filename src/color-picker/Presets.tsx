@@ -19,9 +19,9 @@ export default defineComponent({
   setup(props, { emit }) {
     return () => (
       <div class="vue3-colorful__presets">
-        {props.presets.map((color) => (
+        {props.presets.map((color, index) => (
           <button
-            key={color}
+            key={`${color}-${index}`}
             type="button"
             class={[
               'vue3-colorful__preset',

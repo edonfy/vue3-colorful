@@ -40,6 +40,7 @@ const Converters: Record<ColorModel, Converter> = {
     format: (hsva, alpha) => (alpha ? hsvaToHsvaString(hsva) : hsvaToHsvString(hsva)),
   },
   cmyk: {
+    // CMYK has no standard alpha extension (no cmyka() CSS function), so showAlpha is ignored
     parse: (str) => cmykToHsva(cmykStringToCmyk(str)),
     format: (hsva) => cmykToCmykString(hsvaToCmyk(hsva)),
   },
@@ -59,9 +60,9 @@ export const parseColor = (color: string): HsvaColor => {
   if (trimmed.startsWith('cmyk')) return cmykToHsva(cmykStringToCmyk(trimmed))
 
   // Fallback for hex without #
-  if (/^[0-9a-f]{3,8}$/.test(trimmed)) return hexToHsva('#' + trimmed)
+  if (/^[0-9a-fA-F]{3,8}$/.test(trimmed)) return hexToHsva('#' + trimmed)
 
-  return { h: 0, s: 100, v: 100, a: 1 }
+  throw new Error(`Unsupported color format: ${color}`)
 }
 
 /**

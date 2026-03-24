@@ -1,7 +1,8 @@
 import { PropType, CSSProperties, computed, defineComponent } from 'vue'
 import Pointer from './Pointer'
 import { HsvaColor } from '@/types'
-import Interactive, { Interaction } from './Interactive'
+import Interactive from './Interactive'
+import { Interaction } from '@/composables/useInteraction'
 import { hsvaToRgbaString } from '@/utils/convert'
 import { clamp } from '@/utils/clamp'
 
@@ -21,7 +22,7 @@ export default defineComponent({
 
   emits: ['change'],
 
-  setup(props, { emit }) {
+  setup(props, { emit, slots }) {
     const handleMove = (position: Interaction) => {
       emit('change', props.vertical ? position.top : position.left)
     }
@@ -38,33 +39,52 @@ export default defineComponent({
     const pointerColor = computed(() => hsvaToRgbaString(props.hsva))
 
     const handleKey = (e: KeyboardEvent) => {
-      const step = e.shiftKey ? 0.1 : 0.01
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+      // 10% step for Shift or Page keys
+      const isLargeStep = e.shiftKey || e.key === 'PageUp' || e.key === 'PageDown'
+      const step = isLargeStep ? 0.1 : 0.01
+
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowDown' || e.key === 'PageDown') {
         emit('change', clamp(props.hsva.a - step))
-      } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'PageUp') {
         emit('change', clamp(props.hsva.a + step))
+      } else if (e.key === 'Home') {
+        emit('change', 0)
+      } else if (e.key === 'End') {
+        emit('change', 1)
       }
     }
 
     return () => (
       <div class={['vue3-colorful__alpha', { 'vue3-colorful__alpha--vertical': props.vertical }]}>
-        <div class={'vue3-colorful__alpha-gradient'} style={gradientStyle.value}></div>
+        {!slots.track && (
+          <div class={'vue3-colorful__alpha-gradient'} style={gradientStyle.value}></div>
+        )}
         <Interactive
           onMove={handleMove}
           onKey={handleKey}
           role="slider"
           ariaLabel="Alpha"
+          ariaOrientation={props.vertical ? 'vertical' : 'horizontal'}
           aria-valuenow={Math.round(props.hsva.a * 100)}
           aria-valuemin="0"
           aria-valuemax="100"
           aria-valuetext={`${Math.round(props.hsva.a * 100)}%`}
         >
-          <Pointer
-            class={'vue3-colorful__alpha-pointer'}
-            left={props.vertical ? 0.5 : props.hsva.a}
-            top={props.vertical ? props.hsva.a : 0.5}
-            color={pointerColor.value}
-          ></Pointer>
+          {slots.track?.()}
+          {slots.pointer ? (
+            slots.pointer({
+              left: props.vertical ? 0.5 : props.hsva.a,
+              top: props.vertical ? props.hsva.a : 0.5,
+              color: pointerColor.value,
+            })
+          ) : (
+            <Pointer
+              class={'vue3-colorful__alpha-pointer'}
+              left={props.vertical ? 0.5 : props.hsva.a}
+              top={props.vertical ? props.hsva.a : 0.5}
+              color={pointerColor.value}
+            ></Pointer>
+          )}
         </Interactive>
       </div>
     )

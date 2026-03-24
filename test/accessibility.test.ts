@@ -33,7 +33,25 @@ describe('Accessibility', () => {
       })
       const interactive = wrapper.find('[role="slider"]')
       await interactive.trigger('keydown', { key: 'ArrowRight', shiftKey: true })
-      expect(wrapper.emitted('change')?.[0]?.[0]).toBe(10)
+      expect(wrapper.emitted('change')?.[0]?.[0]).toBe(36)
+    })
+
+    it('wraps hue from 0 to 359 on ArrowLeft', async () => {
+      const wrapper = mount(Hue, {
+        props: { hue: 0 },
+      })
+      const interactive = wrapper.find('[role="slider"]')
+      await interactive.trigger('keydown', { key: 'ArrowLeft' })
+      expect(wrapper.emitted('change')?.[0]?.[0]).toBe(359)
+    })
+
+    it('wraps hue from 359 to 0 on ArrowRight', async () => {
+      const wrapper = mount(Hue, {
+        props: { hue: 359 },
+      })
+      const interactive = wrapper.find('[role="slider"]')
+      await interactive.trigger('keydown', { key: 'ArrowRight' })
+      expect(wrapper.emitted('change')?.[0]?.[0]).toBe(0)
     })
   })
 

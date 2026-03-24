@@ -51,7 +51,7 @@ export default defineComponent({
 
   emits: ['hueChange', 'alphaChange', 'saturationChange', 'colorSelect'],
 
-  setup(props, { emit }) {
+  setup(props, { emit, slots }) {
     return () => (
       <div
         class={[
@@ -64,18 +64,30 @@ export default defineComponent({
         <div class={['vue3-colorful__body', { 'vue3-colorful__body--horizontal': props.vertical }]}>
           <Saturation
             hsva={props.hsva}
-            onChange={(val) => emit('saturationChange', val)}
+            onChange={(val: { s: number; v: number }) => emit('saturationChange', val)}
+            v-slots={{
+              pointer: slots['saturation-pointer'],
+              track: slots['saturation-track'],
+            }}
           ></Saturation>
           <Hue
             hue={props.hsva.h}
             vertical={props.vertical}
-            onChange={(val) => emit('hueChange', val)}
+            onChange={(val: number) => emit('hueChange', val)}
+            v-slots={{
+              pointer: slots['hue-pointer'],
+              track: slots['hue-track'],
+            }}
           />
           {props.showAlpha && (
             <Alpha
               hsva={props.hsva}
               vertical={props.vertical}
-              onChange={(val) => emit('alphaChange', val)}
+              onChange={(val: number) => emit('alphaChange', val)}
+              v-slots={{
+                pointer: slots['alpha-pointer'],
+                track: slots['alpha-track'],
+              }}
             />
           )}
           {props.showEyedropper && (

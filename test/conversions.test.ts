@@ -66,10 +66,10 @@ describe('Color Conversions', () => {
       expect(convert.hsvaStringToHsva('hsv(180, 50%, 50%)')).toMatchObject({ h: 180, s: 50, v: 50 })
       expect(convert.rgbaStringToHsva('rgb(64, 128, 128)')).toMatchObject({ h: 180 })
 
-      // Invalid strings
-      expect(convert.hslaStringToHsva('invalid')).toMatchObject({ h: 0, s: 0, v: 0 })
-      expect(convert.hsvaStringToHsva('invalid')).toMatchObject({ h: 0, s: 0, v: 0 })
-      expect(convert.rgbaStringToHsva('invalid')).toMatchObject({ h: 0, s: 0, v: 0 })
+      // Invalid strings should now throw errors
+      expect(() => convert.hslaStringToHsva('invalid')).toThrow()
+      expect(() => convert.hsvaStringToHsva('invalid')).toThrow()
+      expect(() => convert.rgbaStringToHsva('invalid')).toThrow()
     })
   })
 
