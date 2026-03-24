@@ -52,7 +52,8 @@ export default defineComponent({
       props.onKey?.(e)
     }
 
-    const start = (e: any) => {
+    const start = (e: MouseEvent | TouchEvent) => {
+
       e.preventDefault()
       isStart = true
 
@@ -63,7 +64,8 @@ export default defineComponent({
       emit('move', position)
     }
 
-    const move = (e: any) => {
+    const move = (e: MouseEvent | TouchEvent) => {
+
       if (isStart) {
         e.preventDefault()
         const position = getRelativePosition(rootRef.value!, e)
