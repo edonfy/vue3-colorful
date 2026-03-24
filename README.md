@@ -28,12 +28,15 @@ Inspired by <a href="https://omgovich.github.io/react-colorful/">react-colorful<
 - 📱 **Responsive** - Modern "Premium" UI with glassmorphism
 - 🛠 **Modern Stack** - Powered by Vite 6, Vitest 3, and UnoCSS
 
-
 ## Installation
+
+> [!IMPORTANT]
+> This library requires **Node.js 20.x** or higher.
 
 ```bash
 # Using pnpm (recommended)
 pnpm add vue3-colorful
+
 
 # Using npm
 npm install vue3-colorful
@@ -190,9 +193,7 @@ const textColor = ref('#000000')
       <label>Text Color:</label>
       <ColorPicker v-model="textColor" />
     </div>
-    <div :style="{ backgroundColor, color: textColor }">
-      Preview text with selected colors
-    </div>
+    <div :style="{ backgroundColor, color: textColor }">Preview text with selected colors</div>
   </form>
 </template>
 ```
@@ -201,29 +202,29 @@ const textColor = ref('#000000')
 
 ### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `modelValue` | `string` | `''` | The color value (v-model) |
-| `colorModel` | `'hex' \| 'rgb' \| 'hsv' \| 'hsl' \| 'cmyk'` | `'hex'` | Output color format |
-| `showAlpha` | `boolean` | `false` | Show alpha channel slider |
+| Prop         | Type                                         | Default | Description               |
+| ------------ | -------------------------------------------- | ------- | ------------------------- |
+| `modelValue` | `string`                                     | `''`    | The color value (v-model) |
+| `colorModel` | `'hex' \| 'rgb' \| 'hsv' \| 'hsl' \| 'cmyk'` | `'hex'` | Output color format       |
+| `showAlpha`  | `boolean`                                    | `false` | Show alpha channel slider |
 
 ### Events
 
-| Event | Payload | Description |
-|-------|---------|-------------|
+| Event               | Payload  | Description                |
+| ------------------- | -------- | -------------------------- |
 | `update:modelValue` | `string` | Emitted when color changes |
 
 ### Supported Color Formats
 
 The component can **parse** and **emit** colors in the following formats:
 
-| Format | Example Input | Example Output |
-|--------|---------------|----------------|
-| **Hex** | `#ff6600`, `#f60`, `#ff660080` | `#ff6600` |
-| **RGB** | `rgb(255, 102, 0)`, `rgba(255, 102, 0, 0.5)` | `rgb(255, 102, 0)` |
-| **HSL** | `hsl(24, 100%, 50%)`, `hsla(24, 100%, 50%, 0.5)` | `hsl(24, 100%, 50%)` |
-| **HSV** | `hsv(24, 100%, 100%)`, `hsva(24, 100%, 100%, 0.5)` | `hsv(24, 100%, 100%)` |
-| **CMYK** | `cmyk(0%, 60%, 100%, 0%)` | `cmyk(0%, 60%, 100%, 0%)` |
+| Format   | Example Input                                      | Example Output            |
+| -------- | -------------------------------------------------- | ------------------------- |
+| **Hex**  | `#ff6600`, `#f60`, `#ff660080`                     | `#ff6600`                 |
+| **RGB**  | `rgb(255, 102, 0)`, `rgba(255, 102, 0, 0.5)`       | `rgb(255, 102, 0)`        |
+| **HSL**  | `hsl(24, 100%, 50%)`, `hsla(24, 100%, 50%, 0.5)`   | `hsl(24, 100%, 50%)`      |
+| **HSV**  | `hsv(24, 100%, 100%)`, `hsva(24, 100%, 100%, 0.5)` | `hsv(24, 100%, 100%)`     |
+| **CMYK** | `cmyk(0%, 60%, 100%, 0%)`                          | `cmyk(0%, 60%, 100%, 0%)` |
 
 ## TypeScript
 
@@ -290,12 +291,12 @@ You can try vue3-colorful online in the [example directory](./example) or visit 
 
 ## Comparison with react-colorful
 
-| Feature | vue3-colorful | react-colorful |
-|---------|---------------|----------------|
-| Framework | Vue 3 | React |
-| Size | ~4KB | ~2KB |
+| Feature       | vue3-colorful            | react-colorful     |
+| ------------- | ------------------------ | ------------------ |
+| Framework     | Vue 3                    | React              |
+| Size          | ~4KB                     | ~2KB               |
 | Color Formats | Hex, RGB, HSV, HSL, CMYK | Hex, RGB, HSL, HSV |
-| TypeScript | ✅ | ✅ |
+| TypeScript    | ✅                       | ✅                 |
 
 ## License
 

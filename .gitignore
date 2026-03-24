@@ -25,4 +25,9 @@ dist-ssr
 
 *storybook.log
 storybook-static
+
+# Build stats
+stats.html
+stats.json
+
 coverage
