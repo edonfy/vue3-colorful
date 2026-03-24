@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 22.x
-          cache: pnpm
+          # cache: pnpm
 
       # Install dependencies with frozen lockfile to ensure exact versions
       - name: Install Dependencies
