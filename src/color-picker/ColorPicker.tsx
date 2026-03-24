@@ -3,74 +3,9 @@ import Saturation from './Saturation'
 import Hue from './Hue'
 import Alpha from './Alpha'
 import { HsvaColor, ColorModel } from '@/types'
-import {
-  hsvaToHex,
-  hsvaToRgbString,
-  hsvaToRgbaString,
-  hsvaToHsvString,
-  hsvaToHsvaString,
-  hsvaToHslString,
-  hsvaToHslaString,
-  hexToHsva,
-  rgbaStringToHsva,
-  hslaStringToHsva,
-  hsvaStringToHsva,
-  hsvaToCmyk,
-  cmykToCmykString,
-  cmykStringToCmyk,
-  cmykToHsva,
-} from '@/utils/convert'
-
-/**
- * Parse a color string to HSVA
- */
-const parseColor = (color: string): HsvaColor => {
-  if (!color) return { h: 0, s: 100, v: 100, a: 1 }
-
-  const trimmed = color.trim()
-
-  try {
-    if (trimmed.startsWith('#')) {
-      return hexToHsva(trimmed)
-    } else if (trimmed.startsWith('rgb')) {
-      return rgbaStringToHsva(trimmed)
-    } else if (trimmed.startsWith('hsl')) {
-      return hslaStringToHsva(trimmed)
-    } else if (trimmed.startsWith('hsv')) {
-      return hsvaStringToHsva(trimmed)
-    } else if (trimmed.startsWith('cmyk')) {
-      const cmyk = cmykStringToCmyk(trimmed)
-      return cmykToHsva(cmyk)
-    } else {
-      // Try to parse as hex without #
-      if (/^[0-9a-fA-F]{3,8}$/.test(trimmed)) {
-        return hexToHsva('#' + trimmed)
-      }
-    }
-  } catch (error) {
-    console.warn(`Failed to parse color: ${color}`, error)
-  }
-
-  return { h: 0, s: 100, v: 100, a: 1 }
-}
-
-/**
- * Convert HSVA to output string based on color model
- */
-const hsvaToOutput = (hsva: HsvaColor, colorModel: ColorModel, showAlpha: boolean): string => {
-  switch (colorModel) {
-    case 'rgb':
-      return showAlpha ? hsvaToRgbaString(hsva) : hsvaToRgbString(hsva)
-    case 'hsv':
-      return showAlpha ? hsvaToHsvaString(hsva) : hsvaToHsvString(hsva)
-    case 'hsl':
-      return showAlpha ? hsvaToHslaString(hsva) : hsvaToHslString(hsva)
-    case 'cmyk':
-      return cmykToCmykString(hsvaToCmyk(hsva))
-    default: // 'hex'
-      return hsvaToHex(hsva)
-  }
-}
+import { parseColor, formatColor } from '@/utils/converter'
+import Eyedropper from './Eyedropper'
+import Presets from './Presets'
 
 export default defineComponent({
   name: 'ColorPicker',
@@ -88,6 +23,14 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    showEyedropper: {
+      type: Boolean,
+      default: false,
+    },
+    presets: {
+      type: Array as () => string[],
+      default: () => [],
+    },
   },
 
   emits: ['update:modelValue'],
@@ -97,7 +40,7 @@ export default defineComponent({
     let isInternalUpdate = false
 
     // Computed output value
-    const outputValue = computed(() => hsvaToOutput(hsva.value, props.colorModel, props.showAlpha))
+    const outputValue = computed(() => formatColor(hsva.value, props.colorModel, props.showAlpha))
 
     // Watch for internal changes and emit
     watch(
@@ -143,12 +86,24 @@ export default defineComponent({
       hsva.value.v = v
     }
 
+    const handleSelect = (color: string) => {
+      hsva.value = parseColor(color)
+    }
+
     return () => {
       return (
         <div class={'vue3-colorful'}>
           <Saturation hsva={hsva.value} onChange={saturationChange}></Saturation>
           <Hue hue={hsva.value.h} onChange={hueChange}></Hue>
           {props.showAlpha && <Alpha hsva={hsva.value} onChange={alphaChange}></Alpha>}
+          {props.showEyedropper && <Eyedropper onSelect={handleSelect}></Eyedropper>}
+          {props.presets.length > 0 && (
+            <Presets
+              presets={props.presets}
+              activeColor={outputValue.value}
+              onSelect={handleSelect}
+            ></Presets>
+          )}
         </div>
       )
     }

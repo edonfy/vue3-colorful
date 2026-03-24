@@ -26,8 +26,10 @@ export default defineComponent({
       emit('change', value)
     }
 
+    const hueColor = computed(() => hsvaToHslString({ h: props.hsva.h, s: 100, v: 100, a: 1 }))
+
     const containerStyle = computed<CSSProperties>(() => ({
-      backgroundColor: hsvaToHslString({ h: props.hsva.h, s: 100, v: 100, a: 1 }),
+      backgroundColor: hueColor.value,
     }))
 
     const handleKey = (e: KeyboardEvent) => {

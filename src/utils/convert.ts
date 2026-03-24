@@ -92,20 +92,6 @@ export const hslaToHsva = ({ h, s, l, a }: HslaColor): HsvaColor => {
 export const hsvaToHex = (hsva: HsvaColor): string => rgbaToHex(hsvaToRgba(hsva))
 
 /**
- * Convert HSVA color object to HSLA
- */
-export const hsvaToHsla = ({ h, s, v, a }: HsvaColor): HslaColor => {
-  const hh = ((200 - s) * v) / 100
-
-  return {
-    h: round(h),
-    s: round(hh > 0 && hh < 200 ? ((s * v) / 100 / (hh <= 100 ? hh : 200 - hh)) * 100 : 0),
-    l: round(hh / 2),
-    a: round(a, 2),
-  }
-}
-
-/**
  * Convert HSVA to HSL string
  */
 export const hsvaToHslString = (hsva: HsvaColor): string => {
@@ -138,25 +124,56 @@ export const hsvaToHslaString = (hsva: HsvaColor): string => {
 }
 
 /**
- * Convert HSVA color object to RGBA
+ * Memoization cache
  */
-export const hsvaToRgba = ({ h, s, v, a }: HsvaColor): RgbaColor => {
-  h = (h / 360) * 6
-  s = s / 100
-  v = v / 100
+const cache: Record<string, any> = {}
 
-  const hh = Math.floor(h),
-    b = v * (1 - s),
-    c = v * (1 - (h - hh) * s),
-    d = v * (1 - (1 - h + hh) * s),
-    module = hh % 6
+const memoize = <T>(keyPrefix: string, hsva: HsvaColor, fn: (hsva: HsvaColor) => T): T => {
+  const key = `${keyPrefix}_${hsva.h}_${hsva.s}_${hsva.v}_${hsva.a}`
+  if (cache[key]) return cache[key]
+  const result = fn(hsva)
+  cache[key] = result
+  return result
+}
 
-  return {
-    r: round([v, c, b, b, d, v][module] * 255),
-    g: round([d, v, v, c, b, b][module] * 255),
-    b: round([b, b, d, v, v, c][module] * 255),
-    a: round(a, 2),
-  }
+/**
+ * Convert HSVA color object to HSLA (Memoized)
+ */
+export const hsvaToHsla = (hsva: HsvaColor): HslaColor => {
+  return memoize('hsla', hsva, ({ h, s, v, a }) => {
+    const hh = ((200 - s) * v) / 100
+
+    return {
+      h: round(h),
+      s: round(hh > 0 && hh < 200 ? ((s * v) / 100 / (hh <= 100 ? hh : 200 - hh)) * 100 : 0),
+      l: round(hh / 2),
+      a: round(a, 2),
+    }
+  })
+}
+
+/**
+ * Convert HSVA color object to RGBA (Memoized)
+ */
+export const hsvaToRgba = (hsva: HsvaColor): RgbaColor => {
+  return memoize('rgba', hsva, ({ h, s, v, a }) => {
+    const hn = (h / 360) * 6
+    const sn = s / 100
+    const vn = v / 100
+
+    const hh = Math.floor(hn),
+      b = vn * (1 - sn),
+      c = vn * (1 - (hn - hh) * sn),
+      d = vn * (1 - (1 - hn + hh) * sn),
+      module = hh % 6
+
+    return {
+      r: round([vn, c, b, b, d, vn][module] * 255),
+      g: round([d, vn, vn, c, b, b][module] * 255),
+      b: round([b, b, d, vn, vn, c][module] * 255),
+      a: round(a, 2),
+    }
+  })
 }
 
 /**

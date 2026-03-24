@@ -29,12 +29,9 @@ export default defineComponent({
       return { colorFrom, colorTo }
     })
 
-    const gradientStyle = computed<CSSProperties>(() => {
-      const { colorFrom, colorTo } = gradientColors.value
-      return {
-        backgroundImage: `linear-gradient(90deg, ${colorFrom}, ${colorTo})`,
-      }
-    })
+    const gradientStyle = computed<CSSProperties>(() => ({
+      backgroundImage: `linear-gradient(90deg, ${gradientColors.value.colorFrom}, ${gradientColors.value.colorTo})`,
+    }))
 
     const pointerColor = computed(() => hsvaToHslaString(props.hsva))
 

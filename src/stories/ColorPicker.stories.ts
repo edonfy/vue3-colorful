@@ -14,6 +14,12 @@ const meta: Meta<typeof ColorPicker> = {
     showAlpha: {
       control: 'boolean',
     },
+    showEyedropper: {
+      control: 'boolean',
+    },
+    presets: {
+      control: 'object',
+    },
   },
   render: (args) => {
     return {
@@ -30,6 +36,15 @@ type Story = StoryObj<typeof ColorPicker>
 export const Default: Story = {
   args: {
     modelValue: '#ff6600',
+  },
+}
+
+export const FullFeatured: Story = {
+  args: {
+    modelValue: '#3b82f6',
+    showAlpha: true,
+    showEyedropper: true,
+    presets: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#6366f1'],
   },
 }
 
