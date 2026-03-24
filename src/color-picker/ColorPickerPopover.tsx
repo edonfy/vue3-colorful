@@ -19,7 +19,7 @@ export default defineComponent({
     const reference = ref<HTMLElement | null>(null)
     const floating = ref<HTMLElement | null>(null)
 
-    const { floatingStyles } = useFloating(reference, floating, {
+    const { floatingStyles, isPositioned } = useFloating(reference, floating, {
       placement: 'bottom-start',
       strategy: 'fixed',
       middleware: [offset(8), flip(), shift()],
@@ -72,6 +72,9 @@ export default defineComponent({
               style={{
                 ...floatingStyles.value,
                 zIndex: 9999,
+                opacity: isPositioned.value ? 1 : 0,
+                pointerEvents: isPositioned.value ? 'auto' : 'none',
+                transition: 'opacity 0.2s ease, transform 0.2s ease',
               }}
               class="vue3-colorful__popover-content"
             >
