@@ -28,6 +28,9 @@ export interface InteractiveProps {
 export default defineComponent({
   name: 'Interactive',
 
+
+  inheritAttrs: false,
+
   props: {
     onMove: {
       type: Function as unknown as () => (interaction: Interaction) => void,
@@ -45,9 +48,6 @@ export default defineComponent({
     'aria-valuemax': [Number, String],
     'aria-valuetext': String,
   },
-
-
-  inheritAttrs: false,
 
   setup(props, { slots, attrs }) {
     const rootRef = ref<HTMLDivElement>()

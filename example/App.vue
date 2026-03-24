@@ -48,8 +48,8 @@ const previewStyle = computed<CSSProperties>(() => ({
             <div class="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-700 rounded-xl">
               <code class="text-lg font-mono">{{ hexColor }}</code>
               <button 
-                @click="copyToClipboard(hexColor)"
                 class="px-4 py-2 bg-white dark:bg-gray-600 hover:bg-gray-50 dark:hover:bg-gray-500 rounded-lg shadow-sm transition-all"
+                @click="copyToClipboard(hexColor)"
               >
                 Copy
               </button>
@@ -64,7 +64,7 @@ const previewStyle = computed<CSSProperties>(() => ({
         <color-picker v-model="rgbColor" color-model="rgb" :show-alpha="true" />
         <div class="mt-4 flex items-center justify-between">
           <code class="text-sm font-mono truncate mr-2">{{ rgbColor }}</code>
-          <button @click="copyToClipboard(rgbColor)" class="text-xs text-blue-500 underline">Copy</button>
+          <button class="text-xs text-blue-500 underline" @click="copyToClipboard(rgbColor)">Copy</button>
         </div>
       </section>
 
@@ -74,7 +74,7 @@ const previewStyle = computed<CSSProperties>(() => ({
         <color-picker v-model="hsvColor" color-model="hsv" />
         <div class="mt-4 flex items-center justify-between">
           <code class="text-sm font-mono truncate mr-2">{{ hsvColor }}</code>
-          <button @click="copyToClipboard(hsvColor)" class="text-xs text-blue-500 underline">Copy</button>
+          <button class="text-xs text-blue-500 underline" @click="copyToClipboard(hsvColor)">Copy</button>
         </div>
       </section>
 
@@ -84,7 +84,7 @@ const previewStyle = computed<CSSProperties>(() => ({
         <color-picker v-model="hslColor" color-model="hsl" />
         <div class="mt-4 flex items-center justify-between">
           <code class="text-sm font-mono truncate mr-2">{{ hslColor }}</code>
-          <button @click="copyToClipboard(hslColor)" class="text-xs text-blue-500 underline">Copy</button>
+          <button class="text-xs text-blue-500 underline" @click="copyToClipboard(hslColor)">Copy</button>
         </div>
       </section>
 
@@ -94,7 +94,7 @@ const previewStyle = computed<CSSProperties>(() => ({
         <color-picker v-model="cmykColor" color-model="cmyk" />
         <div class="mt-4 flex items-center justify-between">
           <code class="text-sm font-mono truncate mr-2">{{ cmykColor }}</code>
-          <button @click="copyToClipboard(cmykColor)" class="text-xs text-blue-500 underline">Copy</button>
+          <button class="text-xs text-blue-500 underline" @click="copyToClipboard(cmykColor)">Copy</button>
         </div>
       </section>
     </main>
