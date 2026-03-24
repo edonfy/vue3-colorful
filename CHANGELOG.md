@@ -1,4 +1,19 @@
-# Changelog
+## 0.3.0 (2025-03-24)
+
+### Added
+
+- 🏗️ **PickerFactory**: Centralized factory pattern for all specialized pickers, reducing boilerplate by ~600 lines.
+- ⚡ **Performance Optimizations**:
+  - Implemented `useInteraction` composable with `requestAnimationFrame` throttling.
+  - Added LRU cache (100 items) for color conversions in `utils/convert.ts`.
+  - Pre-compiled regular expressions for color parsing.
+- 🛡️ **Robustness & Error Handling**:
+  - Error-first parsing in `utils/converter.ts` with explicit error throwing for invalid formats.
+  - Real-time validation and error state (red border) for `ColorInput`.
+- ♿ **A11Y Enhancements**: Full support for `Home`, `End`, `PageUp`, and `PageDown` keys in all sliders and saturation areas.
+- 🧪 **Test Suite Expansion**: Added comprehensive tests for `PickerFactory`, `useInteraction`, and edge-case color conversions. Total 72 tests passing.
+
+---
 
 ## 0.2.2
 

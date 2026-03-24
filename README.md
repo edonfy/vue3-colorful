@@ -21,7 +21,7 @@ Inspired by <a href="https://omgovich.github.io/react-colorful/">react-colorful<
 - ♿ **Accessibility (a11y)** - Full keyboard navigation and ARIA compliance
 - 🎨 **Multiple color formats** - Support for Hex, RGB, HSV, HSL, CMYK
 - 📚 **Storybook** - Interactive documentation and component testing
-- 📦 **Tiny size** - Only ~4.6KB gzipped
+- 📦 **Tiny size** - Only ~5.9KB gzipped (JS)
 - 🌈 **Alpha channel** - Optional transparency support
 - 📱 **Responsive** - Modern "Premium" UI with glassmorphism
 - 🌓 **Dark Mode** - Built-in premium dark theme support
@@ -151,6 +151,34 @@ Align the hue and alpha sliders vertically by passing `vertical`.
 </template>
 ```
 
+### Custom Slots (Advanced)
+
+For advanced customization, you can override the default UI of the sliders and pointers using slots.
+
+```vue
+<template>
+  <HexColorPicker v-model="color">
+    <!-- Custom Hue Slider Pointer -->
+    <template #hue-pointer="{ left, top, color }">
+      <div class="custom-pointer" :style="{ left: `${left * 100}%`, backgroundColor: color }" />
+    </template>
+
+    <!-- Custom Saturation Area Pointer -->
+    <template #saturation-pointer="{ left, top, color }">
+      <div class="custom-crosshair" :style="{ left: `${left * 100}%`, top: `${top * 100}%` }" />
+    </template>
+  </HexColorPicker>
+</template>
+```
+
+Available slots:
+
+- `#hue-track`, `#hue-pointer`
+- `#alpha-track`, `#alpha-pointer`
+- `#saturation-track`, `#saturation-pointer`
+
+Each pointer slot provides `{ left, top, color }` as scope. `left` and `top` are fractions (0-1).
+
 ## Theming (CSS Variables)
 
 The entire library is built with CSS Variables (prefixed with `--vc-`) for easy customization.
@@ -205,12 +233,13 @@ The entire library is built with CSS Variables (prefixed with `--vc-`) for easy 
 | Feature       | vue3-colorful            | react-colorful     |
 | ------------- | ------------------------ | ------------------ |
 | Framework     | Vue 3                    | React              |
-| Size          | ~4.6KB                   | ~2KB               |
+| Size          | ~5.9KB (JS)              | ~2KB               |
 | Tree-shakable | ✅                       | ✅                 |
 | Eyedropper    | ✅                       | ❌                 |
 | Presets       | ✅                       | ❌                 |
 | Dark Mode     | ✅                       | ❌                 |
 | Custom Layout | ✅                       | ❌                 |
+| Custom Slots  | ✅                       | ❌                 |
 | Color Formats | Hex, RGB, HSV, HSL, CMYK | Hex, RGB, HSL, HSV |
 
 ## License

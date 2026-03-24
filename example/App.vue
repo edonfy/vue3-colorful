@@ -151,6 +151,57 @@ const toggleDark = () => {
         </div>
       </section>
 
+      <!-- Custom Slots Demo -->
+      <section
+        class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-3xl p-8 shadow-xl border border-white/20"
+      >
+        <h2 class="text-3xl font-bold flex items-center gap-3 mb-8">
+          <span class="w-2 h-10 bg-pink-500 rounded-full"></span>
+          Slot Customization
+        </h2>
+        <div class="flex flex-col md:flex-row gap-12 items-center">
+          <div class="flex-1 space-y-4">
+            <p class="text-gray-600 dark:text-gray-400">
+              Override any part of the picker with your own Vue components. In this example, we use
+              slots to create square handles and a unique crosshair saturation pointer.
+            </p>
+            <ul class="list-disc list-inside text-sm space-y-2 opacity-80">
+              <li>
+                Square handles using <code>#hue-pointer</code> and <code>#alpha-pointer</code>
+              </li>
+              <li>A custom <code>#saturation-pointer</code> with a crosshair look</li>
+              <li>Total control over background via <code>#track</code> slots</li>
+            </ul>
+          </div>
+          <div
+            class="p-6 bg-gray-50 dark:bg-gray-900 rounded-3xl shadow-inner border border-black/5"
+          >
+            <hex-color-picker v-model="hexColor" :dark="isDark" show-alpha>
+              <template #hue-pointer="{ left, top, color }">
+                <div
+                  class="absolute w-6 h-6 border-2 border-white shadow-md rounded-sm transform -translate-x-1/2 -translate-y-1/2"
+                  :style="{ left: `${left * 100}%`, top: `${top * 100}%`, backgroundColor: color }"
+                />
+              </template>
+              <template #alpha-pointer="{ left, top, color }">
+                <div
+                  class="absolute w-6 h-6 border-2 border-white shadow-md rounded-sm transform -translate-x-1/2 -translate-y-1/2"
+                  :style="{ left: `${left * 100}%`, top: `${top * 100}%`, backgroundColor: color }"
+                />
+              </template>
+              <template #saturation-pointer="{ left, top }">
+                <div
+                  class="absolute w-6 h-6 border-2 border-black rounded-full transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center"
+                  :style="{ left: `${left * 100}%`, top: `${top * 100}%` }"
+                >
+                  <div class="w-1.5 h-1.5 bg-white rounded-full shadow-sm" />
+                </div>
+              </template>
+            </hex-color-picker>
+          </div>
+        </div>
+      </section>
+
       <!-- Theming Demo -->
       <section
         class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden"
