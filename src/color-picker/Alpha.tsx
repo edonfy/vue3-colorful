@@ -51,10 +51,12 @@ export default defineComponent({
       <div class={'vue3-colorful__alpha'}>
         <div class={'vue3-colorful__alpha-gradient'} style={gradientStyle.value}></div>
         <Interactive
-          on-move={handleMove}
-          on-key={handleKey}
+          onMove={handleMove}
+          onKey={handleKey}
+
           role="slider"
-          aria-label="Alpha"
+          ariaLabel="Alpha"
+
           aria-valuenow={Math.round(props.hsva.a * 100)}
           aria-valuemin="0"
           aria-valuemax="100"

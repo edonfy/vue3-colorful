@@ -140,6 +140,33 @@ describe('ColorPicker', () => {
       expect(wrapper.emitted('update:modelValue')).toBeTruthy()
     })
 
+    it('parses short hex color input', () => {
+      const wrapper = mount(ColorPicker, {
+        props: {
+          modelValue: '#0f0',
+        },
+      })
+      expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+    })
+
+    it('parses hex color with alpha input', () => {
+      const wrapper = mount(ColorPicker, {
+        props: {
+          modelValue: '#00ff0080',
+        },
+      })
+      expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+    })
+
+    it('handles case-insensitive hex color', () => {
+      const wrapper = mount(ColorPicker, {
+        props: {
+          modelValue: '#ABCDEF',
+        },
+      })
+      expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+    })
+
     it('handles invalid color input gracefully', () => {
       const wrapper = mount(ColorPicker, {
         props: {
@@ -148,6 +175,7 @@ describe('ColorPicker', () => {
       })
       expect(wrapper.emitted('update:modelValue')).toBeTruthy()
     })
+
   })
 
   describe('events', () => {

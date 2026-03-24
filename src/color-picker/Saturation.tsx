@@ -38,27 +38,30 @@ export default defineComponent({
 
       switch (e.key) {
         case 'ArrowLeft':
-          emit('change', { s: clamp(s - step), v })
+          emit('change', { s: clamp(s - step, 0, 100), v })
           break
         case 'ArrowRight':
-          emit('change', { s: clamp(s + step), v })
+          emit('change', { s: clamp(s + step, 0, 100), v })
           break
         case 'ArrowUp':
-          emit('change', { s, v: clamp(v + step) })
+          emit('change', { s, v: clamp(v + step, 0, 100) })
           break
         case 'ArrowDown':
-          emit('change', { s, v: clamp(v - step) })
+          emit('change', { s, v: clamp(v - step, 0, 100) })
           break
+
       }
     }
 
     return () => (
       <div class="vue3-colorful__saturation" style={containerStyle.value}>
         <Interactive
-          on-move={handleMove}
-          on-key={handleKey}
+          onMove={handleMove}
+          onKey={handleKey}
+
           role="slider"
-          aria-label="Saturation and Value"
+          ariaLabel="Saturation and Value"
+
           aria-valuetext={`Saturation ${Math.round(props.hsva.s)}%, Value ${Math.round(props.hsva.v)}%`}
         >
           <Pointer

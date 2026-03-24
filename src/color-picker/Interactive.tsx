@@ -6,49 +6,40 @@ export interface Interaction {
   top: number
 }
 
-// Finds the proper window object to fix iframe embedding issues
-const getParentWindow = (node?: HTMLElement | null): Window => {
-  return (node && node.ownerDocument.defaultView) || self
-}
-
-const getRelativePosition = (node: HTMLElement, event: PointerEvent) => {
+const getRelativePosition = (node: HTMLElement, event: MouseEvent | TouchEvent) => {
   const rect = node.getBoundingClientRect()
+  const pointer = 'touches' in event ? event.touches[0] : (event as MouseEvent)
 
   return {
-    left: clamp((event.pageX - (rect.left + getParentWindow(node).scrollX)) / rect.width),
-    top: clamp((event.pageY - (rect.top + getParentWindow(node).scrollY)) / rect.height),
+    left: clamp((pointer.clientX - rect.left) / rect.width),
+    top: clamp((pointer.clientY - rect.top) / rect.height),
   }
-}
-
-export interface InteractiveProps {
-  onMove?: (interaction: Interaction) => void
-  onKey?: (event: KeyboardEvent) => void
 }
 
 export default defineComponent({
   name: 'Interactive',
 
-  inheritAttrs: false,
+  inheritAttrs: true,
 
   props: {
-    onMove: {
-      type: Function as unknown as () => (interaction: Interaction) => void,
-      default: undefined,
-    },
     onKey: {
       type: Function as unknown as () => (event: KeyboardEvent) => void,
       default: undefined,
     },
     // a11y props
     role: String,
-    'aria-label': String,
+    'ariaLabel': String,
+
     'aria-valuenow': [Number, String],
     'aria-valuemin': [Number, String],
     'aria-valuemax': [Number, String],
     'aria-valuetext': String,
   },
 
-  setup(props, { slots, attrs }) {
+
+  emits: ['move'],
+
+  setup(props, { slots, emit }) {
     const rootRef = ref<HTMLDivElement>()
 
     const interaction = reactive<Interaction>({
@@ -62,7 +53,7 @@ export default defineComponent({
       props.onKey?.(e)
     }
 
-    const start = (e: PointerEvent) => {
+    const start = (e: any) => {
       e.preventDefault()
       isStart = true
 
@@ -70,18 +61,17 @@ export default defineComponent({
       interaction.left = position.left
       interaction.top = position.top
 
-      props.onMove?.(position)
+      emit('move', position)
     }
 
-    const move = (e: PointerEvent) => {
-      e.preventDefault()
-
+    const move = (e: any) => {
       if (isStart) {
+        e.preventDefault()
         const position = getRelativePosition(rootRef.value!, e)
         interaction.left = position.left
         interaction.top = position.top
 
-        props.onMove?.(position)
+        emit('move', position)
       }
     }
 
@@ -90,15 +80,21 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      rootRef.value?.addEventListener('pointerdown', start)
       addEventListener('pointermove', move)
+      addEventListener('mousemove', move)
+      addEventListener('touchmove', move)
       addEventListener('pointerup', end)
+      addEventListener('mouseup', end)
+      addEventListener('touchend', end)
     })
 
     onUnmounted(() => {
-      rootRef.value?.removeEventListener('pointerdown', start)
       removeEventListener('pointermove', move)
+      removeEventListener('mousemove', move)
+      removeEventListener('touchmove', move)
       removeEventListener('pointerup', end)
+      removeEventListener('mouseup', end)
+      removeEventListener('touchend', end)
     })
 
     return () => (
@@ -107,8 +103,18 @@ export default defineComponent({
         class={'vue3-colorful__interactive'}
         tabindex={0}
         onKeydown={handleKeyDown}
-        {...attrs}
+        onMousedown={start}
+        onTouchstart={start}
+        onPointerdown={start}
+        role={props.role}
+        aria-label={props.ariaLabel}
+
+        aria-valuenow={props['aria-valuenow']}
+        aria-valuemin={props['aria-valuemin']}
+        aria-valuemax={props['aria-valuemax']}
+        aria-valuetext={props['aria-valuetext']}
       >
+
         {slots.default ? slots.default(interaction) : null}
       </div>
     )

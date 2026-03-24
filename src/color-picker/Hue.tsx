@@ -39,10 +39,12 @@ export default defineComponent({
     return () => (
       <div class={'vue3-colorful__hue'}>
         <Interactive
-          on-move={handleMove}
-          on-key={handleKey}
+          onMove={handleMove}
+          onKey={handleKey}
+
           role="slider"
-          aria-label="Hue"
+          ariaLabel="Hue"
+
           aria-valuenow={Math.round(props.hue)}
           aria-valuemin="0"
           aria-valuemax="360"
