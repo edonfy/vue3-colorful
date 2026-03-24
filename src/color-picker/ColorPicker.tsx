@@ -2,11 +2,6 @@ import { defineComponent, ref, watch, computed } from 'vue'
 import { HsvaColor, ColorModel } from '@/types'
 import { parseColor, formatColor } from '@/utils/converter'
 import BasePicker from './BasePicker'
-import Eyedropper from './Eyedropper'
-import Presets from './Presets'
-import Saturation from './Saturation'
-import Hue from './Hue'
-import Alpha from './Alpha'
 
 export default defineComponent({
   name: 'ColorPicker',
@@ -73,14 +68,6 @@ export default defineComponent({
         immediate: true,
       }
     )
-
-    const hueChange = (h: number) => {
-      hsva.value.h = h
-    }
-
-    const alphaChange = (a: number) => {
-      hsva.value.a = a
-    }
 
     const saturationChange = ({ s, v }: { s: number; v: number }) => {
       hsva.value.s = s

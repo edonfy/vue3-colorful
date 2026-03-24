@@ -1,4 +1,5 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
+
 import { parseColor, formatColor } from '../src/utils/converter'
 
 describe('ColorConverter', () => {

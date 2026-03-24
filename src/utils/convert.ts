@@ -126,11 +126,15 @@ export const hsvaToHslaString = (hsva: HsvaColor): string => {
 /**
  * Memoization cache
  */
-const cache: Record<string, any> = {}
+const cache: Record<string, RgbaColor | HslaColor> = {}
 
-const memoize = <T>(keyPrefix: string, hsva: HsvaColor, fn: (hsva: HsvaColor) => T): T => {
+const memoize = <T extends RgbaColor | HslaColor>(
+  keyPrefix: string,
+  hsva: HsvaColor,
+  fn: (hsva: HsvaColor) => T
+): T => {
   const key = `${keyPrefix}_${hsva.h}_${hsva.s}_${hsva.v}_${hsva.a}`
-  if (cache[key]) return cache[key]
+  if (cache[key]) return cache[key] as T
   const result = fn(hsva)
   cache[key] = result
   return result

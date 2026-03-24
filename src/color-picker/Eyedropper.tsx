@@ -16,7 +16,7 @@ export default defineComponent({
         const dropper = new window.EyeDropper()
         const result = await dropper.open()
         emit('select', result.sRGBHex)
-      } catch (e) {
+      } catch {
         // User canceled or error
       }
     }
