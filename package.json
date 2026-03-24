@@ -93,16 +93,17 @@
     "storybook": "^10.3.3",
     "typescript": "^5.8.0",
     "typescript-eslint": "^8.57.2",
-    "unocss": "^66.6.7",
+    "unocss": "^0.65.4",
     "vite": "^6.0.0",
     "vitest": "^3.0.0",
     "vue": "^3.5.0",
     "vue-tsc": "^2.2.0"
   },
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=20.0.0",
     "pnpm": ">=9.0.0"
   },
+
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
