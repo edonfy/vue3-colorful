@@ -18,17 +18,30 @@
   height: var(--vc-height);
   user-select: none;
   cursor: default;
-  /* Allow pointers to overflow slightly for visibility */
+  background: var(--vc-bg-color);
+  border-radius: var(--vc-border-radius);
+}
+
+.vue3-colorful__body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  position: relative;
   overflow: visible;
 }
 
 
+
 /* Row Layout Support */
-.vue3-colorful--horizontal {
+.vue3-colorful__body--horizontal {
   flex-direction: row;
-  width: auto;
-  gap: 0; /* Gaps will be handled by margins or borders */
+  height: 100%;
 }
+
+.vue3-colorful__body--horizontal {
+  padding-right: 12px;
+}
+
 
 
 
@@ -69,22 +82,17 @@
     linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
 }
 
-.vue3-colorful--horizontal .vue3-colorful__saturation {
+.vue3-colorful__body--horizontal .vue3-colorful__saturation {
   border-bottom: none;
   border-right: 12px solid #000;
-  border-radius: var(--vc-border-radius) 0 0 var(--vc-border-radius);
-  flex-basis: auto; /* Let it grow */
-  width: 0; /* Important for flex-grow */
+  border-radius: var(--vc-border-radius) 0 0 0;
   flex-grow: 1;
 }
 
-.vue3-colorful--horizontal {
-  padding-right: 12px;
-}
-
-.vue3-colorful--horizontal .vue3-colorful__hue,
-.vue3-colorful--horizontal .vue3-colorful__alpha {
+.vue3-colorful__body--horizontal .vue3-colorful__hue,
+.vue3-colorful__body--horizontal .vue3-colorful__alpha {
   margin-left: 12px;
+  width: var(--vc-slider-height);
   height: 100%;
   flex-shrink: 0;
 }
@@ -98,10 +106,12 @@
   flex-shrink: 0;
 }
 
-.vue3-colorful:not(.vue3-colorful--horizontal) .vue3-colorful__hue,
-.vue3-colorful:not(.vue3-colorful--horizontal) .vue3-colorful__alpha {
+.vue3-colorful__body:not(.vue3-colorful__body--horizontal) .vue3-colorful__hue,
+.vue3-colorful__body:not(.vue3-colorful__body--horizontal) .vue3-colorful__alpha {
   height: var(--vc-slider-height);
 }
+
+
 
 
 .vue3-colorful__alpha-gradient,
@@ -141,7 +151,7 @@
 .vue3-colorful__hue--vertical,
 .vue3-colorful__alpha--vertical {
   width: var(--vc-slider-height);
-  height: auto;
+  height: 100%;
   /* Ensure pointers aren't cut off by the container ends */
   margin-top: 6px;
   margin-bottom: 6px;
