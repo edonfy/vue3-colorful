@@ -1,7 +1,7 @@
 # vue3-colorful
 
 <p align="center">
-A tiny Vue 3 color picker component (~3KB gzipped)
+A tiny Vue 3 color picker component (~4KB gzipped)
 </p>
 
 <p align="center">
@@ -19,7 +19,8 @@ Inspired by <a href="https://omgovich.github.io/react-colorful/">react-colorful<
 - 🎨 **Multiple color formats** - Support for Hex, RGB, HSV, HSL, CMYK
 - ♿ **Accessibility (a11y)** - Full keyboard navigation and ARIA compliance
 - 📚 **Storybook** - Interactive documentation and component testing
-- 📦 **Tiny size** - Only ~3KB gzipped
+- 📦 **Tiny size** - Only ~4KB gzipped
+
 - 🔷 **TypeScript** - Full type support
 - ⚡ **Zero dependencies** - No external dependencies except Vue 3
 - 🎯 **Vue 3** - Built with Composition API and JSX
@@ -292,7 +293,7 @@ You can try vue3-colorful online in the [example directory](./example) or visit 
 | Feature | vue3-colorful | react-colorful |
 |---------|---------------|----------------|
 | Framework | Vue 3 | React |
-| Size | ~3KB | ~2KB |
+| Size | ~4KB | ~2KB |
 | Color Formats | Hex, RGB, HSV, HSL, CMYK | Hex, RGB, HSL, HSV |
 | TypeScript | ✅ | ✅ |
 
