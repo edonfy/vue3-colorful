@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1
+
+### Patch Changes
+
+- - 📝 Update README.md with detailed accessibility (a11y) support, Storybook integration, and modern tech stack information
+  - ✨ Final polish for the premium demo and project structure documentation
+
 ## 0.2.0
 
 ### Minor Changes

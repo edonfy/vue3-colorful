@@ -17,12 +17,16 @@ Inspired by <a href="https://omgovich.github.io/react-colorful/">react-colorful<
 ## Features
 
 - 🎨 **Multiple color formats** - Support for Hex, RGB, HSV, HSL, CMYK
+- ♿ **Accessibility (a11y)** - Full keyboard navigation and ARIA compliance
+- 📚 **Storybook** - Interactive documentation and component testing
 - 📦 **Tiny size** - Only ~3KB gzipped
 - 🔷 **TypeScript** - Full type support
 - ⚡ **Zero dependencies** - No external dependencies except Vue 3
 - 🎯 **Vue 3** - Built with Composition API and JSX
 - 🌈 **Alpha channel** - Optional transparency support
-- 📱 **Responsive** - Works on all screen sizes
+- 📱 **Responsive** - Modern "Premium" UI with glassmorphism
+- 🛠 **Modern Stack** - Powered by Vite 6, Vitest 3, and UnoCSS
+
 
 ## Installation
 
