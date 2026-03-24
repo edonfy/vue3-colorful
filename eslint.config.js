@@ -29,7 +29,7 @@ export default ts.config(
     },
   },
   {
-    ignores: ['dist/**', 'node_modules/**', 'stats.html', 'coverage/**'],
+    ignores: ['dist/**', 'node_modules/**', 'stats.html', 'coverage/**', 'storybook-static/**'],
   },
   {
     files: ['**/*.{js,ts,vue,tsx}'],

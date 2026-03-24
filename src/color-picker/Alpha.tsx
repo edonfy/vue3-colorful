@@ -2,7 +2,7 @@ import { PropType, CSSProperties, computed, defineComponent } from 'vue'
 import Pointer from './Pointer'
 import { HsvaColor } from '@/types'
 import Interactive, { Interaction } from './Interactive'
-import { hsvaToHslaString, hsvaToRgbaString } from '@/utils/convert'
+import { hsvaToRgbaString } from '@/utils/convert'
 import { clamp } from '@/utils/clamp'
 
 export default defineComponent({
