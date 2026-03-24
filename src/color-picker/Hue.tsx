@@ -10,7 +10,7 @@ export default defineComponent({
   props: {
     hue: {
       type: Number,
-      required: true
+      required: true,
     },
   },
 
@@ -49,7 +49,7 @@ export default defineComponent({
         >
           <Pointer left={props.hue / 360} color={color.value}></Pointer>
         </Interactive>
-      </div >
+      </div>
     )
-  }
+  },
 })

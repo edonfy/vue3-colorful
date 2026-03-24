@@ -2,8 +2,8 @@ import { defineComponent, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { clamp } from '@/utils/clamp'
 
 export interface Interaction {
-  left: number;
-  top: number;
+  left: number
+  top: number
 }
 
 // Finds the proper window object to fix iframe embedding issues
@@ -21,24 +21,23 @@ const getRelativePosition = (node: HTMLElement, event: PointerEvent) => {
 }
 
 export interface InteractiveProps {
-  onMove?: (interaction: Interaction) => void;
-  onKey?: (event: KeyboardEvent) => void;
+  onMove?: (interaction: Interaction) => void
+  onKey?: (event: KeyboardEvent) => void
 }
 
 export default defineComponent({
   name: 'Interactive',
-
 
   inheritAttrs: false,
 
   props: {
     onMove: {
       type: Function as unknown as () => (interaction: Interaction) => void,
-      default: undefined
+      default: undefined,
     },
     onKey: {
       type: Function as unknown as () => (event: KeyboardEvent) => void,
-      default: undefined
+      default: undefined,
     },
     // a11y props
     role: String,
@@ -54,7 +53,7 @@ export default defineComponent({
 
     const interaction = reactive<Interaction>({
       left: 0,
-      top: 0
+      top: 0,
     })
 
     let isStart = false
@@ -103,15 +102,15 @@ export default defineComponent({
     })
 
     return () => (
-      <div 
-        ref={rootRef} 
-        class={'vue3-colorful__interactive'} 
-        tabindex={0} 
+      <div
+        ref={rootRef}
+        class={'vue3-colorful__interactive'}
+        tabindex={0}
         onKeydown={handleKeyDown}
         {...attrs}
       >
         {slots.default ? slots.default(interaction) : null}
       </div>
     )
-  }
+  },
 })

@@ -3,9 +3,9 @@ import Saturation from './Saturation'
 import Hue from './Hue'
 import Alpha from './Alpha'
 import { HsvaColor, ColorModel } from '@/types'
-import { 
-  hsvaToHex, 
-  hsvaToRgbString, 
+import {
+  hsvaToHex,
+  hsvaToRgbString,
   hsvaToRgbaString,
   hsvaToHsvString,
   hsvaToHsvaString,
@@ -18,7 +18,7 @@ import {
   hsvaToCmyk,
   cmykToCmykString,
   cmykStringToCmyk,
-  cmykToHsva
+  cmykToHsva,
 } from '@/utils/convert'
 
 /**
@@ -26,9 +26,9 @@ import {
  */
 const parseColor = (color: string): HsvaColor => {
   if (!color) return { h: 0, s: 100, v: 100, a: 1 }
-  
+
   const trimmed = color.trim()
-  
+
   try {
     if (trimmed.startsWith('#')) {
       return hexToHsva(trimmed)
@@ -50,7 +50,7 @@ const parseColor = (color: string): HsvaColor => {
   } catch (error) {
     console.warn(`Failed to parse color: ${color}`, error)
   }
-  
+
   return { h: 0, s: 100, v: 100, a: 1 }
 }
 
@@ -78,16 +78,16 @@ export default defineComponent({
   props: {
     modelValue: {
       type: String,
-      default: ''
+      default: '',
     },
     colorModel: {
       type: String as () => ColorModel,
-      default: 'hex'
+      default: 'hex',
     },
     showAlpha: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   emits: ['update:modelValue'],
@@ -100,27 +100,35 @@ export default defineComponent({
     const outputValue = computed(() => hsvaToOutput(hsva.value, props.colorModel, props.showAlpha))
 
     // Watch for internal changes and emit
-    watch(outputValue, (newValue) => {
-      isInternalUpdate = true
-      emit('update:modelValue', newValue)
-    }, {
-      immediate: true
-    })
+    watch(
+      outputValue,
+      (newValue) => {
+        isInternalUpdate = true
+        emit('update:modelValue', newValue)
+      },
+      {
+        immediate: true,
+      }
+    )
 
     // Watch for external modelValue changes
-    watch(() => props.modelValue, (newValue) => {
-      if (isInternalUpdate) {
-        isInternalUpdate = false
-        return
+    watch(
+      () => props.modelValue,
+      (newValue) => {
+        if (isInternalUpdate) {
+          isInternalUpdate = false
+          return
+        }
+
+        if (newValue) {
+          const parsed = parseColor(newValue)
+          hsva.value = parsed
+        }
+      },
+      {
+        immediate: true,
       }
-      
-      if (newValue) {
-        const parsed = parseColor(newValue)
-        hsva.value = parsed
-      }
-    }, {
-      immediate: true
-    })
+    )
 
     const hueChange = (h: number) => {
       hsva.value.h = h
@@ -130,7 +138,7 @@ export default defineComponent({
       hsva.value.a = a
     }
 
-    const saturationChange = ({ s, v }: { s: number, v: number }) => {
+    const saturationChange = ({ s, v }: { s: number; v: number }) => {
       hsva.value.s = s
       hsva.value.v = v
     }
@@ -144,5 +152,5 @@ export default defineComponent({
         </div>
       )
     }
-  }
+  },
 })

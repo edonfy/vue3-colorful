@@ -16,11 +16,11 @@ export default defineComponent({
 
     const style = computed<CSSProperties>(() => ({
       top: `${top.value * 100}%`,
-      left: `${props.left * 100}%`
+      left: `${props.left * 100}%`,
     }))
 
     return () => (
-      <div class="vue3-colorful__pointer" style={style.value} >
+      <div class="vue3-colorful__pointer" style={style.value}>
         <div class="vue3-colorful__pointer-fill" style={{ backgroundColor: props.color }} />
       </div>
     )

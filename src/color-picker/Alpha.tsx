@@ -5,15 +5,14 @@ import Interactive, { Interaction } from './Interactive'
 import { hsvaToHslaString } from '@/utils/convert'
 import { clamp } from '@/utils/clamp'
 
-
 export default defineComponent({
   name: 'Alpha',
 
   props: {
     hsva: {
       type: Object as PropType<HsvaColor>,
-      required: true
-    }
+      required: true,
+    },
   },
 
   emits: ['change'],
@@ -24,7 +23,6 @@ export default defineComponent({
     }
 
     const gradientColors = computed(() => {
-
       const { h, s, v } = props.hsva
       const colorFrom = hsvaToHslaString({ h, s, v, a: 0 })
       const colorTo = hsvaToHslaString({ h, s, v, a: 1 })
@@ -62,10 +60,13 @@ export default defineComponent({
           aria-valuemax="100"
           aria-valuetext={`${Math.round(props.hsva.a * 100)}%`}
         >
-          <Pointer class={'vue3-colorful__alpha-pointer'} left={props.hsva.a} color={pointerColor.value}></Pointer>
+          <Pointer
+            class={'vue3-colorful__alpha-pointer'}
+            left={props.hsva.a}
+            color={pointerColor.value}
+          ></Pointer>
         </Interactive>
       </div>
     )
-
-  }
+  },
 })

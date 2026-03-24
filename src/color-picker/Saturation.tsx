@@ -5,15 +5,14 @@ import { HsvaColor } from '@/types'
 import { hsvaToHslString } from '@/utils/convert'
 import { clamp } from '@/utils/clamp'
 
-
 export default defineComponent({
   name: 'Saturation',
 
   props: {
     hsva: {
       type: Object as PropType<HsvaColor>,
-      required: true
-    }
+      required: true,
+    },
   },
 
   emits: ['change'],
@@ -28,11 +27,10 @@ export default defineComponent({
     }
 
     const containerStyle = computed<CSSProperties>(() => ({
-      backgroundColor: hsvaToHslString({ h: props.hsva.h, s: 100, v: 100, a: 1 })
+      backgroundColor: hsvaToHslString({ h: props.hsva.h, s: 100, v: 100, a: 1 }),
     }))
 
     const handleKey = (e: KeyboardEvent) => {
-
       // Small step 1%, large step 10%
       const step = e.shiftKey ? 10 : 1
       const s = props.hsva.s
@@ -55,7 +53,7 @@ export default defineComponent({
     }
 
     return () => (
-      <div class='vue3-colorful__saturation' style={containerStyle.value}>
+      <div class="vue3-colorful__saturation" style={containerStyle.value}>
         <Interactive
           on-move={handleMove}
           on-key={handleKey}
@@ -71,6 +69,5 @@ export default defineComponent({
         </Interactive>
       </div>
     )
-
-  }
+  },
 })

@@ -32,7 +32,8 @@
   border-color: transparent;
   border-bottom: 12px solid #000;
   border-radius: 8px 8px 0 0;
-  background-image: linear-gradient(to top, #000, rgba(0, 0, 0, 0)),
+  background-image:
+    linear-gradient(to top, #000, rgba(0, 0, 0, 0)),
     linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
 }
 
@@ -44,12 +45,12 @@
 
 .vue3-colorful__alpha-gradient,
 .vue3-colorful__saturation {
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .05);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
 .vue3-colorful__alpha-gradient,
 .vue3-colorful__pointer-fill {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   top: 0;
