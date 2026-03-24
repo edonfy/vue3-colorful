@@ -17,16 +17,21 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout Repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       # Setup Node.js
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: 22.x
-          # cache: pnpm
+          cache: pnpm
 
       # Install dependencies with frozen lockfile to ensure exact versions
       - name: Install Dependencies
