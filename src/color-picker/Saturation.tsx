@@ -49,7 +49,6 @@ export default defineComponent({
         case 'ArrowDown':
           emit('change', { s, v: clamp(v - step, 0, 100) })
           break
-
       }
     }
 
@@ -58,10 +57,8 @@ export default defineComponent({
         <Interactive
           onMove={handleMove}
           onKey={handleKey}
-
           role="slider"
           ariaLabel="Saturation and Value"
-
           aria-valuetext={`Saturation ${Math.round(props.hsva.s)}%, Value ${Math.round(props.hsva.v)}%`}
         >
           <Pointer

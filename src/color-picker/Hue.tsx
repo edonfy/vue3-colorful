@@ -41,10 +41,8 @@ export default defineComponent({
         <Interactive
           onMove={handleMove}
           onKey={handleKey}
-
           role="slider"
           ariaLabel="Hue"
-
           aria-valuenow={Math.round(props.hue)}
           aria-valuemin="0"
           aria-valuemax="360"

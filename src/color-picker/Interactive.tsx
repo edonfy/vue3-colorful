@@ -28,14 +28,13 @@ export default defineComponent({
     },
     // a11y props
     role: String,
-    'ariaLabel': String,
+    ariaLabel: String,
 
     'aria-valuenow': [Number, String],
     'aria-valuemin': [Number, String],
     'aria-valuemax': [Number, String],
     'aria-valuetext': String,
   },
-
 
   emits: ['move'],
 
@@ -108,13 +107,11 @@ export default defineComponent({
         onPointerdown={start}
         role={props.role}
         aria-label={props.ariaLabel}
-
         aria-valuenow={props['aria-valuenow']}
         aria-valuemin={props['aria-valuemin']}
         aria-valuemax={props['aria-valuemax']}
         aria-valuetext={props['aria-valuetext']}
       >
-
         {slots.default ? slots.default(interaction) : null}
       </div>
     )
