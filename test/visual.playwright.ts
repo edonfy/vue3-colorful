@@ -1,7 +1,7 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, Page } from '@playwright/test'
 
 test.describe('Visual Regression', () => {
-  test('HexColorPicker should match snapshot', async ({ page }: { page: any }) => {
+  test('HexColorPicker should match snapshot', async ({ page }: { page: Page }) => {
     // Navigating directly to the iframe for a clean screenshot
     await page.goto(
       'http://localhost:6006/iframe.html?id=components-specializedpickers--hex&viewMode=story'
@@ -11,7 +11,7 @@ test.describe('Visual Regression', () => {
     await expect(page.locator('.vue3-colorful')).toHaveScreenshot('hex-picker.png')
   })
 
-  test('Popover Mode should match snapshot when opened', async ({ page }: { page: any }) => {
+  test('Popover Mode should match snapshot when opened', async ({ page }: { page: Page }) => {
     await page.goto(
       'http://localhost:6006/iframe.html?id=ecosystem-integrations--popover-mode&viewMode=story'
     )
@@ -23,7 +23,7 @@ test.describe('Visual Regression', () => {
     await expect(popover).toHaveScreenshot('popover-opened.png')
   })
 
-  test('CMYK Picker should match snapshot', async ({ page }: { page: any }) => {
+  test('CMYK Picker should match snapshot', async ({ page }: { page: Page }) => {
     await page.goto(
       'http://localhost:6006/iframe.html?id=components-specializedpickers--cmyk&viewMode=story'
     )

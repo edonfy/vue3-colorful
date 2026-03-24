@@ -2,29 +2,16 @@ import type { Preset } from 'unocss'
 
 /**
  * UnoCSS preset for vue3-colorful
- *
- * Allow users to theme the color picker via UnoCSS theme.
- *
- * Usage in uno.config.ts:
- * import { presetVue3Colorful } from 'vue3-colorful/plugins/unocss'
- *
- * presets: [
- *   presetVue3Colorful()
- * ],
- * theme: {
- *   vue3Colorful: {
- *     width: '300px',
- *     accentColor: '#3b82f6',
- *   }
- * }
  */
 export function presetVue3Colorful(): Preset {
   return {
     name: 'unocss-preset-vue3-colorful',
     preflights: [
       {
-        getCSS: ({ theme }) => {
-          const config = (theme as any).vue3Colorful
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getCSS: ({ theme }: { theme: any }) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const config = (theme as any).vue3Colorful as Record<string, string> | undefined
           if (config) {
             const vars: string[] = []
             const mappings: Record<string, string> = {

@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import { configDefaults } from 'vitest/config'
 import Vue from '@vitejs/plugin-vue'
 import VueJsx from '@vitejs/plugin-vue-jsx'
 import UnoCSS from 'unocss/vite'
@@ -23,6 +24,12 @@ export default defineConfig({
       brotliSize: true,
     }),
   ],
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    include: ['**/*.test.ts'],
+    exclude: [...configDefaults.exclude],
+  },
   build: {
     lib: {
       entry: {
