@@ -110,6 +110,45 @@ describe('Specialized Pickers', () => {
     expect(updatedValue).toBe('#ff00ff')
   })
 
+  it('All pickers should handle manual input', async () => {
+    let updatedValue = ''
+    const wrapper = mount(HexColorPicker, {
+      props: {
+        modelValue: '#000000',
+        showInput: true,
+        'onUpdate:modelValue': (val: string) => (updatedValue = val),
+      },
+    })
+
+    const input = wrapper.find('.vue3-colorful__input')
+    expect(input.exists()).toBe(true)
+
+    await input.setValue('#00ff00')
+    await nextTick()
+    expect(updatedValue).toBe('#00ff00')
+  })
+
+  it('All pickers should handle vertical orientation', async () => {
+    let updatedValue = ''
+    const wrapper = mount(HexColorPicker, {
+      props: {
+        modelValue: '#ff0000', // red, h=0
+        vertical: true,
+        'onUpdate:modelValue': (val: string) => (updatedValue = val),
+      },
+    })
+
+    const base = wrapper.findComponent({ name: 'BasePicker' })
+    const hue = base.getComponent({ name: 'Hue' })
+    const interactive = hue.getComponent({ name: 'Interactive' })
+
+    // Simulate vertical movement on hue slider
+    // Mid point (0.5) should be h=180 (cyan)
+    await interactive.vm.$emit('move', { left: 0, top: 0.5 })
+    await nextTick()
+    expect(updatedValue).toBe('#00ffff')
+  })
+
   it('All pickers should handle preset selection', async () => {
     let updatedValue = ''
     const wrapper = mount(HexColorPicker, {

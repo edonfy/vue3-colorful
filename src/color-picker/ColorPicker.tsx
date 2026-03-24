@@ -27,6 +27,22 @@ export default defineComponent({
       type: Array as () => string[],
       default: () => [],
     },
+    dark: {
+      type: Boolean,
+      default: false,
+    },
+    showInput: {
+      type: Boolean,
+      default: false,
+    },
+    colorLabel: {
+      type: String,
+      default: '',
+    },
+    vertical: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   emits: ['update:modelValue'],
@@ -85,6 +101,10 @@ export default defineComponent({
         showEyedropper={props.showEyedropper}
         presets={props.presets}
         activeColor={outputValue.value}
+        dark={props.dark}
+        showInput={props.showInput}
+        colorLabel={props.colorLabel}
+        vertical={props.vertical}
         onHueChange={(h) => (hsva.value.h = h)}
         onAlphaChange={(a) => (hsva.value.a = a)}
         onSaturationChange={saturationChange}

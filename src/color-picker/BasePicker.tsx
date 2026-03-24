@@ -4,6 +4,7 @@ import Hue from './Hue'
 import Alpha from './Alpha'
 import Eyedropper from './Eyedropper'
 import Presets from './Presets'
+import ColorInput from './ColorInput'
 import { HsvaColor } from '@/types'
 
 export default defineComponent({
@@ -30,20 +31,52 @@ export default defineComponent({
       type: String, // String representation for the active preset highlight
       default: '',
     },
+    dark: {
+      type: Boolean,
+      default: false,
+    },
+    showInput: {
+      type: Boolean,
+      default: false,
+    },
+    colorLabel: {
+      type: String,
+      default: '',
+    },
+    vertical: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   emits: ['hueChange', 'alphaChange', 'saturationChange', 'colorSelect'],
 
   setup(props, { emit }) {
     return () => (
-      <div class={'vue3-colorful'}>
+      <div
+        class={[
+          'vue3-colorful',
+          {
+            'vue3-colorful--dark': props.dark,
+            'vue3-colorful--horizontal': props.vertical,
+          },
+        ]}
+      >
         <Saturation
           hsva={props.hsva}
           onChange={(val) => emit('saturationChange', val)}
         ></Saturation>
-        <Hue hue={props.hsva.h} onChange={(val) => emit('hueChange', val)}></Hue>
+        <Hue
+          hue={props.hsva.h}
+          vertical={props.vertical}
+          onChange={(val) => emit('hueChange', val)}
+        />
         {props.showAlpha && (
-          <Alpha hsva={props.hsva} onChange={(val) => emit('alphaChange', val)}></Alpha>
+          <Alpha
+            hsva={props.hsva}
+            vertical={props.vertical}
+            onChange={(val) => emit('alphaChange', val)}
+          />
         )}
         {props.showEyedropper && (
           <Eyedropper onSelect={(color) => emit('colorSelect', color)}></Eyedropper>
@@ -54,6 +87,13 @@ export default defineComponent({
             activeColor={props.activeColor}
             onSelect={(color) => emit('colorSelect', color)}
           ></Presets>
+        )}
+        {props.showInput && (
+          <ColorInput
+            modelValue={props.activeColor}
+            label={props.colorLabel}
+            onUpdate:modelValue={(val) => emit('colorSelect', val)}
+          />
         )}
       </div>
     )
