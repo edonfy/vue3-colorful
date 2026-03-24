@@ -1,4 +1,4 @@
-import { defineComponent, ref, PropType, onMounted, onUnmounted } from 'vue'
+import { defineComponent, ref, PropType, onMounted, onUnmounted, Teleport } from 'vue'
 import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/vue'
 import { commonPickerProps } from './PickerFactory'
 import ColorPicker from './ColorPicker'
@@ -21,6 +21,7 @@ export default defineComponent({
 
     const { floatingStyles } = useFloating(reference, floating, {
       placement: 'bottom-start',
+      strategy: 'fixed',
       middleware: [offset(8), flip(), shift()],
       whileElementsMounted: autoUpdate,
     })
@@ -65,13 +66,22 @@ export default defineComponent({
         </div>
 
         {isOpen.value && (
-          <div ref={floating} style={floatingStyles.value} class="vue3-colorful__popover-content">
-            <ColorPicker
-              {...props}
-              onUpdate:modelValue={(val) => emit('update:modelValue', val)}
-              v-slots={slots}
-            />
-          </div>
+          <Teleport to="body">
+            <div
+              ref={floating}
+              style={{
+                ...floatingStyles.value,
+                zIndex: 9999,
+              }}
+              class="vue3-colorful__popover-content"
+            >
+              <ColorPicker
+                {...props}
+                onUpdate:modelValue={(val) => emit('update:modelValue', val)}
+                v-slots={slots}
+              />
+            </div>
+          </Teleport>
         )}
       </div>
     )
