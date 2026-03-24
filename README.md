@@ -1,7 +1,7 @@
 # vue3-colorful
 
 <p align="center">
-A tiny Vue 3 color picker component (~4KB gzipped)
+A tiny Vue 3 color picker component (~14.4KB gzipped)
 </p>
 
 <p align="center">
@@ -22,7 +22,7 @@ Inspired by <a href="https://omgovich.github.io/react-colorful/">react-colorful<
 - 🎨 **Multiple color formats** - Support for Hex, RGB, HSV, HSL, CMYK
 - 🎈 **Popover Mode** - Built-in floating picker support with `@floating-ui`
 - 🧩 **Ecosystem Plugins** - Tailwind CSS Plugin, UnoCSS Preset, and Nuxt 3 Module
-- 📦 **Tiny size** - Only ~5.9KB gzipped (Core JS)
+- 📦 **Tiny size** - ~14.4KB gzipped (Full package, tree-shakable)
 - 🌈 **Alpha channel** - Optional transparency support
 - 🌓 **Dark Mode** - Built-in premium dark theme support
 - ⌨️ **Manual Input** - Optional text input for precise color entry
