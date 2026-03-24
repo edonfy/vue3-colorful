@@ -53,7 +53,6 @@ export default defineComponent({
     }
 
     const start = (e: MouseEvent | TouchEvent) => {
-
       e.preventDefault()
       isStart = true
 
@@ -65,7 +64,6 @@ export default defineComponent({
     }
 
     const move = (e: MouseEvent | TouchEvent) => {
-
       if (isStart) {
         e.preventDefault()
         const position = getRelativePosition(rootRef.value!, e)
