@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.2
+
+### Added
+
+- ✨ Structural refactor of `BasePicker` to support stable vertical layouts with presets and input
+- 🎨 Refined vertical orientation with 12px gaps and polished 6px padding for alignment
+- 🌓 Improved saturation area border-radius for vertical layout consistency
+- ⌨️ Fully documented manual input, dark mode, and theming in README
+
+### Fixed
+
+- 🐛 Corrected vertical slider dimensions (no longer squashed in flex row)
+- 🐛 Fixed pointer clipping in vertical orientation by adding container safety zones
+- 🐛 Resolved presets and manual input displacement when vertical mode is active
+
 ## 0.2.1
 
 ### Patch Changes
