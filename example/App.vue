@@ -6,9 +6,11 @@ import {
   HslColorPicker,
   HsvColorPicker,
   CmykColorPicker,
+  ColorPickerPopover,
 } from '../src'
 
 const hexColor = ref<string>('#3b82f6')
+const popoverColor = ref<string>('#8b5cf6')
 const rgbColor = ref<string>('rgba(16, 185, 129, 0.8)')
 const hsvColor = ref<string>('hsv(38, 93, 96)')
 const hslColor = ref<string>('hsl(346, 84%, 61%)')
@@ -199,6 +201,56 @@ const toggleDark = () => {
               </template>
             </hex-color-picker>
           </div>
+        </div>
+      </section>
+
+      <!-- NEW v0.4.0 Features: Popover & Ecosystem -->
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Popover Demo -->
+        <div
+          class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-3xl p-8 shadow-xl border border-white/20 flex flex-col items-center justify-center text-center"
+        >
+          <h2 class="text-2xl font-bold mb-4">Popover Mode (New!)</h2>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mb-8 max-w-sm">
+            Save space with our new built-in floating picker. Intelligent positioning via
+            @floating-ui.
+          </p>
+          <div
+            class="p-6 bg-gray-100 dark:bg-gray-900/40 rounded-2xl flex flex-col items-center gap-4"
+          >
+            <ColorPickerPopover v-model="popoverColor" :dark="isDark" show-input />
+            <div class="font-mono text-sm opacity-60">{{ popoverColor }}</div>
+          </div>
+        </div>
+
+        <!-- Ecosystem Checklist -->
+        <div class="bg-gray-900 text-white rounded-3xl p-8 shadow-2xl flex flex-col justify-center">
+          <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+            <span class="text-green-400">✓</span> Ecosystem Ready
+          </h2>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-1.5 h-1.5 bg-blue-400 rounded-full shrink-0"></span>
+              <div>
+                <p class="font-semibold">Tailwind CSS Plugin</p>
+                <p class="text-xs text-gray-400">Sync with your theme.js variables.</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-1.5 h-1.5 bg-red-400 rounded-full shrink-0"></span>
+              <div>
+                <p class="font-semibold">UnoCSS Preset</p>
+                <p class="text-xs text-gray-400">Native integration for UnoCSS lovers.</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-1.5 h-1.5 bg-green-400 rounded-full shrink-0"></span>
+              <div>
+                <p class="font-semibold">Nuxt 3 Module</p>
+                <p class="text-xs text-gray-400">Auto-imports & SSR support out of the box.</p>
+              </div>
+            </li>
+          </ul>
         </div>
       </section>
 

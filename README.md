@@ -20,13 +20,13 @@ Inspired by <a href="https://omgovich.github.io/react-colorful/">react-colorful<
 - 🌳 **Tree-shakable** - Specialized components for each color model to minimize bundle size
 - ♿ **Accessibility (a11y)** - Full keyboard navigation and ARIA compliance
 - 🎨 **Multiple color formats** - Support for Hex, RGB, HSV, HSL, CMYK
-- 📚 **Storybook** - Interactive documentation and component testing
-- 📦 **Tiny size** - Only ~5.9KB gzipped (JS)
+- 🎈 **Popover Mode** - Built-in floating picker support with `@floating-ui`
+- 🧩 **Ecosystem Plugins** - Tailwind CSS Plugin, UnoCSS Preset, and Nuxt 3 Module
+- 📦 **Tiny size** - Only ~5.9KB gzipped (Core JS)
 - 🌈 **Alpha channel** - Optional transparency support
-- 📱 **Responsive** - Modern "Premium" UI with glassmorphism
 - 🌓 **Dark Mode** - Built-in premium dark theme support
 - ⌨️ **Manual Input** - Optional text input for precise color entry
-- 🛠 **Modern Stack** - Powered by Vite 6, Vitest 3, and UnoCSS
+- ✅ **Visual Regression** - Automated QA for UI stability (Playwright)
 
 ## Installation
 
@@ -57,6 +57,21 @@ const color = ref('#ff6600')
 <template>
   <HexColorPicker v-model="color" />
 </template>
+```
+
+### Popover Mode (v0.4.0+)
+
+```vue
+<template>
+  <ColorPickerPopover v-model="color" />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { ColorPickerPopover } from 'vue3-colorful'
+
+const color = ref('#3b82f6')
+</script>
 ```
 
 Available specialized components:
