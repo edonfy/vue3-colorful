@@ -25,11 +25,17 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: resolve(__dirname, './src/index.ts'),
+      entry: {
+        index: resolve(__dirname, './src/index.ts'),
+        tailwind: resolve(__dirname, './src/plugins/tailwind.ts'),
+        unocss: resolve(__dirname, './src/plugins/unocss.ts'),
+        nuxt: resolve(__dirname, './src/plugins/nuxt.ts'),
+      },
       name: 'vue3-colorful',
+      formats: ['es', 'cjs'],
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', 'tailwindcss/plugin', 'unocss', '@nuxt/kit'],
       output: {
         globals: {
           vue: 'Vue',

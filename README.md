@@ -242,6 +242,60 @@ The entire library is built with CSS Variables (prefixed with `--vc-`) for easy 
 | Custom Slots  | ✅                       | ❌                 |
 | Color Formats | Hex, RGB, HSV, HSL, CMYK | Hex, RGB, HSL, HSV |
 
+## Ecosystem Integrations
+
+`vue3-colorful` provides first-class support for the most popular Vue-based ecosystems.
+
+### Tailwind CSS
+
+Use our official plugin to theme the picker directly from your `tailwind.config.js`.
+
+```js
+// tailwind.config.js
+import { tailwindPlugin } from 'vue3-colorful/tailwind'
+
+export default {
+  theme: {
+    vue3Colorful: {
+      width: '300px',
+      accentColor: '#3b82f6',
+      borderRadius: '12px',
+    },
+  },
+  plugins: [tailwindPlugin],
+}
+```
+
+### UnoCSS
+
+If you use UnoCSS, you can use our dedicated preset.
+
+```ts
+// uno.config.ts
+import { unocssPreset } from 'vue3-colorful/unocss'
+
+export default defineConfig({
+  presets: [unocssPreset()],
+  theme: {
+    vue3Colorful: {
+      width: '320px',
+      accentColor: '#ef4444',
+    },
+  },
+})
+```
+
+### Nuxt 3
+
+Enjoy seamless auto-imports and built-in CSS injection with our Nuxt module.
+
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['vue3-colorful/nuxt'],
+})
+```
+
 ## License
 
 MIT

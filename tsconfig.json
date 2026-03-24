@@ -10,7 +10,11 @@
     "jsx": "preserve",
     "jsxImportSource": "vue",
     "outDir": "dist",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "paths": {
