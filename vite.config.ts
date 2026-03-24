@@ -21,7 +21,7 @@ export default defineConfig({
       filename: 'stats.html',
       gzipSize: true,
       brotliSize: true,
-    })
+    }),
   ],
   build: {
     lib: {
@@ -32,19 +32,19 @@ export default defineConfig({
       external: ['vue'],
       output: {
         globals: {
-          vue: 'Vue'
+          vue: 'Vue',
         },
         exports: 'named',
       },
-    }
+    },
   },
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
       '~': resolve(__dirname, './src'),
-    }
+    },
   },
   server: {
-    host: '0.0.0.0'
-  }
+    host: '0.0.0.0',
+  },
 })

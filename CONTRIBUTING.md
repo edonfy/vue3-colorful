@@ -5,12 +5,14 @@ Thank you for your interest in contributing to vue3-colorful! This guide will he
 ## Development Setup
 
 1. **Fork and clone the repository**
+
    ```bash
    git clone https://github.com/your-username/vue3-colorful.git
    cd vue3-colorful
    ```
 
 2. **Install dependencies**
+
    ```bash
    pnpm install
    ```
@@ -23,6 +25,7 @@ Thank you for your interest in contributing to vue3-colorful! This guide will he
 ## Development Workflow
 
 1. **Create a new branch**
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -33,6 +36,7 @@ Thank you for your interest in contributing to vue3-colorful! This guide will he
    - Update documentation if needed
 
 3. **Run quality checks**
+
    ```bash
    # Type checking
    pnpm type-check
@@ -48,6 +52,7 @@ Thank you for your interest in contributing to vue3-colorful! This guide will he
    ```
 
 4. **Commit your changes**
+
    ```bash
    git add .
    git commit -m "feat: add your feature"

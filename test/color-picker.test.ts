@@ -175,7 +175,6 @@ describe('ColorPicker', () => {
       })
       expect(wrapper.emitted('update:modelValue')).toBeTruthy()
     })
-
   })
 
   describe('events', () => {
