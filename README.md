@@ -16,19 +16,22 @@ Inspired by <a href="https://omgovich.github.io/react-colorful/">react-colorful<
 
 ## Features
 
-- 🎨 **Multiple color formats** - Support for Hex, RGB, HSV, HSL, CMYK
+- [x] **80%+ Test Coverage** - Verified with Vitest and v8 coverage
 - 🌳 **Tree-shakable** - Specialized components for each color model to minimize bundle size
 - ♿ **Accessibility (a11y)** - Full keyboard navigation and ARIA compliance
+- 🎨 **Multiple color formats** - Support for Hex, RGB, HSV, HSL, CMYK
 - 📚 **Storybook** - Interactive documentation and component testing
-- 📦 **Tiny size** - Only ~4KB gzipped
+- 📦 **Tiny size** - Only ~4.6KB gzipped
 - 🌈 **Alpha channel** - Optional transparency support
 - 📱 **Responsive** - Modern "Premium" UI with glassmorphism
+- 🌓 **Dark Mode** - Built-in premium dark theme support
+- ⌨️ **Manual Input** - Optional text input for precise color entry
 - 🛠 **Modern Stack** - Powered by Vite 6, Vitest 3, and UnoCSS
 
 ## Installation
 
 > [!IMPORTANT]
-> This library requires **Node.js 20.x** or higher.
+> This library requires **Node.js 20.x** or higher and **Vue 3.2+**.
 
 ```bash
 # Using pnpm (recommended)
@@ -36,9 +39,6 @@ pnpm add vue3-colorful
 
 # Using npm
 npm install vue3-colorful
-
-# Using yarn
-yarn add vue3-colorful
 ```
 
 ## Specialized Pickers (Tree-shakable)
@@ -121,6 +121,61 @@ const presets = ['#ff0000', '#00ff00', '#0000ff']
 </template>
 ```
 
+### Dark Mode
+
+Pass the `dark` prop to enable the built-in dark theme.
+
+```vue
+<template>
+  <HexColorPicker v-model="color" dark />
+</template>
+```
+
+### Manual Input
+
+Enable a manual text input field for precise color entry.
+
+```vue
+<template>
+  <HexColorPicker v-model="color" show-input color-label="Hex" />
+</template>
+```
+
+### Vertical Sliders (Layout Flexibility)
+
+Align the hue and alpha sliders vertically by passing `vertical`.
+
+```vue
+<template>
+  <HexColorPicker v-model="color" vertical />
+</template>
+```
+
+## Theming (CSS Variables)
+
+The entire library is built with CSS Variables (prefixed with `--vc-`) for easy customization.
+
+```css
+/* Customizing the picker appearance */
+.your-custom-picker {
+  --vc-width: 300px;
+  --vc-border-radius: 20px;
+  --vc-accent-color: #ef4444;
+  --vc-pointer-size: 32px;
+}
+```
+
+| Variable             | Default                      | Description                    |
+| -------------------- | ---------------------------- | ------------------------------ |
+| `--vc-width`         | `200px`                      | Width of the picker            |
+| `--vc-height`        | `200px`                      | Total height (excluding input) |
+| `--vc-border-radius` | `8px`                        | Corner radius of elements      |
+| `--vc-pointer-size`  | `28px`                       | Size of the picker handle      |
+| `--vc-accent-color`  | `#3b82f6`                    | Active/Focus color             |
+| `--vc-slider-height` | `24px`                       | Height (or width) of sliders   |
+| `--vc-bg-color`      | `#fff` / `#222`              | Background of presets/input    |
+| `--vc-shadow`        | `0 4px 12px rgba(0,0,0,0.1)` | Main picker shadow             |
+
 ## API
 
 ### Props
@@ -132,6 +187,10 @@ const presets = ['#ff0000', '#00ff00', '#0000ff']
 | `showAlpha`      | `boolean`    | `false` | Show alpha channel slider                  |
 | `showEyedropper` | `boolean`    | `false` | Enable the native EyeDropper tool          |
 | `presets`        | `string[]`   | `[]`    | Array of color strings for quick selection |
+| `dark`           | `boolean`    | `false` | Enable built-in dark theme                 |
+| `showInput`      | `boolean`    | `false` | Show manual text input field               |
+| `colorLabel`     | `string`     | `''`    | Label text for the manual input            |
+| `vertical`       | `boolean`    | `false` | Orient sliders vertically (row layout)     |
 
 ### Supported Color Models
 
@@ -146,10 +205,12 @@ const presets = ['#ff0000', '#00ff00', '#0000ff']
 | Feature       | vue3-colorful            | react-colorful     |
 | ------------- | ------------------------ | ------------------ |
 | Framework     | Vue 3                    | React              |
-| Size          | ~4KB                     | ~2KB               |
+| Size          | ~4.6KB                   | ~2KB               |
 | Tree-shakable | ✅                       | ✅                 |
 | Eyedropper    | ✅                       | ❌                 |
 | Presets       | ✅                       | ❌                 |
+| Dark Mode     | ✅                       | ❌                 |
+| Custom Layout | ✅                       | ❌                 |
 | Color Formats | Hex, RGB, HSV, HSL, CMYK | Hex, RGB, HSL, HSV |
 
 ## License
