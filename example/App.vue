@@ -197,12 +197,10 @@ body {
 }
 
 /* Custom class for the main picker to showcase the layout flex */
-.main-picker {
-  height: auto !important;
-  width: auto !important;
-  min-height: 250px;
-  box-shadow: none !important;
-  border: none !important;
+.vue3-colorful {
+  width: 100% !important;
+  height: 250px !important;
+  border-radius: 12px;
 }
 
 /* Ensure saturation area has space when in horizontal */
