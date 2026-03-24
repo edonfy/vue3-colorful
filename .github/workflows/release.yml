@@ -6,35 +6,47 @@ on:
       - main
       - master
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
     steps:
+      # Checkout the repository
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # Setup Node.js
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
           cache: pnpm
 
+      # Setup pnpm
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10.32.1
 
+      # Confirm pnpm is installed
+      - name: Verify pnpm installation
+        run: pnpm --version
+
+      # Install dependencies with frozen lockfile to ensure exact versions
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
+      # Build the project
       - name: Build
         run: pnpm build
 
+      # Create release pull request or publish to npm
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
