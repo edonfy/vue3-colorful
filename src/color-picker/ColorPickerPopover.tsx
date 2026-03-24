@@ -1,4 +1,14 @@
-import { defineComponent, ref, PropType, onMounted, onUnmounted, Teleport } from 'vue'
+import {
+  defineComponent,
+  ref,
+  PropType,
+  onMounted,
+  onUnmounted,
+  Teleport,
+  computed,
+  watch,
+  CSSProperties,
+} from 'vue'
 import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/vue'
 import { commonPickerProps } from './PickerFactory'
 import ColorPicker from './ColorPicker'
@@ -19,7 +29,7 @@ export default defineComponent({
     const reference = ref<HTMLElement | null>(null)
     const floating = ref<HTMLElement | null>(null)
 
-    const { floatingStyles, isPositioned } = useFloating(reference, floating, {
+    const { x, y, floatingStyles, isPositioned } = useFloating(reference, floating, {
       placement: 'bottom-start',
       strategy: 'fixed',
       middleware: [offset(8), flip(), shift()],
@@ -27,7 +37,61 @@ export default defineComponent({
     })
 
     const toggle = () => (isOpen.value = !isOpen.value)
-    const close = () => (isOpen.value = false)
+    const close = () => {
+      isOpen.value = false
+      isVisible.value = false
+    }
+
+    // Check if coordinates have settled away from (0,0)
+    const isPositionedCorrectly = computed(() => {
+      return (
+        isPositioned.value &&
+        x.value !== null &&
+        y.value !== null &&
+        (x.value !== 0 || y.value !== 0)
+      )
+    })
+
+    // Delayed visibility guard (2 frames)
+    const isVisible = ref(false)
+    watch([isOpen, isPositionedCorrectly], ([open, positioned]) => {
+      if (open && positioned) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            if (isOpen.value) {
+              isVisible.value = true
+            }
+          })
+        })
+      } else if (!open) {
+        isVisible.value = false
+      }
+    })
+
+    // Secure styles to prevent flashing at (0,0)
+    const safeStyles = computed<CSSProperties>(() => {
+      if (!isPositionedCorrectly.value) {
+        return {
+          ...floatingStyles.value,
+          position: 'fixed' as const,
+          top: '-10000px',
+          left: '-10000px',
+          opacity: 0,
+          visibility: 'hidden' as const,
+          transition: 'none',
+        } as CSSProperties
+      }
+
+      const baseTransform = floatingStyles.value.transform || ''
+      return {
+        ...floatingStyles.value,
+        opacity: isVisible.value ? 1 : 0,
+        visibility: isVisible.value ? 'visible' : 'hidden',
+        pointerEvents: isVisible.value ? 'auto' : 'none',
+        transition: 'opacity 0.2s ease, transform 0.2s ease',
+        transform: `${baseTransform} scale(${isVisible.value ? 1 : 0.95})`,
+      } as CSSProperties
+    })
 
     // Close on click outside
     const handleClickOutside = (e: MouseEvent) => {
@@ -65,27 +129,17 @@ export default defineComponent({
           )}
         </div>
 
-        {isOpen.value && (
-          <Teleport to="body">
-            <div
-              ref={floating}
-              style={{
-                ...floatingStyles.value,
-                zIndex: 9999,
-                opacity: isPositioned.value ? 1 : 0,
-                pointerEvents: isPositioned.value ? 'auto' : 'none',
-                transition: 'opacity 0.2s ease, transform 0.2s ease',
-              }}
-              class="vue3-colorful__popover-content"
-            >
+        <Teleport to="body">
+          {isOpen.value && (
+            <div ref={floating} style={safeStyles.value} class="vue3-colorful__popover-content">
               <ColorPicker
                 {...props}
                 onUpdate:modelValue={(val) => emit('update:modelValue', val)}
                 v-slots={slots}
               />
             </div>
-          </Teleport>
-        )}
+          )}
+        </Teleport>
       </div>
     )
   },
