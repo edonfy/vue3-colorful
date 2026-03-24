@@ -235,4 +235,18 @@ describe('ColorPicker', () => {
       expect(wrapper.emitted('update:modelValue')).toBeTruthy()
     })
   })
+
+  it('handles vertical orientation', async () => {
+    const wrapper = mount(ColorPicker, {
+      props: { modelValue: '#ffffff', vertical: true },
+    })
+    expect(wrapper.find('.vue3-colorful__hue--vertical').exists()).toBe(true)
+  })
+
+  it('hides alpha slider when showAlpha is false (explicit test)', () => {
+    const wrapper = mount(ColorPicker, {
+      props: { modelValue: '#ffffff', showAlpha: false },
+    })
+    expect(wrapper.find('.vue3-colorful__alpha').exists()).toBe(false)
+  })
 })

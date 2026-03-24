@@ -29,6 +29,21 @@ export default defineConfig({
     globals: true,
     include: ['**/*.test.ts'],
     exclude: [...configDefaults.exclude],
+    alias: {
+      'virtual:uno.css': resolve(__dirname, './test/mocks/empty.css'),
+    },
+    coverage: {
+      exclude: [
+        'src/stories',
+        'src/types.ts',
+        'src/vite-env.d.ts',
+        'src/index.ts',
+        'dist/**',
+        '**/*.stories.ts',
+        '**/*.test.ts',
+        'node_modules/**',
+      ],
+    },
   },
   build: {
     lib: {

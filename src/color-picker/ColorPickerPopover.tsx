@@ -24,7 +24,7 @@ export default defineComponent({
     },
   },
   emits: ['update:modelValue'],
-  setup(props, { emit, slots }) {
+  setup(props, { emit, slots, expose }) {
     const isOpen = ref(false)
     const reference = ref<HTMLElement | null>(null)
     const floating = ref<HTMLElement | null>(null)
@@ -82,7 +82,7 @@ export default defineComponent({
         } as CSSProperties
       }
 
-      const baseTransform = floatingStyles.value.transform || ''
+      const baseTransform = (floatingStyles.value.transform as string) || ''
       return {
         ...floatingStyles.value,
         opacity: isVisible.value ? 1 : 0,
@@ -113,6 +113,8 @@ export default defineComponent({
     onUnmounted(() => {
       document.removeEventListener('mousedown', handleClickOutside)
     })
+
+    expose({ isOpen, isVisible })
 
     return () => (
       <div class="vue3-colorful__popover-wrapper">
