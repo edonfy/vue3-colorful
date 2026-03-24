@@ -28,15 +28,15 @@ jobs:
           node-version: 20.x
           cache: pnpm
 
-      # Setup pnpm
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.32.1
+      # Install pnpm manually using npm
+      - name: Install pnpm manually
+        run: |
+          npm install -g pnpm
+          pnpm --version  # This will print the pnpm version to verify it's installed
 
-      # Confirm pnpm is installed
-      - name: Verify pnpm installation
-        run: pnpm --version
+      # Verify PATH to check if pnpm is correctly added
+      - name: Check PATH environment variable
+        run: echo $PATH
 
       # Install dependencies with frozen lockfile to ensure exact versions
       - name: Install Dependencies
