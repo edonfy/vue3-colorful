@@ -1,5 +1,6 @@
+import { ref } from 'vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
-import { HexColorPicker } from '../index'
+import { HexColorPicker, ColorPickerPopover } from '../index'
 
 const meta: Meta<typeof HexColorPicker> = {
   title: 'Ecosystem/Integrations',
@@ -9,6 +10,23 @@ const meta: Meta<typeof HexColorPicker> = {
 
 export default meta
 type Story = StoryObj<typeof HexColorPicker>
+
+export const PopoverMode: Story = {
+  render: () => ({
+    components: { ColorPickerPopover },
+    setup() {
+      const color = ref('#3b82f6')
+      return { color }
+    },
+    template: `
+      <div style="padding: 50px; text-align: center;">
+        <p style="margin-bottom: 20px;">Click the swatch to open the picker:</p>
+        <ColorPickerPopover v-model="color" show-input />
+        <p style="margin-top: 20px;">Active Color: {{ color }}</p>
+      </div>
+    `,
+  }),
+}
 
 export const TailwindThemed: Story = {
   args: {

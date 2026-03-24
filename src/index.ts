@@ -12,5 +12,6 @@ export * from './types'
 
 export const VERSION = __VERSION__
 
+export { default as ColorPickerPopover } from './color-picker/ColorPickerPopover'
 export { ColorPicker }
 export default ColorPicker
