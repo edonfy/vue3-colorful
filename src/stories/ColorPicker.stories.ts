@@ -1,3 +1,4 @@
+import { h } from 'vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
 import ColorPicker from '../color-picker'
 
@@ -14,7 +15,18 @@ const meta: Meta<typeof ColorPicker> = {
       control: 'boolean',
     },
   },
+  render: (args) => {
+    return {
+      setup() {
+        return () => h(ColorPicker, { ...args })
+      },
+    }
+  },
 }
+
+
+
+
 
 export default meta
 type Story = StoryObj<typeof ColorPicker>

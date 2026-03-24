@@ -12,6 +12,22 @@ const config: StorybookConfig = {
     "@storybook/addon-docs",
     "@storybook/addon-onboarding"
   ],
-  "framework": "@storybook/vue3-vite"
+  "framework": "@storybook/vue3-vite",
+  async viteFinal(config) {
+    const { mergeConfig } = await import('vite');
+    const { default: UnoCSS } = await import('unocss/vite');
+    const { default: VueJsx } = await import('@vitejs/plugin-vue-jsx');
+    
+    return mergeConfig(config, {
+      plugins: [VueJsx(), UnoCSS()],
+      resolve: {
+        alias: {
+          '@': '/Users/edonfy/dev/vue3-colorful/src',
+        },
+      },
+    });
+  },
+
 };
+
 export default config;
