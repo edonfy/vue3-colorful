@@ -36,7 +36,9 @@
 .vue3-colorful__body--horizontal {
   flex-direction: row;
   height: 100%;
+  padding: 6px;
 }
+
 
 
 
@@ -82,9 +84,10 @@
 .vue3-colorful__body--horizontal .vue3-colorful__saturation {
   border-bottom: none;
   border-right: none;
-  border-radius: var(--vc-border-radius) 0 0 0;
+  border-radius: var(--vc-border-radius) 0 0 var(--vc-border-radius);
   flex-grow: 1;
 }
+
 
 
 .vue3-colorful__body--horizontal .vue3-colorful__hue,
@@ -150,10 +153,8 @@
 .vue3-colorful__alpha--vertical {
   width: var(--vc-slider-height);
   height: 100%;
-  /* Ensure pointers aren't cut off by the container ends */
-  margin-top: 6px;
-  margin-bottom: 6px;
 }
+
 
 
 
