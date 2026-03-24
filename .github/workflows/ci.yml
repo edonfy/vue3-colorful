@@ -24,10 +24,9 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: latest
 
       - name: Install dependencies
+
         run: pnpm install
 
       - name: Type check
@@ -58,10 +57,9 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: latest
 
       - name: Install dependencies
+
         run: pnpm install
 
       - name: Format check
