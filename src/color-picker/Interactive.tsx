@@ -36,10 +36,20 @@ export default defineComponent({
     onKey: {
       type: Function as unknown as () => (event: KeyboardEvent) => void,
       default: undefined
-    }
+    },
+    // a11y props
+    role: String,
+    'aria-label': String,
+    'aria-valuenow': [Number, String],
+    'aria-valuemin': [Number, String],
+    'aria-valuemax': [Number, String],
+    'aria-valuetext': String,
   },
 
-  setup(props, { slots }) {
+
+  inheritAttrs: false,
+
+  setup(props, { slots, attrs }) {
     const rootRef = ref<HTMLDivElement>()
 
     const interaction = reactive<Interaction>({
@@ -93,7 +103,13 @@ export default defineComponent({
     })
 
     return () => (
-      <div ref={rootRef} class={'vue3-colorful__interactive'} tabindex={0} onKeydown={handleKeyDown}>
+      <div 
+        ref={rootRef} 
+        class={'vue3-colorful__interactive'} 
+        tabindex={0} 
+        onKeydown={handleKeyDown}
+        {...attrs}
+      >
         {slots.default ? slots.default(interaction) : null}
       </div>
     )

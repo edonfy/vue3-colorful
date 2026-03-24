@@ -9,5 +9,7 @@ module.exports = edonfy({
     'no-unused-vars': 0,
     '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/ban-ts-comment': 0,
-  }
+  },
+  extends: ['prettier']
 })
+export const extends = ['plugin:storybook/recommended'];

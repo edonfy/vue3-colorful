@@ -1,4 +1,6 @@
+import 'virtual:uno.css'
 import './style.css'
+
 import ColorPicker from './color-picker'
 
 export * from './types'

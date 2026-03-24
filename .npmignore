@@ -1,0 +1,21 @@
+# Files to ignore in npm package
+.vscode/
+.github/
+example/
+test/
+src/
+public/
+tsconfig.json
+tsconfig.node.json
+vite.config.ts
+vitest.config.ts
+uno.config.ts
+.eslintrc.cjs
+.prettierrc
+.prettierignore
+pnpm-lock.yaml
+CHANGELOG.md
+CONTRIBUTING.md
+.husky/
+package.json.bak
+stats.html

@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import Vue from '@vitejs/plugin-vue'
 import VueJsx from '@vitejs/plugin-vue-jsx'
 import UnoCSS from 'unocss/vite'
+import { visualizer } from 'rollup-plugin-visualizer'
 import { resolve } from 'node:path'
 import { readFileSync } from 'node:fs'
 
@@ -15,7 +16,12 @@ export default defineConfig({
   plugins: [
     Vue(),
     VueJsx(),
-    UnoCSS()
+    UnoCSS(),
+    visualizer({
+      filename: 'stats.html',
+      gzipSize: true,
+      brotliSize: true,
+    })
   ],
   build: {
     lib: {
