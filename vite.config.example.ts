@@ -7,6 +7,13 @@ import { resolve } from 'node:path'
 export default defineConfig({
   base: '/vue3-colorful/',
   plugins: [Vue(), VueJsx(), UnoCSS()],
+  css: {
+    preprocessorOptions: {
+      less: {
+        math: 'always',
+      },
+    },
+  },
   build: {
     outDir: 'dist-example',
   },
