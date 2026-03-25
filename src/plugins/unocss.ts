@@ -8,8 +8,8 @@ export function presetVue3Colorful(): Preset {
     name: 'unocss-preset-vue3-colorful',
     preflights: [
       {
-        getCSS: (_context: any) => {
-          const theme = _context.theme as Record<string, any>
+        getCSS: (_context) => {
+          const theme = _context.theme as Record<string, unknown>
           const config = theme.vue3Colorful as Record<string, string | number> | undefined
           if (config) {
             const vars: string[] = []

@@ -1,10 +1,10 @@
 import { PropType, CSSProperties, computed, defineComponent } from 'vue'
-import Pointer from './Pointer'
 import { HsvaColor } from '@/types'
-import Interactive from './Interactive'
 import { Interaction } from '@/composables/useInteraction'
 import { hsvaToRgbaString } from '@/utils/convert'
 import { clamp } from '@/utils/clamp'
+import Pointer from './Pointer'
+import Interactive from './Interactive'
 
 export default defineComponent({
   name: 'Alpha',

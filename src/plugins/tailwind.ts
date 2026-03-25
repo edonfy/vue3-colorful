@@ -46,6 +46,6 @@ const vue3ColorfulPlugin = plugin(({ addBase, theme }) => {
       })
     }
   }
-})
+}) as ReturnType<typeof plugin>
 
-export default vue3ColorfulPlugin as any
+export default vue3ColorfulPlugin

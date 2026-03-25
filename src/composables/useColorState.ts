@@ -1,6 +1,6 @@
 import { ref, watch, computed, Ref, ComputedRef } from 'vue'
-import { HsvaColor, ColorModel } from '../types'
-import { parseColor, formatColor } from '../utils/converter'
+import { HsvaColor, ColorModel } from '@/types'
+import { parseColor, formatColor } from '@/utils/converter'
 
 interface UseColorStateOptions {
   modelValue: Ref<string>

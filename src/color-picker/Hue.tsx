@@ -1,8 +1,8 @@
 import { computed, defineComponent } from 'vue'
-import Pointer from './Pointer'
-import Interactive from './Interactive'
 import { Interaction } from '@/composables/useInteraction'
 import { hsvaToHslString } from '@/utils/convert'
+import Pointer from './Pointer'
+import Interactive from './Interactive'
 
 export default defineComponent({
   name: 'Hue',

@@ -13,6 +13,13 @@ vi.mock('@floating-ui/vue', () => ({
   autoUpdate: vi.fn(),
 }))
 
+// ColorPickerPopover exposes isOpen via expose()
+interface PopoverExposed {
+  isOpen: boolean
+}
+
+const isOpen = (vm: unknown): boolean => (vm as PopoverExposed).isOpen
+
 describe('ColorPickerPopover', () => {
   afterEach(() => {
     document.body.innerHTML = ''
@@ -31,10 +38,10 @@ describe('ColorPickerPopover', () => {
     })
     const trigger = wrapper.find('.vue3-colorful__popover-trigger')
     await trigger.trigger('click')
-    expect((wrapper.vm as any).isOpen).toBe(true)
+    expect(isOpen(wrapper.vm)).toBe(true)
 
     await trigger.trigger('click')
-    expect((wrapper.vm as any).isOpen).toBe(false)
+    expect(isOpen(wrapper.vm)).toBe(false)
   })
 
   it('closes on click outside', async () => {
@@ -42,10 +49,10 @@ describe('ColorPickerPopover', () => {
       props: { modelValue: '#ffffff' },
     })
     await wrapper.find('.vue3-colorful__popover-trigger').trigger('click')
-    expect((wrapper.vm as any).isOpen).toBe(true)
+    expect(isOpen(wrapper.vm)).toBe(true)
 
     document.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
-    expect((wrapper.vm as any).isOpen).toBe(false)
+    expect(isOpen(wrapper.vm)).toBe(false)
   })
 
   it('uses custom slots for trigger', () => {
@@ -65,10 +72,10 @@ describe('ColorPickerPopover', () => {
     })
 
     await wrapper.find('.vue3-colorful__popover-trigger').trigger('click')
-    expect((wrapper.vm as any).isOpen).toBe(true)
+    expect(isOpen(wrapper.vm)).toBe(true)
 
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
-    expect((wrapper.vm as any).isOpen).toBe(false)
+    expect(isOpen(wrapper.vm)).toBe(false)
 
     wrapper.unmount()
   })
@@ -88,11 +95,8 @@ describe('ColorPickerPopover', () => {
       })
 
       await wrapper.find('.vue3-colorful__popover-trigger').trigger('click')
-      expect((wrapper.vm as any).isOpen).toBe(true)
+      expect(isOpen(wrapper.vm)).toBe(true)
 
-      // After click, useTransitionStatus sets status='initial' synchronously
-      // Then calls requestAnimationFrame (mocked by fake timers)
-      // Flush all timers to execute nested RAF callbacks
       vi.runAllTimers()
       await wrapper.vm.$nextTick()
 
@@ -109,7 +113,6 @@ describe('ColorPickerPopover', () => {
         props: { modelValue: '#ffffff' },
       })
 
-      // Open and flush animations
       await wrapper.find('.vue3-colorful__popover-trigger').trigger('click')
       vi.runAllTimers()
       await wrapper.vm.$nextTick()
@@ -117,7 +120,6 @@ describe('ColorPickerPopover', () => {
       let content = document.body.querySelector('.vue3-colorful__popover-content')
       expect(content).not.toBeNull()
 
-      // Close
       await wrapper.find('.vue3-colorful__popover-trigger').trigger('click')
       await wrapper.vm.$nextTick()
 
@@ -125,7 +127,6 @@ describe('ColorPickerPopover', () => {
       expect(content).not.toBeNull()
       expect(content!.getAttribute('data-status')).toBe('close')
 
-      // Simulate transitionend to trigger unmount
       content!.dispatchEvent(new Event('transitionend'))
       await wrapper.vm.$nextTick()
 

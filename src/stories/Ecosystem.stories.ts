@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
-import { HexColorPicker, ColorPickerPopover } from '../index'
+import { HexColorPicker, ColorPickerPopover } from '@/index'
 
 const meta: Meta<typeof HexColorPicker> = {
   title: 'Ecosystem/Integrations',

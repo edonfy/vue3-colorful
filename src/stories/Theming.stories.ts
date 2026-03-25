@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import HexColorPicker from '../color-picker/HexColorPicker'
+import HexColorPicker from '@/color-picker/HexColorPicker'
 
 const meta: Meta<typeof HexColorPicker> = {
   title: 'Advanced/Theming',

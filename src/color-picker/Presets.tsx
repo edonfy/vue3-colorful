@@ -1,5 +1,5 @@
 import { defineComponent, PropType, computed } from 'vue'
-import { parseColor, formatColor } from '../utils/converter'
+import { parseColor, formatColor } from '@/utils/converter'
 
 export default defineComponent({
   name: 'Presets',
@@ -26,6 +26,7 @@ export default defineComponent({
             normalized: formatColor(parseColor(color), 'hex', false),
           }
         } catch {
+          console.warn(`[vue3-colorful] Invalid preset color: ${color}`)
           return {
             original: color,
             normalized: color.toLowerCase(),
@@ -38,6 +39,7 @@ export default defineComponent({
       try {
         return formatColor(parseColor(props.activeColor), 'hex', false)
       } catch {
+        console.warn(`[vue3-colorful] Invalid activeColor: ${props.activeColor}`)
         return props.activeColor.toLowerCase()
       }
     })

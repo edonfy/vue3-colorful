@@ -30,11 +30,10 @@ describe('useInteraction composable', () => {
     },
     setup(props) {
       const rootRef = ref<HTMLElement>()
-      const { interaction, start, handleKeyDown } = useInteraction(
-        rootRef,
-        props.onMove!,
-        props.onKey
-      )
+      const { interaction, start, handleKeyDown } = useInteraction(rootRef, {
+        onMove: props.onMove!,
+        onKey: props.onKey,
+      })
       return { rootRef, interaction, start, handleKeyDown }
     },
     render() {

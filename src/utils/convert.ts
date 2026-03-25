@@ -1,5 +1,5 @@
 import { round } from './round'
-import { RgbaColor, RgbColor, HslaColor, HslColor, HsvaColor, HsvColor, CmykColor } from '../types'
+import { RgbaColor, RgbColor, HslaColor, HslColor, HsvaColor, HsvColor, CmykColor } from '@/types'
 
 /**
  * Valid CSS <angle> units.
@@ -132,10 +132,6 @@ export const hsvaToHslaString = (hsva: HsvaColor): string => {
  * Memoization cache with LRU strategy
  */
 const cache = new Map<string, RgbaColor | HslaColor>()
-
-export const clearCache = () => {
-  cache.clear()
-}
 const MAX_CACHE_SIZE = 100
 
 const memoize = <T extends RgbaColor | HslaColor>(

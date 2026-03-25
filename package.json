@@ -1,6 +1,6 @@
 {
   "name": "vue3-colorful",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "type": "module",
   "packageManager": "pnpm@10.32.1",
   "sideEffects": [
@@ -30,16 +30,34 @@
       }
     },
     "./tailwind": {
-      "import": "./dist/tailwind.js",
-      "require": "./dist/tailwind.cjs"
+      "import": {
+        "types": "./dist/plugins/tailwind.d.ts",
+        "default": "./dist/tailwind.js"
+      },
+      "require": {
+        "types": "./dist/plugins/tailwind.d.ts",
+        "default": "./dist/tailwind.cjs"
+      }
     },
     "./unocss": {
-      "import": "./dist/unocss.js",
-      "require": "./dist/unocss.cjs"
+      "import": {
+        "types": "./dist/plugins/unocss.d.ts",
+        "default": "./dist/unocss.js"
+      },
+      "require": {
+        "types": "./dist/plugins/unocss.d.ts",
+        "default": "./dist/unocss.cjs"
+      }
     },
     "./nuxt": {
-      "import": "./dist/nuxt.js",
-      "require": "./dist/nuxt.cjs"
+      "import": {
+        "types": "./dist/plugins/nuxt.d.ts",
+        "default": "./dist/nuxt.js"
+      },
+      "require": {
+        "types": "./dist/plugins/nuxt.d.ts",
+        "default": "./dist/nuxt.cjs"
+      }
     }
   },
   "repository": {

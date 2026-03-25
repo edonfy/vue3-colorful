@@ -1,5 +1,5 @@
 import { defineComponent, ref, PropType } from 'vue'
-import { useInteraction } from '../composables/useInteraction'
+import { useInteraction } from '@/composables/useInteraction'
 
 export default defineComponent({
   name: 'Interactive',
@@ -20,11 +20,10 @@ export default defineComponent({
   setup(props, { slots, emit, attrs }) {
     const rootRef = ref<HTMLDivElement>()
 
-    const { interaction, start, handleKeyDown } = useInteraction(
-      rootRef,
-      (position) => emit('move', position),
-      (event) => props.onKey?.(event)
-    )
+    const { interaction, start, handleKeyDown } = useInteraction(rootRef, {
+      onMove: (position) => emit('move', position),
+      onKey: (event) => props.onKey?.(event),
+    })
 
     return () => (
       <div

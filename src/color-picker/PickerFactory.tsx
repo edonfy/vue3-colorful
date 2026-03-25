@@ -1,7 +1,7 @@
 import { defineComponent, ref, toRef, PropType } from 'vue'
 import BasePicker from './BasePicker'
-import { ColorModel } from '../types'
-import { useColorState } from '../composables/useColorState'
+import { ColorModel } from '@/types'
+import { useColorState } from '@/composables/useColorState'
 
 export const commonPickerProps = {
   modelValue: {

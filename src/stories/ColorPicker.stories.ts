@@ -1,6 +1,6 @@
 import { h } from 'vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
-import ColorPicker from '../color-picker'
+import ColorPicker from '@/color-picker'
 
 const meta: Meta<typeof ColorPicker> = {
   title: 'Components/ColorPicker',

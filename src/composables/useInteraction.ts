@@ -1,5 +1,5 @@
 import { onMounted, onUnmounted, reactive, Ref } from 'vue'
-import { clamp } from '../utils/clamp'
+import { clamp } from '@/utils/clamp'
 
 export interface Interaction {
   left: number
@@ -16,11 +16,22 @@ const getRelativePosition = (node: HTMLElement, event: PointerEvent | MouseEvent
   }
 }
 
+export interface UseInteractionOptions {
+  onMove: (interaction: Interaction) => void
+  onKey?: (event: KeyboardEvent) => void
+}
+
+export interface UseInteractionReturn {
+  interaction: Interaction
+  start: (e: PointerEvent | MouseEvent | TouchEvent) => void
+  handleKeyDown: (e: KeyboardEvent) => void
+}
+
 export const useInteraction = (
   rootRef: Ref<HTMLElement | undefined>,
-  onMove: (interaction: Interaction) => void,
-  onKey?: (event: KeyboardEvent) => void
-) => {
+  options: UseInteractionOptions
+): UseInteractionReturn => {
+  const { onMove, onKey } = options
   const interaction = reactive<Interaction>({
     left: 0,
     top: 0,

@@ -6,7 +6,7 @@ import {
   HslColorPicker,
   HsvColorPicker,
   CmykColorPicker,
-} from '../index'
+} from '@/index'
 
 const meta: Meta = {
   title: 'Components/SpecializedPickers',
