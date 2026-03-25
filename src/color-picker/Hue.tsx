@@ -62,7 +62,8 @@ export default defineComponent({
       } else if (e.key === 'Home') {
         emit('change', 0)
       } else if (e.key === 'End') {
-        emit('change', 0) // Normalizing 360 to 0
+        // Emit 360 for clearer semantic end-of-range (visual result is same as 0)
+        emit('change', 360)
       }
     }
 

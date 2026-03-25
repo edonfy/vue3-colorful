@@ -46,6 +46,9 @@ export function useColorState(options: UseColorStateOptions): UseColorStateRetur
         hsva.value = parseColor(newValue)
       } catch {
         console.warn(`[vue3-colorful] Invalid color value: ${newValue}`)
+        // Record the incoming (invalid) value as last seen external value
+        // to avoid confusing the echo-detection logic.
+        lastEmittedValue.value = newValue
       }
     }
   })

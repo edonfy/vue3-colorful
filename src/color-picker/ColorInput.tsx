@@ -17,17 +17,17 @@ export default defineComponent({
   setup(props, { emit }) {
     const internalValue = ref(props.modelValue)
     const isInvalid = ref(false)
-    let lastEmittedValue = props.modelValue
+    const lastEmittedValue = ref(props.modelValue)
     let debounceTimer: ReturnType<typeof setTimeout> | null = null
 
     watch(
       () => props.modelValue,
       (newVal) => {
-        // Only update internal if it's different from the already formatted/parsed value
-        // to avoid jumping cursors or overwriting active input
+        // If parent updates modelValue (external change), sync internal and lastEmittedValue
         if (newVal !== internalValue.value) {
           internalValue.value = newVal
           isInvalid.value = false
+          lastEmittedValue.value = newVal
         }
       }
     )
@@ -35,6 +35,22 @@ export default defineComponent({
     onUnmounted(() => {
       if (debounceTimer) clearTimeout(debounceTimer)
     })
+
+    const tryEmit = (val: string) => {
+      const trimmed = val.trim()
+      if (!trimmed) return
+
+      try {
+        parseColor(trimmed)
+        isInvalid.value = false
+        if (trimmed !== lastEmittedValue.value) {
+          lastEmittedValue.value = trimmed
+          emit('update:modelValue', trimmed)
+        }
+      } catch {
+        isInvalid.value = true
+      }
+    }
 
     const handleChange = (e: Event) => {
       const val = (e.target as HTMLInputElement).value
@@ -44,51 +60,31 @@ export default defineComponent({
       if (debounceTimer) clearTimeout(debounceTimer)
 
       debounceTimer = setTimeout(() => {
-        const trimmed = val.trim()
-        if (!trimmed) return
-
-        // Verify that the value hasn't changed since the timer started
+        // If user continued typing and internalValue changed, ignore stale timer
         if (val !== internalValue.value) return
-
-        try {
-          parseColor(trimmed)
-          isInvalid.value = false
-          if (trimmed !== lastEmittedValue) {
-            lastEmittedValue = trimmed
-            emit('update:modelValue', trimmed)
-          }
-        } catch {
-          isInvalid.value = true
-        }
+        tryEmit(val)
       }, 100)
     }
 
     const handlePaste = (e: ClipboardEvent) => {
       e.preventDefault()
-      const text = e.clipboardData?.getData('text') || ''
+      const text = (e.clipboardData && e.clipboardData.getData('text')) || ''
       const cleaned = text.trim()
-
-      // If it looks like a hex without #, add it
       const final = /^[0-9a-fA-F]{3,8}$/.test(cleaned) ? `#${cleaned}` : cleaned
 
       internalValue.value = final
-      try {
-        parseColor(final)
-        isInvalid.value = false
-        if (final !== lastEmittedValue) {
-          lastEmittedValue = final
-          emit('update:modelValue', final)
-        }
-      } catch {
-        isInvalid.value = true
-      }
+      tryEmit(final)
     }
 
     const handleBlur = () => {
       const trimmed = internalValue.value.trim()
       if (trimmed !== internalValue.value) {
         internalValue.value = trimmed
-        if (!isInvalid.value) {
+      }
+      if (!isInvalid.value) {
+        // On blur, ensure parent is updated and lastEmittedValue kept in sync
+        if (trimmed !== lastEmittedValue.value) {
+          lastEmittedValue.value = trimmed
           emit('update:modelValue', trimmed)
         }
       }

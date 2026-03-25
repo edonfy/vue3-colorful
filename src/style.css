@@ -1,3 +1,4 @@
+/* Updated style.css with performance hints (will-change / translateZ) */
 .vue3-colorful,
 .vue3-colorful * {
   box-sizing: border-box;
@@ -84,6 +85,7 @@
   border: 2px solid #fff;
   border-radius: 50%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  will-change: transform;
 }
 
 @media (hover: hover) {
@@ -362,13 +364,14 @@
   /* Transition animation driven by data-status */
   transition-property: opacity, transform;
   opacity: 1;
-  transform: scale(1);
+  transform: scale(1) translateZ(0);
+  will-change: opacity, transform;
 }
 
 .vue3-colorful__popover-content[data-status='initial'],
 .vue3-colorful__popover-content[data-status='close'] {
   opacity: 0;
-  transform: scale(0.95) translateY(-4px);
+  transform: scale(0.95) translateY(-4px) translateZ(0);
 }
 
 .vue3-colorful__popover-content[data-status='open'],

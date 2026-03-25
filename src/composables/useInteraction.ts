@@ -45,8 +45,14 @@ export const useInteraction = (
     if ('pointerId' in e) {
       try {
         rootRef.value.setPointerCapture(e.pointerId)
-      } catch {
-        // Ignore
+      } catch (err) {
+        if (
+          typeof process !== 'undefined' &&
+          process.env &&
+          process.env.NODE_ENV !== 'production'
+        ) {
+          console.warn('[vue3-colorful] setPointerCapture failed', err)
+        }
       }
     }
 
@@ -76,8 +82,14 @@ export const useInteraction = (
     if (rootRef.value && e && 'pointerId' in e) {
       try {
         rootRef.value.releasePointerCapture(e.pointerId)
-      } catch {
-        // Ignore
+      } catch (err) {
+        if (
+          typeof process !== 'undefined' &&
+          process.env &&
+          process.env.NODE_ENV !== 'production'
+        ) {
+          console.warn('[vue3-colorful] releasePointerCapture failed', err)
+        }
       }
     }
     if (frameId !== null) {
