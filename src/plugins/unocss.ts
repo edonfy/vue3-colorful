@@ -8,10 +8,9 @@ export function presetVue3Colorful(): Preset {
     name: 'unocss-preset-vue3-colorful',
     preflights: [
       {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getCSS: ({ theme }: { theme: any }) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const config = (theme as any).vue3Colorful as Record<string, string> | undefined
+        getCSS: (_context: any) => {
+          const theme = _context.theme as Record<string, any>
+          const config = theme.vue3Colorful as Record<string, string | number> | undefined
           if (config) {
             const vars: string[] = []
             const mappings: Record<string, string> = {
@@ -27,7 +26,7 @@ export function presetVue3Colorful(): Preset {
             }
 
             Object.entries(mappings).forEach(([key, varName]) => {
-              if (config[key]) {
+              if (config[key] !== undefined && config[key] !== null) {
                 vars.push(`${varName}: ${config[key]};`)
               }
             })

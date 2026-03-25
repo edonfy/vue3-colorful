@@ -11,10 +11,20 @@ import {
 
 const hexColor = ref<string>('#3b82f6')
 const popoverColor = ref<string>('#8b5cf6')
-const rgbColor = ref<string>('rgba(16, 185, 129, 0.8)')
-const hsvColor = ref<string>('hsv(38, 93, 96)')
-const hslColor = ref<string>('hsl(346, 84%, 61%)')
-const cmykColor = ref<string>('cmyk(0%, 50%, 100%, 0%)')
+
+const specializedColors = ref({
+  RGB: 'rgba(16, 185, 129, 0.8)',
+  HSV: 'hsv(38, 93, 96)',
+  HSL: 'hsl(346, 84%, 61%)',
+  CMYK: 'cmyk(0%, 50%, 100%, 0%)',
+})
+
+const specializedPickers = [
+  { name: 'RGB', key: 'RGB', comp: RgbColorPicker, alpha: true },
+  { name: 'HSV', key: 'HSV', comp: HsvColorPicker, alpha: false },
+  { name: 'HSL', key: 'HSL', comp: HslColorPicker, alpha: false },
+  { name: 'CMYK', key: 'CMYK', comp: CmykColorPicker, alpha: false },
+]
 
 const isDark = ref(false)
 const isVertical = ref(false)
@@ -131,24 +141,21 @@ const toggleDark = () => {
       <!-- Specialized Pickers Grid -->
       <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div
-          v-for="(picker, index) in [
-            { name: 'RGB', model: rgbColor, comp: RgbColorPicker, alpha: true },
-            { name: 'HSV', model: hsvColor, comp: HsvColorPicker, alpha: false },
-            { name: 'HSL', model: hslColor, comp: HslColorPicker, alpha: false },
-            { name: 'CMYK', model: cmykColor, comp: CmykColorPicker, alpha: false },
-          ]"
-          :key="index"
+          v-for="picker in specializedPickers"
+          :key="picker.key"
           class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/10 shadow-lg"
         >
           <h3 class="text-lg font-bold mb-4">{{ picker.name }}</h3>
           <component
             :is="picker.comp"
-            v-model="picker.model"
+            v-model="specializedColors[picker.key as keyof typeof specializedColors]"
             :show-alpha="picker.alpha"
             :dark="isDark"
           />
           <div class="mt-4 flex items-center justify-between text-xs font-mono opacity-70">
-            <span class="truncate">{{ picker.model }}</span>
+            <span class="truncate">{{
+              specializedColors[picker.key as keyof typeof specializedColors]
+            }}</span>
           </div>
         </div>
       </section>

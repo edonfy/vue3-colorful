@@ -43,9 +43,33 @@ export default defineComponent({
       const isLargeStep = e.shiftKey || e.key === 'PageUp' || e.key === 'PageDown'
       const step = isLargeStep ? 0.1 : 0.01
 
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowDown' || e.key === 'PageDown') {
+      if (
+        [
+          'ArrowLeft',
+          'ArrowRight',
+          'ArrowUp',
+          'ArrowDown',
+          'PageUp',
+          'PageDown',
+          'Home',
+          'End',
+        ].includes(e.key)
+      ) {
+        e.preventDefault()
+      }
+
+      const isDown =
+        e.key === 'ArrowLeft' ||
+        (props.vertical ? e.key === 'ArrowUp' : e.key === 'ArrowDown') ||
+        e.key === 'PageDown'
+      const isUp =
+        e.key === 'ArrowRight' ||
+        (props.vertical ? e.key === 'ArrowDown' : e.key === 'ArrowUp') ||
+        e.key === 'PageUp'
+
+      if (isDown) {
         emit('change', clamp(props.hsva.a - step))
-      } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+      } else if (isUp) {
         emit('change', clamp(props.hsva.a + step))
       } else if (e.key === 'Home') {
         emit('change', 0)
@@ -63,8 +87,8 @@ export default defineComponent({
           onMove={handleMove}
           onKey={handleKey}
           role="slider"
-          ariaLabel="Alpha"
-          ariaOrientation={props.vertical ? 'vertical' : 'horizontal'}
+          aria-label="Alpha"
+          aria-orientation={props.vertical ? 'vertical' : 'horizontal'}
           aria-valuenow={Math.round(props.hsva.a * 100)}
           aria-valuemin="0"
           aria-valuemax="100"

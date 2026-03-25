@@ -19,8 +19,14 @@ describe('useInteraction composable', () => {
 
   const TestComponent = defineComponent({
     props: {
-      onMove: Function as PropType<(i: { left: number; top: number }) => void>,
-      onKey: Function as PropType<(e: KeyboardEvent) => void>,
+      onMove: {
+        type: Function as PropType<(i: { left: number; top: number }) => void>,
+        default: undefined,
+      },
+      onKey: {
+        type: Function as PropType<(e: KeyboardEvent) => void>,
+        default: undefined,
+      },
     },
     setup(props) {
       const rootRef = ref<HTMLElement>()

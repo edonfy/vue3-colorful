@@ -31,14 +31,38 @@ export default defineComponent({
       const isLargeStep = e.shiftKey || e.key === 'PageUp' || e.key === 'PageDown'
       const step = isLargeStep ? 36 : 1
 
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowDown' || e.key === 'PageDown') {
+      if (
+        [
+          'ArrowLeft',
+          'ArrowRight',
+          'ArrowUp',
+          'ArrowDown',
+          'PageUp',
+          'PageDown',
+          'Home',
+          'End',
+        ].includes(e.key)
+      ) {
+        e.preventDefault()
+      }
+
+      const isDown =
+        e.key === 'ArrowLeft' ||
+        (props.vertical ? e.key === 'ArrowUp' : e.key === 'ArrowDown') ||
+        e.key === 'PageDown'
+      const isUp =
+        e.key === 'ArrowRight' ||
+        (props.vertical ? e.key === 'ArrowDown' : e.key === 'ArrowUp') ||
+        e.key === 'PageUp'
+
+      if (isDown) {
         emit('change', (((props.hue - step) % 360) + 360) % 360)
-      } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+      } else if (isUp) {
         emit('change', (props.hue + step) % 360)
       } else if (e.key === 'Home') {
         emit('change', 0)
       } else if (e.key === 'End') {
-        emit('change', 360)
+        emit('change', 0) // Normalizing 360 to 0
       }
     }
 
@@ -52,11 +76,11 @@ export default defineComponent({
           onMove={handleMove}
           onKey={handleKey}
           role="slider"
-          ariaLabel="Hue"
-          ariaOrientation={props.vertical ? 'vertical' : 'horizontal'}
+          aria-label="Hue"
+          aria-orientation={props.vertical ? 'vertical' : 'horizontal'}
           aria-valuenow={Math.round(props.hue)}
           aria-valuemin="0"
-          aria-valuemax="360"
+          aria-valuemax="359"
         >
           {slots.track?.()}
           {slots.pointer ? (

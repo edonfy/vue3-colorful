@@ -1,19 +1,27 @@
-## 0.3.0 (2025-03-24)
+## 0.4.0 (2025-03-25)
 
-### Added
+### 🚀 Major Improvements
 
-- 🏗️ **PickerFactory**: Centralized factory pattern for all specialized pickers, reducing boilerplate by ~600 lines.
-- ⚡ **Performance Optimizations**:
-  - Implemented `useInteraction` composable with `requestAnimationFrame` throttling.
-  - Added LRU cache (100 items) for color conversions in `utils/convert.ts`.
-  - Pre-compiled regular expressions for color parsing.
-- 🛡️ **Robustness & Error Handling**:
-  - Error-first parsing in `utils/converter.ts` with explicit error throwing for invalid formats.
-  - Real-time validation and error state (red border) for `ColorInput`.
-- ♿ **A11Y Enhancements**: Full support for `Home`, `End`, `PageUp`, and `PageDown` keys in all sliders and saturation areas.
-- 🧪 **Test Suite Expansion**: Added comprehensive tests for `PickerFactory`, `useInteraction`, and edge-case color conversions. Total 72 tests passing.
+- ✨ **Popover Mode**: Added `ColorPickerPopover`, a built-in compact floating picker using `@floating-ui`.
+- 🧩 **Ecosystem Plugins**: Native integration for **Tailwind CSS**, **UnoCSS**, and **Nuxt 3**.
+- 🌓 **Dark Mode**: Premium dark theme support across all components.
+- ♿ **WCAG 2.1 Compliance**: Full ARIA support, screen reader compatibility, and refined contrast.
+
+### 🏠 Infrastructure
+
+- 🏗️ **Package Architecture**: Fixed critical `package.json` export paths (`main`, `module`, `require`) for full CJS/ESM compatibility.
+- 📦 **Optimized Bundling**: Externalized `@floating-ui/vue`, reducing the core bundle size by **~50%**.
+- 🔌 **Nuxt Module**: Fixed CSS resolution and added `ColorPickerPopover` to auto-imports.
+
+### 🐛 Bug Fixes
+
+- 🐛 **Interaction**: Fixed vertical direction inversion in `Hue`/`Alpha`. Added `pointercancel` support and a right-click guard.
+- 🐛 **Reactivity**: Fixed `useColorState` empty string sync and prevented double-emission in `ColorInput`.
+- 🐛 **UI/UX**: Encoded SVG data URLs, added `prefers-reduced-motion`, and ensured global `border-box` layout.
 
 ---
+
+## 0.3.0 (2025-03-24)
 
 ## 0.2.2
 

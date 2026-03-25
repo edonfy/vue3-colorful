@@ -1,7 +1,7 @@
-import { defineComponent, ref, watch, computed, PropType } from 'vue'
+import { defineComponent, ref, toRef, PropType } from 'vue'
 import BasePicker from './BasePicker'
-import { HsvaColor, ColorModel } from '../types'
-import { parseColor, formatColor } from '../utils/converter'
+import { ColorModel } from '../types'
+import { useColorState } from '../composables/useColorState'
 
 export const commonPickerProps = {
   modelValue: {
@@ -44,50 +44,12 @@ export const createPicker = (name: string, model: ColorModel) => {
     props: commonPickerProps,
     emits: ['update:modelValue'],
     setup(props, { emit, slots }) {
-      const hsva = ref<HsvaColor>({ h: 0, s: 100, v: 100, a: 1 })
-      let isInternalUpdate = false
-
-      const outputValue = computed(() => formatColor(hsva.value, model, props.showAlpha))
-
-      watch(
-        outputValue,
-        (newValue) => {
-          isInternalUpdate = true
-          emit('update:modelValue', newValue)
-        },
-        { immediate: true }
-      )
-
-      watch(
-        () => props.modelValue,
-        (newValue) => {
-          if (isInternalUpdate) {
-            isInternalUpdate = false
-            return
-          }
-          if (newValue) {
-            try {
-              hsva.value = parseColor(newValue)
-            } catch {
-              console.warn(`[vue3-colorful] Invalid color value: ${newValue}`)
-            }
-          }
-        },
-        { immediate: true }
-      )
-
-      const handleSaturation = ({ s, v }: { s: number; v: number }) => {
-        hsva.value.s = s
-        hsva.value.v = v
-      }
-
-      const handleSelect = (color: string) => {
-        try {
-          hsva.value = parseColor(color)
-        } catch {
-          console.warn(`[vue3-colorful] Invalid preset color: ${color}`)
-        }
-      }
+      const { hsva, outputValue, handleSaturation, handleSelect } = useColorState({
+        modelValue: toRef(props, 'modelValue'),
+        colorModel: ref(model),
+        showAlpha: toRef(props, 'showAlpha'),
+        emit,
+      })
 
       return () => (
         <BasePicker

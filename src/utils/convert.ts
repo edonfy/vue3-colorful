@@ -6,6 +6,7 @@ import { RgbaColor, RgbColor, HslaColor, HslColor, HsvaColor, HsvColor, CmykColo
  * https://developer.mozilla.org/en-US/docs/Web/CSS/angle
  */
 const angleUnits: Record<string, number> = {
+  deg: 1,
   grad: 360 / 400,
   turn: 360,
   rad: 360 / (Math.PI * 2),
@@ -131,6 +132,10 @@ export const hsvaToHslaString = (hsva: HsvaColor): string => {
  * Memoization cache with LRU strategy
  */
 const cache = new Map<string, RgbaColor | HslaColor>()
+
+export const clearCache = () => {
+  cache.clear()
+}
 const MAX_CACHE_SIZE = 100
 
 const memoize = <T extends RgbaColor | HslaColor>(
@@ -139,7 +144,12 @@ const memoize = <T extends RgbaColor | HslaColor>(
   fn: (hsva: HsvaColor) => T
 ): T => {
   const key = `${keyPrefix}_${round(hsva.h)}_${round(hsva.s)}_${round(hsva.v)}_${round(hsva.a, 2)}`
-  if (cache.has(key)) return cache.get(key) as T
+  if (cache.has(key)) {
+    const cached = cache.get(key) as T
+    cache.delete(key)
+    cache.set(key, cached)
+    return cached
+  }
 
   const result = fn(hsva)
 
@@ -173,7 +183,8 @@ export const hsvaToHsla = (hsva: HsvaColor): HslaColor => {
  */
 export const hsvaToRgba = (hsva: HsvaColor): RgbaColor => {
   return memoize('rgba', hsva, ({ h, s, v, a }) => {
-    const hn = (h / 360) * 6
+    const normalizedH = ((h % 360) + 360) % 360
+    const hn = (normalizedH / 360) * 6
     const sn = s / 100
     const vn = v / 100
 
@@ -244,7 +255,8 @@ export const rgbaStringToHsva = (rgbaString: string): HsvaColor => {
  * Format number to hex string
  */
 const format = (number: number) => {
-  const hex = number.toString(16)
+  const clamped = Math.min(255, Math.max(0, Math.round(number)))
+  const hex = clamped.toString(16)
   return hex.length < 2 ? '0' + hex : hex
 }
 
@@ -385,7 +397,7 @@ export const cmykToCmykString = (cmyk: CmykColor): string => {
 export const cmykStringToCmyk = (cmykString: string): CmykColor => {
   const match = COLOR_PATTERNS.cmyk.exec(cmykString)
 
-  if (!match) return { c: 0, m: 0, y: 0, k: 0 }
+  if (!match) throw new Error(`Invalid CMYK color: ${cmykString}`)
 
   return {
     c: Number(match[1]),

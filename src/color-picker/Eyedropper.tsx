@@ -12,7 +12,7 @@ export default defineComponent({
       if (!isSupported) return
 
       try {
-        // @ts-ignore - EyeDropper is a new API
+        // @ts-expect-error - EyeDropper is a new API
         const dropper = new window.EyeDropper()
         const result = await dropper.open()
         emit('select', result.sRGBHex)

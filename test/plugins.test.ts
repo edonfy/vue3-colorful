@@ -39,6 +39,44 @@ describe('Ecosystem Plugins', () => {
     expect(css).toContain('--vc-accent-color: #3b82f6;')
   })
 
+  it('tailwindPlugin handles empty config', () => {
+    const addBase = vi.fn()
+    const theme = vi.fn().mockReturnValue(undefined)
+    ;(tailwindPlugin as any).handler({ addBase, theme })
+    expect(addBase).not.toHaveBeenCalled()
+  })
+
+  it('unocssPreset handles empty config', () => {
+    const preset = (unocssPreset as any)()
+    const getCSS = preset.preflights[0].getCSS
+    const css = getCSS({ theme: {} })
+    expect(css).toBe('')
+  })
+
+  it('nuxtModule respects disableCss option', () => {
+    const nuxt = {
+      options: {
+        css: [],
+      },
+    }
+    if (typeof (nuxtModule as any).setup === 'function') {
+      ;(nuxtModule as any).setup({ disableCss: true }, nuxt)
+    }
+    expect(nuxt.options.css).not.toContain('./vue3-colorful.css')
+  })
+
+  it('nuxtModule handles default setup', () => {
+    const nuxt = {
+      options: {
+        css: [],
+      },
+    }
+    if (typeof (nuxtModule as any).setup === 'function') {
+      ;(nuxtModule as any).setup(undefined, nuxt)
+    }
+    expect(nuxt.options.css).toContain('./vue3-colorful.css')
+  })
+
   it('nuxtModule exercises its setup', () => {
     const nuxt = {
       options: {
@@ -50,6 +88,6 @@ describe('Ecosystem Plugins', () => {
     if (typeof (nuxtModule as any).setup === 'function') {
       ;(nuxtModule as any).setup({}, nuxt)
     }
-    expect(nuxt.options.css).toContain('vue3-colorful/dist/style.css')
+    expect(nuxt.options.css).toContain('./vue3-colorful.css')
   })
 })

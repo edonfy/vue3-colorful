@@ -6,7 +6,7 @@ export interface Interaction {
   top: number
 }
 
-const getRelativePosition = (node: HTMLElement, event: MouseEvent | TouchEvent) => {
+const getRelativePosition = (node: HTMLElement, event: PointerEvent | MouseEvent | TouchEvent) => {
   const rect = node.getBoundingClientRect()
   const pointer = 'touches' in event ? event.touches[0] : (event as MouseEvent)
 
@@ -36,17 +36,26 @@ export const useInteraction = (
     onMove(position)
   }
 
-  const start = (e: MouseEvent | TouchEvent) => {
+  const start = (e: PointerEvent | MouseEvent | TouchEvent) => {
     if (!rootRef.value) return
+    if ('button' in e && e.button !== 0) return
     e.preventDefault()
     isStart = true
+
+    if ('pointerId' in e) {
+      try {
+        rootRef.value.setPointerCapture(e.pointerId)
+      } catch {
+        // Ignore
+      }
+    }
 
     const position = getRelativePosition(rootRef.value, e)
     latestPosition = position
     updatePosition(position)
   }
 
-  const move = (e: MouseEvent | TouchEvent) => {
+  const move = (e: PointerEvent | MouseEvent | TouchEvent) => {
     if (isStart && rootRef.value) {
       e.preventDefault()
       latestPosition = getRelativePosition(rootRef.value, e)
@@ -62,8 +71,15 @@ export const useInteraction = (
     }
   }
 
-  const end = () => {
+  const end = (e?: PointerEvent | MouseEvent | TouchEvent) => {
     isStart = false
+    if (rootRef.value && e && 'pointerId' in e) {
+      try {
+        rootRef.value.releasePointerCapture(e.pointerId)
+      } catch {
+        // Ignore
+      }
+    }
     if (frameId !== null) {
       cancelAnimationFrame(frameId)
       frameId = null
@@ -75,16 +91,18 @@ export const useInteraction = (
   }
 
   onMounted(() => {
-    window.addEventListener('pointermove', move)
-    window.addEventListener('pointerup', end)
+    window.addEventListener('pointermove', move as EventListener)
+    window.addEventListener('pointerup', end as EventListener)
+    window.addEventListener('pointercancel', end as EventListener)
   })
 
   onUnmounted(() => {
     if (frameId !== null) {
       cancelAnimationFrame(frameId)
     }
-    window.removeEventListener('pointermove', move)
-    window.removeEventListener('pointerup', end)
+    window.removeEventListener('pointermove', move as EventListener)
+    window.removeEventListener('pointerup', end as EventListener)
+    window.removeEventListener('pointercancel', end as EventListener)
   })
 
   return {

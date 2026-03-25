@@ -3,8 +3,8 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/vue3-colorful"><img src="https://img.shields.io/npm/v/vue3-colorful" alt="npm version"></a>
   <a href="https://github.com/edonfy/vue3-colorful/actions"><img src="https://github.com/edonfy/vue3-colorful/workflows/CI/badge.svg" alt="CI"></a>
-  <img src="https://img.shields.io/badge/coverage-100%25-green" alt="Coverage">
-  <img src="https://img.shields.io/badge/gzipped-~14.4KB-blue" alt="Size">
+  <img src="https://img.shields.io/badge/coverage-92%25-green" alt="Coverage">
+  <img src="https://img.shields.io/badge/gzipped-~10KB-blue" alt="Size">
 </p>
 
 A tiny, fast, and accessible color picker component for Vue 3. Highly optimized and modernized with premium aesthetics and first-class ecosystem support.
@@ -74,7 +74,7 @@ const color = ref('#3b82f6')
 
 ### Tailwind CSS
 
-Theme the picker directly from your `tailwind.config.js`.
+Theme calculation is automated.
 
 ```js
 // tailwind.config.js
@@ -85,6 +85,7 @@ export default {
     vue3Colorful: {
       accentColor: '#3b82f6',
       borderRadius: '12px',
+      // Supports: width, height, pointerSize, sliderHeight, bgColor, textColor, borderColor
     },
   },
   plugins: [tailwindPlugin],
@@ -93,12 +94,13 @@ export default {
 
 ### Nuxt 3
 
-Zero-config module with auto-imports and CSS injection.
-
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
   modules: ['vue3-colorful/nuxt'],
+  vue3Colorful: {
+    disableCss: false, // Set to true to use your own styles
+  },
 })
 ```
 
@@ -106,43 +108,81 @@ export default defineNuxtConfig({
 
 ```ts
 // uno.config.ts
-import { unocssPreset } from 'vue3-colorful/unocss'
+import { presetVue3Colorful } from 'vue3-colorful/unocss'
 
 export default defineConfig({
-  presets: [unocssPreset()],
+  presets: [presetVue3Colorful()],
 })
 ```
 
 ## 🛠️ Props & Customization
 
+### Specialized Pickers
+
+Components: `HexColorPicker`, `RgbColorPicker`, `HslColorPicker`, `HsvColorPicker`, `CmykColorPicker`.
+
 | Prop             | Type       | Default | Description                   |
 | ---------------- | ---------- | ------- | ----------------------------- |
-| `modelValue`     | `string`   | `''`    | Value (v-model)               |
+| `modelValue`     | `string`   | `''`    | Color value (v-model)         |
 | `showAlpha`      | `boolean`  | `false` | Enable alpha channel slider   |
 | `showEyedropper` | `boolean`  | `false` | Enable native EyeDropper tool |
 | `presets`        | `string[]` | `[]`    | List of color swatches        |
 | `dark`           | `boolean`  | `false` | Enable premium dark theme     |
 | `showInput`      | `boolean`  | `false` | Show manual text input        |
 | `vertical`       | `boolean`  | `false` | Orient sliders vertically     |
+| `colorLabel`     | `string`   | `''`    | Label for accessibility       |
+
+### Generic ColorPicker
+
+A flexible component that supports multiple models.
+
+```vue
+<ColorPicker v-model="color" color-model="rgb" />
+```
+
+### Popover Mode
+
+```vue
+<ColorPickerPopover v-model="color" show-input>
+  <template #default="{ isOpen, color }">
+    <button>Custom Trigger (Current: {{ color }})</button>
+  </template>
+</ColorPickerPopover>
+```
+
+### Slots (Advanced UI)
+
+All pickers support the following named slots for custom pointers/tracks:
+
+- `saturation-pointer`, `saturation-track`
+- `hue-pointer`, `hue-track`
+- `alpha-pointer`, `alpha-track`
 
 ### Theming (CSS Variables)
 
-| Variable             | Default   | Description               |
-| -------------------- | --------- | ------------------------- |
-| `--vc-width`         | `200px`   | Width of the picker       |
-| `--vc-accent-color`  | `#3b82f6` | Active/Focus accent color |
-| `--vc-border-radius` | `8px`     | Corner radius of elements |
+| Variable             | Default                      |
+| -------------------- | ---------------------------- |
+| `--vc-width`         | `200px`                      |
+| `--vc-height`        | `200px`                      |
+| `--vc-border-radius` | `8px`                        |
+| `--vc-pointer-size`  | `28px`                       |
+| `--vc-slider-height` | `24px`                       |
+| `--vc-accent-color`  | `#3b82f6`                    |
+| `--vc-shadow`        | `0 4px 12px rgba(0,0,0,0.1)` |
+| `--vc-bg-color`      | `#ffffff`                    |
+| `--vc-text-color`    | `#ffffff` (labels)           |
+| `--vc-border-color`  | `rgba(0,0,0,0.05)`           |
+| `--vc-preset-gap`    | `8px`                        |
 
 ## 🧪 Quality Assurance
 
-We maintain 100% UI stability through:
-
-- **Unit Tests**: 72+ tests for core transformations and events.
-- **Visual Regression**: Playwright snapshots for all component variants.
+- **Unit Tests**: 90+ tests for core transformations.
+- **Visual Regression**: Playwright snapshots for all variants.
 - **Modern Stack**: Built with Vite 6, Vitest 3, and TypeScript 5.
+- **Compatibility**: Vue ^3.2.0
 
 ---
 
 ## License
 
-MIT
+MIT (c) 2024-present edonfy

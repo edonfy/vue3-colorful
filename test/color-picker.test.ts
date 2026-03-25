@@ -101,7 +101,8 @@ describe('ColorPicker', () => {
           modelValue: '#00ff00',
         },
       })
-      expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+      // Should NOT emit on mount if value is valid
+      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
     })
 
     it('parses rgb color input', () => {
@@ -110,7 +111,7 @@ describe('ColorPicker', () => {
           modelValue: 'rgb(0, 255, 0)',
         },
       })
-      expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
     })
 
     it('parses hsl color input', () => {
@@ -119,7 +120,7 @@ describe('ColorPicker', () => {
           modelValue: 'hsl(120, 100%, 50%)',
         },
       })
-      expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
     })
 
     it('parses hsv color input', () => {
@@ -128,7 +129,7 @@ describe('ColorPicker', () => {
           modelValue: 'hsv(120, 100%, 100%)',
         },
       })
-      expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
     })
 
     it('parses cmyk color input', () => {
@@ -137,7 +138,7 @@ describe('ColorPicker', () => {
           modelValue: 'cmyk(100%, 0%, 100%, 0%)',
         },
       })
-      expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
     })
 
     it('parses short hex color input', () => {
@@ -146,7 +147,7 @@ describe('ColorPicker', () => {
           modelValue: '#0f0',
         },
       })
-      expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
     })
 
     it('ColorInput handles empty and invalid updates and blur', async () => {
@@ -160,6 +161,7 @@ describe('ColorPicker', () => {
 
       // Invalid input
       await input.setValue('invalid')
+      await new Promise((r) => setTimeout(r, 150))
       expect(input.attributes('aria-invalid')).toBe('true')
 
       // Empty input
@@ -178,7 +180,7 @@ describe('ColorPicker', () => {
           modelValue: '#00ff0080',
         },
       })
-      expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
     })
 
     it('handles case-insensitive hex color', () => {
@@ -187,7 +189,7 @@ describe('ColorPicker', () => {
           modelValue: '#ABCDEF',
         },
       })
-      expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
     })
 
     it('handles invalid color input gracefully', () => {
@@ -196,7 +198,8 @@ describe('ColorPicker', () => {
           modelValue: 'invalid-color',
         },
       })
-      expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+      // Invalid initial value should NOT emit (stays at default or just logs error)
+      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
     })
   })
 

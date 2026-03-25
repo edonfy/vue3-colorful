@@ -1,4 +1,5 @@
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, computed } from 'vue'
+import { parseColor, formatColor } from '../utils/converter'
 
 export default defineComponent({
   name: 'Presets',
@@ -17,20 +18,43 @@ export default defineComponent({
   emits: ['select'],
 
   setup(props, { emit }) {
+    const normalizedPresets = computed(() => {
+      return props.presets.map((color) => {
+        try {
+          return {
+            original: color,
+            normalized: formatColor(parseColor(color), 'hex', false),
+          }
+        } catch {
+          return {
+            original: color,
+            normalized: color.toLowerCase(),
+          }
+        }
+      })
+    })
+
+    const activeNormalized = computed(() => {
+      try {
+        return formatColor(parseColor(props.activeColor), 'hex', false)
+      } catch {
+        return props.activeColor.toLowerCase()
+      }
+    })
+
     return () => (
       <div class="vue3-colorful__presets">
-        {props.presets.map((color, index) => (
+        {normalizedPresets.value.map((item, index) => (
           <button
-            key={`${color}-${index}`}
+            key={`${item.normalized}-${index}`}
             type="button"
             class={[
               'vue3-colorful__preset',
-              props.activeColor.toLowerCase() === color.toLowerCase() &&
-                'vue3-colorful__preset--active',
+              item.normalized === activeNormalized.value && 'vue3-colorful__preset--active',
             ]}
-            style={{ backgroundColor: color }}
-            onClick={() => emit('select', color)}
-            aria-label={`Select color ${color}`}
+            style={{ backgroundColor: item.original }}
+            onClick={() => emit('select', item.original)}
+            aria-label={`Select color ${item.original}`}
           />
         ))}
       </div>

@@ -124,6 +124,7 @@ describe('Specialized Pickers', () => {
     expect(input.exists()).toBe(true)
 
     await input.setValue('#00ff00')
+    await new Promise((r) => setTimeout(r, 150))
     await nextTick()
     expect(updatedValue).toBe('#00ff00')
   })

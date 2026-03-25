@@ -1,6 +1,6 @@
 {
   "name": "vue3-colorful",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "packageManager": "pnpm@10.32.1",
   "sideEffects": [
@@ -15,8 +15,8 @@
     "vue-colorful"
   ],
   "license": "MIT",
-  "main": "./dist/vue3-colorful.umd.cjs",
-  "module": "./dist/vue3-colorful.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -26,7 +26,7 @@
       },
       "require": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/index.umd.cjs"
+        "default": "./dist/index.cjs"
       }
     },
     "./tailwind": {
@@ -72,6 +72,7 @@
     "build-storybook": "storybook build"
   },
   "peerDependencies": {
+    "@floating-ui/vue": ">=1.0.0",
     "vue": "^3.2.0"
   },
   "devDependencies": {
@@ -80,6 +81,7 @@
     "@edonfy/eslint-config": "^0.0.5",
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^9.21.0",
+    "@floating-ui/vue": "^1.1.11",
     "@nuxt/kit": "^4.4.2",
     "@playwright/test": "^1.58.2",
     "@storybook/addon-a11y": "^10.3.3",
@@ -125,8 +127,5 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  },
-  "dependencies": {
-    "@floating-ui/vue": "^1.1.11"
   }
 }

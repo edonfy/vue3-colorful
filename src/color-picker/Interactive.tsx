@@ -9,23 +9,15 @@ export default defineComponent({
       type: Function as PropType<(event: KeyboardEvent) => void>,
       default: undefined,
     },
-    // a11y props
-    role: String,
-    ariaLabel: String,
-
-    ariaOrientation: {
-      type: String as PropType<'horizontal' | 'vertical'>,
+    role: {
+      type: String,
       default: undefined,
     },
-    'aria-valuenow': [Number, String],
-    'aria-valuemin': [Number, String],
-    'aria-valuemax': [Number, String],
-    'aria-valuetext': String,
   },
 
   emits: ['move'],
 
-  setup(props, { slots, emit }) {
+  setup(props, { slots, emit, attrs }) {
     const rootRef = ref<HTMLDivElement>()
 
     const { interaction, start, handleKeyDown } = useInteraction(
@@ -36,18 +28,13 @@ export default defineComponent({
 
     return () => (
       <div
+        {...attrs}
         ref={rootRef}
-        class={'vue3-colorful__interactive'}
+        class={['vue3-colorful__interactive', attrs.class]}
+        role={props.role}
         tabindex={0}
         onKeydown={handleKeyDown}
         onPointerdown={start}
-        role={props.role}
-        aria-label={props.ariaLabel}
-        aria-orientation={props.ariaOrientation}
-        aria-valuenow={props['aria-valuenow']}
-        aria-valuemin={props['aria-valuemin']}
-        aria-valuemax={props['aria-valuemax']}
-        aria-valuetext={props['aria-valuetext']}
       >
         {slots.default ? slots.default(interaction) : null}
       </div>

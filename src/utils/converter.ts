@@ -53,14 +53,12 @@ export const parseColor = (color: string): HsvaColor => {
   if (!color) return { h: 0, s: 100, v: 100, a: 1 }
   const trimmed = color.trim().toLowerCase()
 
-  if (trimmed.startsWith('#')) return hexToHsva(trimmed)
-  if (trimmed.startsWith('rgb')) return rgbaStringToHsva(trimmed)
-  if (trimmed.startsWith('hsl')) return hslaStringToHsva(trimmed)
-  if (trimmed.startsWith('hsv')) return hsvaStringToHsva(trimmed)
-  if (trimmed.startsWith('cmyk')) return cmykToHsva(cmykStringToCmyk(trimmed))
-
-  // Fallback for hex without #
-  if (/^[0-9a-fA-F]{3,8}$/.test(trimmed)) return hexToHsva('#' + trimmed)
+  if (trimmed.startsWith('#') || /^[0-9a-fA-F]{3,8}$/.test(trimmed))
+    return hexToHsva(trimmed.startsWith('#') ? trimmed : '#' + trimmed)
+  if (trimmed.startsWith('rgb(') || trimmed.startsWith('rgba(')) return rgbaStringToHsva(trimmed)
+  if (trimmed.startsWith('hsl(') || trimmed.startsWith('hsla(')) return hslaStringToHsva(trimmed)
+  if (trimmed.startsWith('hsv(') || trimmed.startsWith('hsva(')) return hsvaStringToHsva(trimmed)
+  if (trimmed.startsWith('cmyk(')) return cmykToHsva(cmykStringToCmyk(trimmed))
 
   throw new Error(`Unsupported color format: ${color}`)
 }

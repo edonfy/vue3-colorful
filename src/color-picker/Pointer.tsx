@@ -4,8 +4,8 @@ export default defineComponent({
   name: 'Pointer',
 
   props: {
-    top: { type: Number },
-    left: { type: Number, required: true },
+    top: { type: Number, default: 0.5 },
+    left: { type: Number, default: 0.5 },
     color: { type: String, required: true },
   },
 

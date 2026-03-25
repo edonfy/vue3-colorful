@@ -24,7 +24,7 @@ export default defineComponent({
       default: false,
     },
     presets: {
-      type: Array as () => string[],
+      type: Array as PropType<string[]>,
       default: () => [],
     },
     activeColor: {
@@ -58,10 +58,11 @@ export default defineComponent({
           'vue3-colorful',
           {
             'vue3-colorful--dark': props.dark,
+            'vue3-colorful--vertical': props.vertical,
           },
         ]}
       >
-        <div class={['vue3-colorful__body', { 'vue3-colorful__body--horizontal': props.vertical }]}>
+        <div class={['vue3-colorful__body', { 'vue3-colorful__body--vertical': props.vertical }]}>
           <Saturation
             hsva={props.hsva}
             onChange={(val: { s: number; v: number }) => emit('saturationChange', val)}

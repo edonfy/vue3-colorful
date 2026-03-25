@@ -1,4 +1,4 @@
-import { defineComponent, ref, watch } from 'vue'
+import { defineComponent, ref, watch, onUnmounted } from 'vue'
 import { parseColor } from '@/utils/converter'
 
 export default defineComponent({
@@ -17,27 +17,67 @@ export default defineComponent({
   setup(props, { emit }) {
     const internalValue = ref(props.modelValue)
     const isInvalid = ref(false)
+    let lastEmittedValue = props.modelValue
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null
 
     watch(
       () => props.modelValue,
       (newVal) => {
-        internalValue.value = newVal
-        isInvalid.value = false
+        // Only update internal if it's different from the already formatted/parsed value
+        // to avoid jumping cursors or overwriting active input
+        if (newVal !== internalValue.value) {
+          internalValue.value = newVal
+          isInvalid.value = false
+        }
       }
     )
+
+    onUnmounted(() => {
+      if (debounceTimer) clearTimeout(debounceTimer)
+    })
 
     const handleChange = (e: Event) => {
       const val = (e.target as HTMLInputElement).value
       internalValue.value = val
+      isInvalid.value = false
 
-      const trimmed = val.trim()
-      try {
-        if (trimmed) {
+      if (debounceTimer) clearTimeout(debounceTimer)
+
+      debounceTimer = setTimeout(() => {
+        const trimmed = val.trim()
+        if (!trimmed) return
+
+        // Verify that the value hasn't changed since the timer started
+        if (val !== internalValue.value) return
+
+        try {
           parseColor(trimmed)
           isInvalid.value = false
-          emit('update:modelValue', trimmed)
-        } else {
-          isInvalid.value = false
+          if (trimmed !== lastEmittedValue) {
+            lastEmittedValue = trimmed
+            emit('update:modelValue', trimmed)
+          }
+        } catch {
+          isInvalid.value = true
+        }
+      }, 100)
+    }
+
+    const handlePaste = (e: ClipboardEvent) => {
+      e.preventDefault()
+      const text = e.clipboardData?.getData('text') || ''
+      const cleaned = text.trim()
+
+      // If it looks like a hex without #, add it
+      const final = /^[0-9a-fA-F]{3,8}$/.test(cleaned) ? `#${cleaned}` : cleaned
+
+      internalValue.value = final
+      try {
+        parseColor(final)
+        isInvalid.value = false
+        if (final !== lastEmittedValue) {
+          lastEmittedValue = final
+          emit('update:modelValue', final)
         }
       } catch {
         isInvalid.value = true
@@ -45,8 +85,12 @@ export default defineComponent({
     }
 
     const handleBlur = () => {
-      if (!isInvalid.value && internalValue.value) {
-        internalValue.value = internalValue.value.trim()
+      const trimmed = internalValue.value.trim()
+      if (trimmed !== internalValue.value) {
+        internalValue.value = trimmed
+        if (!isInvalid.value) {
+          emit('update:modelValue', trimmed)
+        }
       }
     }
 
@@ -58,12 +102,21 @@ export default defineComponent({
             role="textbox"
             aria-label={props.label || 'Color Value'}
             aria-invalid={isInvalid.value}
+            aria-describedby={props.label ? `${props.label.toLowerCase()}-error` : 'color-error'}
             class={['vue3-colorful__input', isInvalid.value && 'vue3-colorful__input--invalid']}
             value={internalValue.value}
             onInput={handleChange}
             onBlur={handleBlur}
+            onPaste={handlePaste}
             spellcheck={false}
           />
+          <span
+            id={props.label ? `${props.label.toLowerCase()}-error` : 'color-error'}
+            class="vue3-colorful__error-text"
+            aria-live="polite"
+          >
+            {isInvalid.value ? 'Invalid color format' : ''}
+          </span>
         </label>
       </div>
     )

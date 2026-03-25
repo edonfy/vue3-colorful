@@ -46,7 +46,7 @@ export default ts.config(
     },
     rules: {
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/ban-ts-comment': 'off',
+      '@typescript-eslint/ban-ts-comment': 'warn',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -57,7 +57,7 @@ export default ts.config(
       ],
       'vue/multi-word-component-names': 'off',
       'vue/prop-name-casing': 'off',
-      'vue/require-default-prop': 'off',
+      'vue/require-default-prop': 'error',
     },
   }
 )

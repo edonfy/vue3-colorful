@@ -15,11 +15,12 @@ const config: StorybookConfig = {
     const { default: UnoCSS } = await import('unocss/vite')
     const { default: VueJsx } = await import('@vitejs/plugin-vue-jsx')
 
+    const { resolve } = await import('path')
     return mergeConfig(config, {
       plugins: [VueJsx(), UnoCSS()],
       resolve: {
         alias: {
-          '@': '/Users/edonfy/dev/vue3-colorful/src',
+          '@': resolve(__dirname, '../src'),
         },
       },
     })

@@ -61,8 +61,8 @@ describe('PickerFactory - createPicker', () => {
       },
     })
 
-    // Initial emit due to immediate: true
-    expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+    // Should NOT emit on mount if value is valid
+    expect(wrapper.emitted('update:modelValue')).toBeFalsy()
 
     // External update should update state and emit back
     await wrapper.setProps({ modelValue: '#00ff00' })

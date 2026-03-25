@@ -39,6 +39,21 @@ export default defineComponent({
       const s = props.hsva.s
       const v = props.hsva.v
 
+      if (
+        [
+          'ArrowLeft',
+          'ArrowRight',
+          'ArrowUp',
+          'ArrowDown',
+          'PageUp',
+          'PageDown',
+          'Home',
+          'End',
+        ].includes(e.key)
+      ) {
+        e.preventDefault()
+      }
+
       switch (e.key) {
         case 'ArrowLeft':
           emit('change', { s: clamp(s - step, 0, 100), v })
@@ -73,7 +88,7 @@ export default defineComponent({
           onMove={handleMove}
           onKey={handleKey}
           role="slider"
-          ariaLabel="Saturation and Value"
+          aria-label="Saturation and Value"
           aria-valuenow={Math.round(props.hsva.s)}
           aria-valuetext={`Saturation ${Math.round(props.hsva.s)}%, Value ${Math.round(props.hsva.v)}%`}
         >

@@ -15,9 +15,6 @@ export const VERSION = __VERSION__
 export { default as ColorPickerPopover } from './color-picker/ColorPickerPopover'
 export { ColorPicker }
 
-// Plugins
-export { default as tailwindPlugin } from './plugins/tailwind'
-export { default as unocssPreset } from './plugins/unocss'
-export { default as nuxtModule } from './plugins/nuxt'
+// Plugins (Exported via subpaths in package.json)
 
 export default ColorPicker

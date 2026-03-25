@@ -67,11 +67,10 @@ export const VerticalLayout: Story = {
       return { args }
     },
     template: `
-      <div style="display: flex; gap: 20px; height: 200px;">
+      <div style="display: flex; gap: 20px; align-items: flex-start;">
         <HexColorPicker v-bind="args" />
-        <p style="margin: 0; color: #666; font-family: sans-serif; align-self: center;">
-          Layout automatically switches to horizontal rows<br/>
-          when <code>vertical=true</code> is passed.
+        <p style="margin: 0; color: #666; font-family: sans-serif; max-width: 200px;">
+          The <code>vertical</code> prop moves the sliders to the right side and displays them vertically, perfect for sidebars or wide layouts.
         </p>
       </div>
     `,

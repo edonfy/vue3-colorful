@@ -12,8 +12,8 @@ export default defineNuxtModule({
     },
   },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setup(_options: any, nuxt: any) {
-    const { resolve: _resolve } = createResolver(import.meta.url)
+  setup(options: { disableCss?: boolean } = {}, nuxt: any) {
+    const { resolve } = createResolver(import.meta.url)
 
     // Auto-import component list
     const components = [
@@ -23,6 +23,7 @@ export default defineNuxtModule({
       'HsvColorPicker',
       'CmykColorPicker',
       'ColorPicker',
+      'ColorPickerPopover',
     ]
 
     components.forEach((name) => {
@@ -33,7 +34,10 @@ export default defineNuxtModule({
       })
     })
 
-    // Automatically inject the library's CSS
-    nuxt.options.css.push('vue3-colorful/dist/style.css')
+    // Automatically inject the library's CSS relative to this file
+    if (!options.disableCss) {
+      // In production, the CSS file is named vue3-colorful.css
+      nuxt.options.css.push(resolve('./vue3-colorful.css'))
+    }
   },
 })

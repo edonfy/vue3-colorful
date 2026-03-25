@@ -12,9 +12,10 @@
     "outDir": "dist",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
+    "emitDeclarationOnly": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
+    "noEmit": false,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "paths": {

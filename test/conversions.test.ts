@@ -45,7 +45,7 @@ describe('Color Conversions', () => {
       expect(obj).toEqual({ c: 0, m: 100, y: 100, k: 0 })
       expect(convert.cmykToCmykString(obj)).toBe(str)
 
-      expect(convert.cmykStringToCmyk('invalid')).toEqual({ c: 0, m: 0, y: 0, k: 0 })
+      expect(() => convert.cmykStringToCmyk('invalid')).toThrow()
     })
   })
 

@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite'
-import { configDefaults } from 'vitest/config'
 import Vue from '@vitejs/plugin-vue'
 import VueJsx from '@vitejs/plugin-vue-jsx'
 import UnoCSS from 'unocss/vite'
@@ -18,33 +17,14 @@ export default defineConfig({
     Vue(),
     VueJsx(),
     UnoCSS(),
-    visualizer({
-      filename: 'stats.html',
-      gzipSize: true,
-      brotliSize: true,
-    }),
-  ],
-  test: {
-    environment: 'jsdom',
-    globals: true,
-    include: ['**/*.test.ts'],
-    exclude: [...configDefaults.exclude],
-    alias: {
-      'virtual:uno.css': resolve(__dirname, './test/mocks/empty.css'),
-    },
-    coverage: {
-      exclude: [
-        'src/stories',
-        'src/types.ts',
-        'src/vite-env.d.ts',
-        'src/index.ts',
-        'dist/**',
-        '**/*.stories.ts',
-        '**/*.test.ts',
-        'node_modules/**',
-      ],
-    },
-  },
+    !!process.env.ANALYZE &&
+      visualizer({
+        filename: 'stats.html',
+        gzipSize: true,
+        brotliSize: true,
+        open: true,
+      }),
+  ].filter(Boolean) as any,
   build: {
     lib: {
       entry: {
@@ -57,10 +37,11 @@ export default defineConfig({
       formats: ['es', 'cjs'],
     },
     rollupOptions: {
-      external: ['vue', 'tailwindcss/plugin', 'unocss', '@nuxt/kit'],
+      external: ['vue', '@floating-ui/vue', 'tailwindcss/plugin', 'unocss', '@nuxt/kit'],
       output: {
         globals: {
           vue: 'Vue',
+          '@floating-ui/vue': 'FloatingUIVue',
         },
         exports: 'named',
       },
@@ -73,6 +54,6 @@ export default defineConfig({
     },
   },
   server: {
-    host: '0.0.0.0',
+    host: 'localhost',
   },
 })
