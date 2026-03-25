@@ -57,7 +57,7 @@
 }
 
 .vue3-colorful--dark .vue3-colorful__label-text {
-  color: #9ca3af;
+  color: #d1d5db;
 }
 
 .vue3-colorful--dark .vue3-colorful__pointer {
@@ -88,6 +88,12 @@
 
 @media (hover: hover) {
   .vue3-colorful__pointer:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .vue3-colorful__pointer:active {
     transform: translate(-50%, -50%) scale(1.1);
   }
 }
@@ -177,8 +183,7 @@
 .vue3-colorful__alpha-pointer {
   background-color: #fff;
   background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill-opacity=".05"%3E%3Crect x="8" width="8" height="8"/%3E%3Crect y="8" width="8" height="8"/%3E%3C/svg%3E');
-  background-size: calc(var(--vc-pointer-size, 28px) / 1.75)
-    calc(var(--vc-pointer-size, 28px) / 1.75);
+  background-size: calc(var(--vc-pointer-size, 28px) / 1.75) calc(var(--vc-pointer-size, 28px) / 1.75);
 }
 
 /* Eyedropper */
@@ -259,7 +264,7 @@
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
 }
 
-.vue3-colorful > *:last-child {
+.vue3-colorful>*:last-child {
   border-radius: 0 0 var(--vc-border-radius) var(--vc-border-radius);
 }
 
@@ -372,6 +377,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .vue3-colorful,
   .vue3-colorful * {
     transition: none !important;
