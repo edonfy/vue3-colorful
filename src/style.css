@@ -86,8 +86,10 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.vue3-colorful__pointer:hover {
-  transform: translate(-50%, -50%) scale(1.1);
+@media (hover: hover) {
+  .vue3-colorful__pointer:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
 }
 
 .vue3-colorful__saturation {
@@ -201,9 +203,11 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.vue3-colorful__eyedropper:hover:not(:disabled) {
-  transform: scale(1.1);
-  background: rgba(255, 255, 255, 0.4);
+@media (hover: hover) {
+  .vue3-colorful__eyedropper:hover:not(:disabled) {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.4);
+  }
 }
 
 .vue3-colorful__eyedropper:focus-visible {
@@ -243,9 +247,11 @@
   box-shadow: inset 0 0 0 1px var(--vc-border-color);
 }
 
-.vue3-colorful__preset:hover {
-  transform: scale(1.15);
-  z-index: 1;
+@media (hover: hover) {
+  .vue3-colorful__preset:hover {
+    transform: scale(1.15);
+    z-index: 1;
+  }
 }
 
 .vue3-colorful__preset--active {
@@ -335,8 +341,10 @@
   transition: transform 0.2s ease;
 }
 
-.vue3-colorful__swatch-trigger:hover {
-  transform: scale(1.1);
+@media (hover: hover) {
+  .vue3-colorful__swatch-trigger:hover {
+    transform: scale(1.1);
+  }
 }
 
 .vue3-colorful__popover-content {

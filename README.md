@@ -19,7 +19,7 @@ A tiny, fast, and accessible color picker component for Vue 3. Highly optimized 
 - ♿ **Accessible** - Full ARIA support and comprehensive keyboard navigation.
 - 🌓 **Dark Mode** - Built-in premium dark theme with simple toggle.
 - 🚀 **Performant** - Ultra-smooth 60fps interactions via RAF throttling and LRU caching.
-- ✅ **Industrial Stability** - Automated Visual Regression & 72+ Unit tests.
+- ✅ **Industrial Stability** - Automated Visual Regression & 90+ Unit tests.
 
 ## 🚀 Installation
 
@@ -174,14 +174,40 @@ All pickers support the following named slots for custom pointers/tracks:
 | `--vc-border-color`  | `rgba(0,0,0,0.05)`           |
 | `--vc-preset-gap`    | `8px`                        |
 
+## ⌨️ Keyboard Navigation
+
+The picker is fully accessible via keyboard:
+
+- **Arrow Keys**: Move the pointer in 1% increments.
+- **Shift + Arrow**: Move in 10% increments.
+- **Home / End**: Move to minimum or maximum values.
+- **PageUp / PageDown**: Move in large increments.
+- **Tab**: Focus between sliders and the input field.
+
+## 💻 Browser Compatibility
+
+- **Vue**: ^3.2.0
+- **Modern Browsers**: Chrome, Firefox, Safari, Edge.
+- **EyeDropper API**: Supported in Chromium-based browsers (Chrome, Edge, Opera). Native support fallback is handled gracefully.
+
+## ❓ Troubleshooting
+
+### My styles are not appearing
+
+Ensure you import the CSS file in your main entry point:
+`import 'vue3-colorful/dist/style.css'`
+
+### Nuxt 3 Error
+
+If you face SSR issues, ensure the module is added to `nuxt.config.ts` modules array as shown in the ecosystem section.
+
+---
+
 ## 🧪 Quality Assurance
 
 - **Unit Tests**: 90+ tests for core transformations.
 - **Visual Regression**: Playwright snapshots for all variants.
 - **Modern Stack**: Built with Vite 6, Vitest 3, and TypeScript 5.
-- **Compatibility**: Vue ^3.2.0
-
----
 
 ## License
 

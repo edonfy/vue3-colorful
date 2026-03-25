@@ -59,6 +59,10 @@ export default defineComponent({
           }
         } catch {
           isInvalid.value = true
+          // Auto-reset error state after 3 seconds
+          setTimeout(() => {
+            if (isInvalid.value) isInvalid.value = false
+          }, 3000)
         }
       }, 100)
     }
