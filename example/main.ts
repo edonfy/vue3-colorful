@@ -7,7 +7,7 @@ import 'virtual:uno.css'
 // import '../dist/style.css'
 
 // import ColorPicker from '../src/color-picker'
-// import '../src/style.css'
+import '../src/style.css'
 
 const app = createApp(App)
 
