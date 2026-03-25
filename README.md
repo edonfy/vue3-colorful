@@ -7,6 +7,10 @@
   <img src="https://img.shields.io/badge/gzipped-~7KB-blue" alt="Size">
 </p>
 
+<p align="center">
+  <a href="https://edonfy.github.io/vue3-colorful/"><strong>Live Demo</strong></a>
+</p>
+
 A tiny, fast, and accessible color picker component for Vue 3. Highly optimized and modernized with premium aesthetics and first-class ecosystem support.
 
 ---
