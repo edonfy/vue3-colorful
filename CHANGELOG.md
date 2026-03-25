@@ -1,3 +1,34 @@
+## 0.4.4 (2026-03-25)
+
+### 🐛 Bug Fixes
+
+- 🐛 **Docs**: Fixed incorrect CSS import path (`dist/style.css` → `dist/vue3-colorful.css`).
+- 🐛 **Docs**: Fixed Tailwind plugin import syntax (named import → default import).
+- 🐛 **Docs**: Updated coverage badge (92% → 94%), test count (94 → 100+), and removed unused CSS variables from theming table.
+- 📦 **Exports**: Added `./style.css` subpath export to `package.json`.
+
+---
+
+## 0.4.3 (2026-03-25)
+
+### 🧹 Code Quality
+
+- 🧹 **Audit**: Import order, type safety, dead code removal, and test coverage improvements.
+
+---
+
+## 0.4.2 (2026-03-25)
+
+### 🐛 Bug Fixes
+
+- 🐛 **ColorInput**: Synced `lastEmittedValue` to prevent stale state on external updates.
+- 🐛 **useColorState**: Improved echo handling to avoid redundant emissions.
+- 🐛 **Hue**: Semantic `End` key behavior aligned with slider orientation.
+- ⌨️ **useInteraction**: Added dev warnings for missing pointer capture.
+- 🎨 **Styles**: Added `contain` performance hints to interactive elements.
+
+---
+
 ## 0.4.1 (2025-03-25)
 
 ### 🐛 Bug Fixes
