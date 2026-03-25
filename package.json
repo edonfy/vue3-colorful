@@ -1,6 +1,6 @@
 {
   "name": "vue3-colorful",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "type": "module",
   "packageManager": "pnpm@10.32.1",
   "sideEffects": [
@@ -58,7 +58,8 @@
         "types": "./dist/plugins/nuxt.d.ts",
         "default": "./dist/nuxt.cjs"
       }
-    }
+    },
+    "./style.css": "./dist/vue3-colorful.css"
   },
   "repository": {
     "type": "git",

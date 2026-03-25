@@ -3,7 +3,7 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/vue3-colorful"><img src="https://img.shields.io/npm/v/vue3-colorful" alt="npm version"></a>
   <a href="https://github.com/edonfy/vue3-colorful/actions"><img src="https://github.com/edonfy/vue3-colorful/workflows/CI/badge.svg" alt="CI"></a>
-  <img src="https://img.shields.io/badge/coverage-92%25-green" alt="Coverage">
+  <img src="https://img.shields.io/badge/coverage-94%25-green" alt="Coverage">
   <img src="https://img.shields.io/badge/gzipped-~7KB-blue" alt="Size">
 </p>
 
@@ -45,7 +45,7 @@ For the best bundle size, import the specific component for your color model.
 <script setup>
 import { ref } from 'vue'
 import { HexColorPicker } from 'vue3-colorful'
-import 'vue3-colorful/dist/style.css'
+import 'vue3-colorful/dist/vue3-colorful.css'
 
 const color = ref('#3b82f6')
 </script>
@@ -82,7 +82,7 @@ Theme calculation is automated.
 
 ```js
 // tailwind.config.js
-import { tailwindPlugin } from 'vue3-colorful/tailwind'
+import tailwindPlugin from 'vue3-colorful/tailwind'
 
 export default {
   theme: {
@@ -164,19 +164,17 @@ All pickers support the following named slots for custom pointers/tracks:
 
 ### Theming (CSS Variables)
 
-| Variable             | Default                      |
-| -------------------- | ---------------------------- |
-| `--vc-width`         | `200px`                      |
-| `--vc-height`        | `200px`                      |
-| `--vc-border-radius` | `8px`                        |
-| `--vc-pointer-size`  | `28px`                       |
-| `--vc-slider-height` | `24px`                       |
-| `--vc-accent-color`  | `#3b82f6`                    |
-| `--vc-shadow`        | `0 4px 12px rgba(0,0,0,0.1)` |
-| `--vc-bg-color`      | `#ffffff`                    |
-| `--vc-text-color`    | `#ffffff` (labels)           |
-| `--vc-border-color`  | `rgba(0,0,0,0.05)`           |
-| `--vc-preset-gap`    | `8px`                        |
+| Variable             | Default               |
+| -------------------- | --------------------- |
+| `--vc-width`         | `200px`               |
+| `--vc-height`        | `200px`               |
+| `--vc-border-radius` | `8px`                 |
+| `--vc-pointer-size`  | `28px`                |
+| `--vc-slider-height` | `24px`                |
+| `--vc-accent-color`  | `#3b82f6`             |
+| `--vc-bg-color`      | `#fff`                |
+| `--vc-border-color`  | `rgba(0, 0, 0, 0.05)` |
+| `--vc-preset-gap`    | `8px`                 |
 
 ## ⌨️ Keyboard Navigation
 
@@ -199,7 +197,7 @@ The picker is fully accessible via keyboard:
 ### My styles are not appearing
 
 Ensure you import the CSS file in your main entry point:
-`import 'vue3-colorful/dist/style.css'`
+`import 'vue3-colorful/dist/vue3-colorful.css'`
 
 ### Nuxt 3 Error
 
@@ -209,7 +207,7 @@ If you face SSR issues, ensure the module is added to `nuxt.config.ts` modules a
 
 ## 🧪 Quality Assurance
 
-- **Unit Tests**: 94 tests for core transformations.
+- **Unit Tests**: 100+ tests for core transformations.
 - **Visual Regression**: Playwright snapshots for all variants.
 - **Modern Stack**: Built with Vite 6, Vitest 3, and TypeScript 5.
 
