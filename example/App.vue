@@ -7,7 +7,9 @@ import {
   HsvColorPicker,
   CmykColorPicker,
   ColorPickerPopover,
-} from '../src'
+} from '../dist/index'
+
+import '../dist/vue3-colorful.css'
 
 const hexColor = ref<string>('#3b82f6')
 const popoverColor = ref<string>('#8b5cf6')
@@ -307,7 +309,7 @@ body {
 }
 
 /* Custom class for the main picker to showcase the layout flex */
-.vue3-colorful {
+.vue3-colorful.main-picker {
   width: 100% !important;
   height: 250px !important;
   border-radius: 12px;

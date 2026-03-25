@@ -15,38 +15,9 @@ A tiny, fast, and accessible color picker component for Vue 3. Highly optimized 
 
 ---
 
-## 📑 Table of Contents
-
-- [Key Features](#-key-features)
-- [Installation](#-installation)
-- [Components](#-components)
-  - [Specialized Pickers](#specialized-pickers-recommended)
-  - [Generic ColorPicker](#generic-colorpicker)
-  - [Popover Mode](#popover-mode)
-- [Props](#-props)
-- [Slots](#-slots)
-- [Customization](#-customization)
-  - [CSS Variables](#css-variables)
-  - [Dark Mode](#dark-mode)
-- [Accessibility](#-accessibility)
-  - [Keyboard Navigation](#keyboard-navigation)
-  - [ARIA Support](#aria-support)
-  - [EyeDropper](#eyedropper)
-- [Ecosystem Integration](#-ecosystem-integration)
-  - [Tailwind CSS](#tailwind-css)
-  - [Nuxt 3](#nuxt-3)
-  - [UnoCSS](#unocss)
-- [Browser Compatibility](#-browser-compatibility)
-- [Troubleshooting](#-troubleshooting)
-- [License](#license)
-
----
-
 ## 🌟 Key Features
 
 - 🌳 **Tree-shakable** - Import only the models you need (Hex, RGB, HSL, HSV, CMYK).
-- 🎈 **Popover Mode** - Built-in floating picker support with `@floating-ui`.
-- 🧩 **Ecosystem Plugins** - Native integration for **Tailwind CSS**, **UnoCSS**, and **Nuxt 3**.
 - ♿ **Accessible** - Full ARIA support and comprehensive keyboard navigation.
 - 🌓 **Dark Mode** - Built-in premium dark theme with simple toggle.
 - 🚀 **Performant** - Ultra-smooth 60fps interactions via RAF throttling and LRU caching.
@@ -114,7 +85,7 @@ const color = ref('#3b82f6')
 
 Additionally accepts all [common props](#-props).
 
-### Popover Mode
+### Popover Mode （support with `@floating-ui`）
 
 A compact floating picker that opens on click, powered by `@floating-ui`.
 
