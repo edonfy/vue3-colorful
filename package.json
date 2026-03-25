@@ -58,6 +58,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && vue-tsc --declaration --emitDeclarationOnly",
+    "build:example": "vite build --config vite.config.example.ts",
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
