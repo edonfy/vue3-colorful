@@ -4,7 +4,7 @@
   <a href="https://www.npmjs.com/package/vue3-colorful"><img src="https://img.shields.io/npm/v/vue3-colorful" alt="npm version"></a>
   <a href="https://github.com/edonfy/vue3-colorful/actions"><img src="https://github.com/edonfy/vue3-colorful/workflows/CI/badge.svg" alt="CI"></a>
   <img src="https://img.shields.io/badge/coverage-92%25-green" alt="Coverage">
-  <img src="https://img.shields.io/badge/gzipped-~10KB-blue" alt="Size">
+  <img src="https://img.shields.io/badge/gzipped-~7KB-blue" alt="Size">
 </p>
 
 A tiny, fast, and accessible color picker component for Vue 3. Highly optimized and modernized with premium aesthetics and first-class ecosystem support.
@@ -53,7 +53,7 @@ const color = ref('#3b82f6')
 
 **Available Components**: `HexColorPicker`, `RgbColorPicker`, `HslColorPicker`, `HsvColorPicker`, `CmykColorPicker`.
 
-### Popover Mode (v0.4.0+)
+### Popover Mode
 
 A compact floating picker component.
 
@@ -205,7 +205,7 @@ If you face SSR issues, ensure the module is added to `nuxt.config.ts` modules a
 
 ## 🧪 Quality Assurance
 
-- **Unit Tests**: 90+ tests for core transformations.
+- **Unit Tests**: 94 tests for core transformations.
 - **Visual Regression**: Playwright snapshots for all variants.
 - **Modern Stack**: Built with Vite 6, Vitest 3, and TypeScript 5.
 

@@ -1,3 +1,20 @@
+## 0.4.1 (2025-03-25)
+
+### 🐛 Bug Fixes
+
+- 🐛 **Popover Animation**: Refactored `ColorPickerPopover` to use CSS-driven `data-status` transitions, eliminating flicker at (0,0) and adding smooth exit animation.
+- 🐛 **Lint**: Fixed `Pointer` component missing `default` prop; replaced `@ts-ignore` with `@ts-expect-error` in `Eyedropper`.
+
+### ⚡ Performance
+
+- ⚡ **Bundle Size**: Reduced core bundle from ~15.5KB to ~7.2KB gzip by removing inline style computation in favor of CSS class-driven animation.
+
+### 🧪 Testing
+
+- ✅ Added 4 new animation status tests for `ColorPickerPopover` (94 total).
+
+---
+
 ## 0.4.0 (2025-03-25)
 
 ### 🚀 Major Improvements

@@ -1,18 +1,9 @@
-import {
-  defineComponent,
-  ref,
-  PropType,
-  onMounted,
-  onUnmounted,
-  Teleport,
-  computed,
-  watch,
-  CSSProperties,
-} from 'vue'
+import { defineComponent, ref, PropType, onMounted, onUnmounted, Teleport } from 'vue'
 import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/vue'
 import { commonPickerProps } from './PickerFactory'
 import ColorPicker from './ColorPicker'
 import { ColorModel } from '../types'
+import { useTransitionStatus } from '../composables/useTransitionStatus'
 
 export default defineComponent({
   name: 'ColorPickerPopover',
@@ -29,66 +20,21 @@ export default defineComponent({
     const reference = ref<HTMLElement | null>(null)
     const floating = ref<HTMLElement | null>(null)
 
-    const { x, y, floatingStyles, isPositioned } = useFloating(reference, floating, {
+    const { floatingStyles } = useFloating(reference, floating, {
       placement: 'bottom-start',
       strategy: 'fixed',
       middleware: [offset(8), flip(), shift()],
       whileElementsMounted: autoUpdate,
+      transform: false,
     })
+
+    const { status, isMounted, onTransitionEnd } = useTransitionStatus(isOpen)
 
     const toggle = () => (isOpen.value = !isOpen.value)
     const close = () => {
       isOpen.value = false
-      isVisible.value = false
     }
 
-    // Check if coordinates have settled away from (0,0)
-    const isPositionedCorrectly = computed(() => {
-      return isPositioned.value && x.value !== null && y.value !== null
-    })
-
-    // Delayed visibility guard (2 frames)
-    const isVisible = ref(false)
-    watch([isOpen, isPositionedCorrectly], ([open, positioned]) => {
-      if (open && positioned) {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            if (isOpen.value) {
-              isVisible.value = true
-            }
-          })
-        })
-      } else if (!open) {
-        isVisible.value = false
-      }
-    })
-
-    // Secure styles to prevent flashing at (0,0)
-    const safeStyles = computed<CSSProperties>(() => {
-      if (!isPositionedCorrectly.value) {
-        return {
-          ...floatingStyles.value,
-          position: 'fixed' as const,
-          top: '-10000px',
-          left: '-10000px',
-          opacity: 0,
-          visibility: 'hidden' as const,
-          transition: 'none',
-        } as CSSProperties
-      }
-
-      const baseTransform = (floatingStyles.value.transform as string) || ''
-      return {
-        ...floatingStyles.value,
-        opacity: isVisible.value ? 1 : 0,
-        visibility: isVisible.value ? 'visible' : 'hidden',
-        pointerEvents: isVisible.value ? 'auto' : 'none',
-        transition: 'opacity 0.2s ease, transform 0.2s ease',
-        transform: `${baseTransform} scale(${isVisible.value ? 1 : 0.95})`,
-      } as CSSProperties
-    })
-
-    // Close on click outside
     const handleClickOutside = (e: MouseEvent) => {
       if (
         isOpen.value &&
@@ -105,8 +51,7 @@ export default defineComponent({
       if (e.key === 'Escape' && isOpen.value) {
         e.stopPropagation()
         close()
-        // Return focus to trigger
-        reference.value?.querySelector('button')?.focus()
+        reference.value?.focus()
       }
     }
 
@@ -120,7 +65,7 @@ export default defineComponent({
       document.removeEventListener('keydown', handleKeydown)
     })
 
-    expose({ isOpen, isVisible })
+    expose({ isOpen })
 
     return () => (
       <div class="vue3-colorful__popover-wrapper">
@@ -144,8 +89,14 @@ export default defineComponent({
         </div>
 
         <Teleport to="body">
-          {isOpen.value && (
-            <div ref={floating} style={safeStyles.value} class="vue3-colorful__popover-content">
+          {isMounted.value && (
+            <div
+              ref={floating}
+              style={floatingStyles.value}
+              class="vue3-colorful__popover-content"
+              data-status={status.value}
+              onTransitionend={onTransitionEnd}
+            >
               <ColorPicker
                 {...props}
                 onUpdate:modelValue={(val) => emit('update:modelValue', val)}
