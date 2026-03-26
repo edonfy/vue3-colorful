@@ -12,12 +12,16 @@ import {
 import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/vue'
 import { commonPickerProps } from './commonPickerProps'
 import ColorPickerPanel from './ColorPickerPanel'
+import PopoverTrigger from './PopoverTrigger'
 import { AnyColor, ColorModel } from '../types'
 import { getColorDisplayValue } from '../utils/converter'
 import { useTransitionStatus } from '../composables/useTransitionStatus'
 
+let popoverPanelId = 0
+
 export default defineComponent({
   name: 'ColorPickerPopover',
+  inheritAttrs: false,
   props: {
     ...commonPickerProps,
     colorModel: {
@@ -26,11 +30,13 @@ export default defineComponent({
     },
   },
   emits: ['update:modelValue', 'active-change'],
-  setup(props, { emit, slots, expose }) {
+  setup(props, { emit, slots, expose, attrs }) {
     const isOpen = ref(false)
     const reference = ref<HTMLElement | null>(null)
     const floating = ref<HTMLElement | null>(null)
     const triggerColor = computed(() => getColorDisplayValue(props.modelValue))
+    popoverPanelId += 1
+    const panelId = `vue3-colorful-popover-panel-${popoverPanelId}`
 
     const { floatingStyles } = useFloating(reference, floating, {
       placement: 'bottom-start',
@@ -58,9 +64,13 @@ export default defineComponent({
 
     const focusTrigger = async () => {
       await nextTick()
-      const focusable = reference.value?.querySelector<HTMLElement>(
+      const focusable = reference.value?.matches(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       )
+        ? reference.value
+        : reference.value?.querySelector<HTMLElement>(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          )
 
       if (focusable) {
         focusable.focus()
@@ -90,17 +100,6 @@ export default defineComponent({
       }
     }
 
-    const handleTriggerKeydown = (e: KeyboardEvent) => {
-      if (props.disabled) {
-        return
-      }
-
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault()
-        toggle()
-      }
-    }
-
     onMounted(() => {
       document.addEventListener('mousedown', handleClickOutside)
       document.addEventListener('keydown', handleKeydown)
@@ -123,47 +122,43 @@ export default defineComponent({
     expose({ isOpen, open, close, toggle, focusTrigger })
 
     return () => (
-      <div class="vue3-colorful__popover-wrapper">
-        <div
-          ref={reference}
-          class={[
-            'vue3-colorful__popover-trigger',
-            props.disabled && 'vue3-colorful__popover-trigger--disabled',
-          ]}
-          onClick={() => {
-            if (props.disabled) return
-            toggle()
+      <div
+        {...attrs}
+        class={[
+          'vue3-colorful-theme',
+          'vue3-colorful__popover-wrapper',
+          props.dark && 'vue3-colorful-theme--dark',
+          attrs.class,
+        ]}
+      >
+        <PopoverTrigger
+          referenceRef={reference}
+          color={props.modelValue}
+          displayColor={triggerColor.value}
+          disabled={props.disabled}
+          readOnly={props.readOnly}
+          isOpen={isOpen.value}
+          panelId={panelId}
+          onToggle={toggle}
+          v-slots={{
+            default: slots.default,
           }}
-          onKeydown={handleTriggerKeydown}
-          aria-haspopup="true"
-          aria-expanded={isOpen.value}
-          aria-disabled={props.disabled ? 'true' : undefined}
-          tabindex={props.disabled ? -1 : 0}
-        >
-          {slots.default ? (
-            slots.default({
-              isOpen: isOpen.value,
-              color: props.modelValue,
-              disabled: props.disabled,
-              readOnly: props.readOnly,
-            })
-          ) : (
-            <button
-              type="button"
-              class="vue3-colorful__swatch-trigger"
-              style={{ backgroundColor: triggerColor.value }}
-              aria-label="Choose color"
-              disabled={props.disabled}
-            />
-          )}
-        </div>
+        />
 
         <Teleport to="body">
           {isMounted.value && (
             <div
+              id={panelId}
               ref={floating}
               style={floatingStyles.value}
-              class="vue3-colorful__popover-content"
+              class={[
+                'vue3-colorful-theme',
+                'vue3-colorful__popover-content',
+                props.dark && 'vue3-colorful-theme--dark',
+              ]}
+              role="dialog"
+              aria-modal="false"
+              tabindex={-1}
               data-status={status.value}
               onTransitionend={onTransitionEnd}
             >

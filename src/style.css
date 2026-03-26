@@ -4,7 +4,8 @@
   box-sizing: border-box;
 }
 
-.vue3-colorful {
+.vue3-colorful,
+.vue3-colorful-theme {
   --vc-width: 200px;
   --vc-height: 200px;
   --vc-border-radius: 8px;
@@ -64,12 +65,32 @@
 }
 
 /* Dark Theme */
-.vue3-colorful--dark {
+.vue3-colorful--dark,
+.vue3-colorful-theme--dark {
   --vc-bg-color: #222;
   --vc-text-color: #f3f4f6;
   --vc-border-color: rgba(255, 255, 255, 0.1);
   --vc-input-bg-color: rgba(255, 255, 255, 0.05);
   --vc-pointer-border-color: #444;
+}
+
+.vue3-colorful__interactive:focus-visible {
+  outline: 2px solid var(--vc-accent-color);
+  outline-offset: 2px;
+}
+
+.vue3-colorful__eyedropper,
+.vue3-colorful__preset,
+.vue3-colorful__input,
+.vue3-colorful__copy-button,
+.vue3-colorful__clear,
+.vue3-colorful__swatch-trigger {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  line-height: 1.2;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 .vue3-colorful--dark .vue3-colorful__label-text {
@@ -532,6 +553,7 @@
   padding: 0;
   box-shadow: var(--vc-shadow);
   transition: transform 0.2s ease;
+  background-clip: padding-box;
 }
 
 @media (hover: hover) {
@@ -547,6 +569,9 @@
 
 .vue3-colorful__popover-content {
   z-index: 1000;
+  background: var(--vc-bg-color);
+  color: var(--vc-text-color);
+  border: 1px solid var(--vc-border-color);
   box-shadow: var(--vc-shadow);
   border-radius: var(--vc-border-radius);
   overflow: hidden;

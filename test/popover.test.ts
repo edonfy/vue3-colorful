@@ -33,7 +33,8 @@ describe('ColorPickerPopover', () => {
     const wrapper = mount(ColorPickerPopover, {
       props: { modelValue: '#ffffff' },
     })
-    expect(wrapper.find('.vue3-colorful__swatch-trigger').exists()).toBe(true)
+    expect(wrapper.find('button.vue3-colorful__swatch-trigger').exists()).toBe(true)
+    expect(wrapper.find('.vue3-colorful-theme').exists()).toBe(true)
   })
 
   it('toggles visibility on click', async () => {
@@ -89,6 +90,7 @@ describe('ColorPickerPopover', () => {
       },
     })
     expect(wrapper.find('.custom-trigger').exists()).toBe(true)
+    expect(wrapper.find('.vue3-colorful__popover-trigger').attributes('role')).toBe('button')
   })
 
   it('does not open when disabled', async () => {
@@ -99,6 +101,47 @@ describe('ColorPickerPopover', () => {
     await wrapper.find('.vue3-colorful__popover-trigger').trigger('click')
     expect(isOpen(wrapper.vm)).toBe(false)
     expect(wrapper.find('.vue3-colorful__popover-trigger').attributes('aria-disabled')).toBe('true')
+  })
+
+  it('links the default trigger and panel with dialog semantics', async () => {
+    const wrapper = mount(ColorPickerPopover, {
+      props: { modelValue: '#ffffff' },
+      attachTo: document.body,
+    })
+
+    const trigger = wrapper.find('.vue3-colorful__popover-trigger')
+    expect(trigger.element.tagName).toBe('BUTTON')
+    expect(trigger.attributes('aria-haspopup')).toBe('dialog')
+
+    await trigger.trigger('click')
+    await wrapper.vm.$nextTick()
+
+    const content = document.body.querySelector('.vue3-colorful__popover-content')
+    expect(content?.getAttribute('role')).toBe('dialog')
+    expect(content?.getAttribute('id')).toBe(trigger.attributes('aria-controls'))
+  })
+
+  it('applies theme host classes to wrapper and teleported content', async () => {
+    const wrapper = mount(ColorPickerPopover, {
+      props: { modelValue: '#ffffff', dark: true },
+      attachTo: document.body,
+    })
+
+    expect(wrapper.find('.vue3-colorful__popover-wrapper').classes()).toContain(
+      'vue3-colorful-theme'
+    )
+    expect(wrapper.find('.vue3-colorful__popover-wrapper').classes()).toContain(
+      'vue3-colorful-theme--dark'
+    )
+
+    await wrapper.find('.vue3-colorful__popover-trigger').trigger('click')
+    await wrapper.vm.$nextTick()
+
+    const content = document.body.querySelector('.vue3-colorful__popover-content')
+
+    expect(content).not.toBeNull()
+    expect(content?.classList.contains('vue3-colorful-theme')).toBe(true)
+    expect(content?.classList.contains('vue3-colorful-theme--dark')).toBe(true)
   })
 
   it('closes on Escape key', async () => {
