@@ -1,4 +1,4 @@
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, onMounted, onUnmounted, ref, watch } from 'vue'
 import type { CSSProperties } from 'vue'
 
 import {
@@ -146,6 +146,30 @@ export default defineComponent({
       masterModel.value = (e.target as HTMLSelectElement).value as ColorModel
     }
 
+    const syncDemoTheme = (isDark: boolean) => {
+      if (typeof document === 'undefined') {
+        return
+      }
+
+      document.body.classList.toggle('demo-body--dark', isDark)
+    }
+
+    onMounted(() => {
+      syncDemoTheme(masterDark.value)
+    })
+
+    watch(masterDark, (isDark) => {
+      syncDemoTheme(isDark)
+    })
+
+    onUnmounted(() => {
+      if (typeof document === 'undefined') {
+        return
+      }
+
+      document.body.classList.remove('demo-body--dark')
+    })
+
     return () => {
       const hexPanel = (
         <section data-testid="hex-picker">
@@ -214,7 +238,10 @@ export default defineComponent({
       }
 
       return (
-        <div class="demo-container" style="position: relative;">
+        <div
+          class={['demo-container', masterDark.value && 'demo-container--dark']}
+          style="position: relative;"
+        >
           <div class="demo-hero__badges">
             <Badge text={`v${VERSION} • Vue 3 • TSX`} />
             <a

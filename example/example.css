@@ -6,20 +6,29 @@
   --demo-accent-soft: rgba(99, 102, 241, 0.1);
   --demo-card-bg: rgba(255, 255, 255, 0.8);
   --demo-card-border: rgba(15, 23, 42, 0.08);
+  --demo-glass-bg: rgba(255, 255, 255, 0.4);
+  --demo-glass-bg-soft: rgba(255, 255, 255, 0.1);
+  --demo-glass-border: rgba(255, 255, 255, 0.3);
+  --demo-glass-border-soft: rgba(255, 255, 255, 0.2);
   --demo-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   --demo-font: 'Inter', system-ui, -apple-system, sans-serif;
   --vc-accent-color: var(--demo-accent);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --demo-bg: #0f172a;
-    --demo-text: #f8fafc;
-    --demo-text-muted: #94a3b8;
-    --demo-card-bg: rgba(30, 41, 59, 0.7);
-    --demo-card-border: rgba(255, 255, 255, 0.08);
-    --demo-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
-  }
+body.demo-body--dark {
+  --demo-bg: #0f172a;
+  --demo-text: #f8fafc;
+  --demo-text-muted: #94a3b8;
+  --demo-card-bg: rgba(30, 41, 59, 0.7);
+  --demo-card-border: rgba(255, 255, 255, 0.08);
+  --demo-glass-bg: rgba(15, 23, 42, 0.55);
+  --demo-glass-bg-soft: rgba(15, 23, 42, 0.35);
+  --demo-glass-border: rgba(148, 163, 184, 0.18);
+  --demo-glass-border-soft: rgba(148, 163, 184, 0.22);
+  --demo-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.35),
+    0 8px 10px -6px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
 }
 
 * {
@@ -102,7 +111,7 @@ body::before {
 .demo-hero__badge {
   display: inline-block;
   padding: 0.25rem 0.75rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--demo-glass-bg-soft);
   color: var(--demo-accent);
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -110,7 +119,7 @@ body::before {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--demo-glass-border-soft);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
@@ -118,7 +127,7 @@ body::before {
   display: inline-flex;
   align-items: center;
   padding: 0.25rem 0.75rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--demo-glass-bg-soft);
   color: var(--demo-text);
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -126,7 +135,7 @@ body::before {
   letter-spacing: 0.05em;
   text-decoration: none;
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--demo-glass-border-soft);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   transition:
     color 0.2s ease,
@@ -198,9 +207,9 @@ body::before {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 2rem;
   align-items: center;
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--demo-glass-bg);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--demo-glass-border);
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow:
@@ -309,9 +318,9 @@ body::before {
 }
 
 .picker-card {
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--demo-glass-bg);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--demo-glass-border);
   border-radius: 1rem;
   padding: 1.5rem;
   display: flex;
@@ -355,9 +364,9 @@ body::before {
   display: grid;
   grid-template-columns: 1fr 350px;
   gap: 2rem;
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--demo-glass-bg);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--demo-glass-border);
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: var(--demo-shadow);
@@ -512,11 +521,11 @@ body::before {
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  body::before {
-    background:
-      radial-gradient(at 0% 0%, hsla(217, 91%, 30%, 0.1) 0, transparent 50%),
-      radial-gradient(at 50% 0%, hsla(250, 84%, 30%, 0.1) 0, transparent 50%),
-      radial-gradient(at 100% 0%, hsla(320, 81%, 30%, 0.1) 0, transparent 50%);
-  }
+body.demo-body--dark::before {
+  background:
+    radial-gradient(at 0% 0%, hsla(217, 91%, 30%, 0.1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, hsla(250, 84%, 30%, 0.1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(320, 81%, 30%, 0.1) 0, transparent 50%),
+    radial-gradient(at 0% 100%, hsla(180, 80%, 18%, 0.08) 0, transparent 50%),
+    radial-gradient(at 100% 100%, hsla(280, 75%, 22%, 0.08) 0, transparent 50%);
 }

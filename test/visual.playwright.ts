@@ -26,6 +26,13 @@ test.describe('Visual Regression', () => {
     )
   })
 
+  test('Showcase dark mode should theme the demo shell', async ({ page }: { page: Page }) => {
+    await page.goto('/')
+    await page.getByLabel('Dark Mode').check()
+    await expect(page.locator('body')).toHaveClass(/demo-body--dark/)
+    await expect(page.locator('.master-showcase')).toHaveScreenshot('showcase-dark-mode.png')
+  })
+
   test('HexColorPicker should match snapshot', async ({ page }: { page: Page }) => {
     await page.goto('/?view=hex')
     await page.waitForSelector('[data-testid="hex-picker"] .vue3-colorful')
