@@ -13,7 +13,9 @@
 
 Lightweight, accessible color pickers for Vue 3, built with TSX render functions and designed for app-level theming.
 
-![vue3-colorful hex picker demo](./docs/assets/showcase-demo.png)
+<p align="center">
+  <img src="./docs/assets/showcase-demo.png" alt="vue3-colorful hex picker demo" width="280">
+</p>
 
 ---
 
