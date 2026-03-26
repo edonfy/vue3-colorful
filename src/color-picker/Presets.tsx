@@ -1,5 +1,5 @@
 import { defineComponent, PropType, computed } from 'vue'
-import { parseColor, formatColor } from '@/utils/converter'
+import { isBlankColor, normalizeColorForComparison, normalizeColorString } from '@/utils/converter'
 
 export default defineComponent({
   name: 'Presets',
@@ -18,30 +18,30 @@ export default defineComponent({
   emits: ['select'],
 
   setup(props, { emit }) {
+    const getNormalizedColor = (color: string, context: 'preset' | 'active'): string => {
+      if (isBlankColor(color)) {
+        return ''
+      }
+
+      try {
+        return normalizeColorForComparison(color)
+      } catch {
+        console.warn(`[vue3-colorful] Invalid ${context} color: ${color}`)
+        return normalizeColorString(color)
+      }
+    }
+
     const normalizedPresets = computed(() => {
       return props.presets.map((color) => {
-        try {
-          return {
-            original: color,
-            normalized: formatColor(parseColor(color), 'hex', false),
-          }
-        } catch {
-          console.warn(`[vue3-colorful] Invalid preset color: ${color}`)
-          return {
-            original: color,
-            normalized: color.toLowerCase(),
-          }
+        return {
+          original: color,
+          normalized: getNormalizedColor(color, 'preset'),
         }
       })
     })
 
     const activeNormalized = computed(() => {
-      try {
-        return formatColor(parseColor(props.activeColor), 'hex', false)
-      } catch {
-        console.warn(`[vue3-colorful] Invalid activeColor: ${props.activeColor}`)
-        return props.activeColor.toLowerCase()
-      }
+      return getNormalizedColor(props.activeColor, 'active')
     })
 
     return () => (

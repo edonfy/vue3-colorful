@@ -110,6 +110,9 @@ describe('Accessibility', () => {
       expect(wrapper.find('.vue3-colorful__hue [role="slider"]').attributes('aria-label')).toBe(
         'Hue'
       )
+      expect(wrapper.find('.vue3-colorful__hue [role="slider"]').attributes('aria-valuemax')).toBe(
+        '360'
+      )
       expect(wrapper.find('.vue3-colorful__alpha [role="slider"]').attributes('aria-label')).toBe(
         'Alpha'
       )

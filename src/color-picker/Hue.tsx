@@ -81,7 +81,8 @@ export default defineComponent({
           aria-orientation={props.vertical ? 'vertical' : 'horizontal'}
           aria-valuenow={Math.round(props.hue)}
           aria-valuemin="0"
-          aria-valuemax="359"
+          aria-valuemax="360"
+          aria-valuetext={`${Math.round(props.hue)}°`}
         >
           {slots.track?.()}
           {slots.pointer ? (

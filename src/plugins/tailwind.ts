@@ -10,6 +10,13 @@ export interface TailwindPluginOptions {
   bgColor?: string
   textColor?: string
   borderColor?: string
+  inputBgColor?: string
+  pointerBorderColor?: string
+  focusRingColor?: string
+  errorColor?: string
+  errorRingColor?: string
+  presetActiveRingColor?: string
+  shadow?: string
   [key: string]: string | undefined
 }
 
@@ -32,6 +39,13 @@ const vue3ColorfulPlugin = plugin(({ addBase, theme }) => {
       bgColor: '--vc-bg-color',
       textColor: '--vc-text-color',
       borderColor: '--vc-border-color',
+      inputBgColor: '--vc-input-bg-color',
+      pointerBorderColor: '--vc-pointer-border-color',
+      focusRingColor: '--vc-focus-ring-color',
+      errorColor: '--vc-error-color',
+      errorRingColor: '--vc-error-ring-color',
+      presetActiveRingColor: '--vc-preset-active-ring-color',
+      shadow: '--vc-shadow',
     }
 
     Object.entries(mappings).forEach(([key, varName]) => {

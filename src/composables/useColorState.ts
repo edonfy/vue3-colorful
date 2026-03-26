@@ -1,6 +1,6 @@
 import { ref, watch, computed, Ref, ComputedRef } from 'vue'
 import { HsvaColor, ColorModel } from '@/types'
-import { parseColor, formatColor } from '@/utils/converter'
+import { createDefaultHsva, parseColor, formatColor, isBlankColor } from '@/utils/converter'
 
 interface UseColorStateOptions {
   modelValue: Ref<string>
@@ -18,11 +18,14 @@ interface UseColorStateReturn {
 
 export function useColorState(options: UseColorStateOptions): UseColorStateReturn {
   const { modelValue, colorModel, showAlpha, emit } = options
-  const hsva = ref<HsvaColor>({ h: 0, s: 100, v: 100, a: 1 })
-  try {
-    hsva.value = parseColor(modelValue.value)
-  } catch {
-    console.warn(`[vue3-colorful] Initial color value is invalid: ${modelValue.value}`)
+  const hsva = ref<HsvaColor>(createDefaultHsva())
+
+  if (!isBlankColor(modelValue.value)) {
+    try {
+      hsva.value = parseColor(modelValue.value)
+    } catch {
+      console.warn(`[vue3-colorful] Initial color value is invalid: ${modelValue.value}`)
+    }
   }
   const lastEmittedValue = ref<string>(modelValue.value)
 
@@ -42,6 +45,12 @@ export function useColorState(options: UseColorStateOptions): UseColorStateRetur
     }
 
     if (newValue !== undefined && newValue !== null) {
+      if (isBlankColor(newValue)) {
+        hsva.value = createDefaultHsva()
+        lastEmittedValue.value = outputValue.value
+        return
+      }
+
       try {
         hsva.value = parseColor(newValue)
       } catch {
@@ -59,10 +68,14 @@ export function useColorState(options: UseColorStateOptions): UseColorStateRetur
   }
 
   const handleSelect = (color: string) => {
+    if (isBlankColor(color)) {
+      return
+    }
+
     try {
       hsva.value = parseColor(color)
     } catch {
-      console.warn(`[vue3-colorful] Invalid selection color: ${color}`)
+      console.warn(`[vue3-colorful] Invalid selection color: ${color.trim()}`)
     }
   }
 

@@ -53,7 +53,11 @@ export const useInteraction = (
     e.preventDefault()
     isStart = true
 
-    if ('pointerId' in e) {
+    if (
+      'pointerId' in e &&
+      'setPointerCapture' in rootRef.value &&
+      typeof rootRef.value.setPointerCapture === 'function'
+    ) {
       try {
         rootRef.value.setPointerCapture(e.pointerId)
       } catch (err) {
@@ -90,7 +94,13 @@ export const useInteraction = (
 
   const end = (e?: PointerEvent | MouseEvent | TouchEvent) => {
     isStart = false
-    if (rootRef.value && e && 'pointerId' in e) {
+    if (
+      rootRef.value &&
+      e &&
+      'pointerId' in e &&
+      'releasePointerCapture' in rootRef.value &&
+      typeof rootRef.value.releasePointerCapture === 'function'
+    ) {
       try {
         rootRef.value.releasePointerCapture(e.pointerId)
       } catch (err) {

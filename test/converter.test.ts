@@ -1,6 +1,12 @@
 import { describe, it, expect } from 'vitest'
 
-import { parseColor, formatColor } from '../src/utils/converter'
+import {
+  DEFAULT_HSVA,
+  createDefaultHsva,
+  formatColor,
+  normalizeColorForComparison,
+  parseColor,
+} from '../src/utils/converter'
 
 describe('ColorConverter', () => {
   describe('parseColor', () => {
@@ -23,7 +29,7 @@ describe('ColorConverter', () => {
     })
 
     it('should handle empty input and throw for invalid format', () => {
-      expect(parseColor('')).toEqual({ h: 0, s: 100, v: 100, a: 1 })
+      expect(parseColor('')).toEqual(DEFAULT_HSVA)
       expect(() => parseColor('invalid')).toThrow()
     })
   })
@@ -53,6 +59,22 @@ describe('ColorConverter', () => {
       const first = formatColor(hsva, 'rgb', true)
       const second = formatColor(hsva, 'rgb', true)
       expect(first).toBe(second)
+    })
+  })
+
+  describe('default color helpers', () => {
+    it('creates a fresh default HSVA object', () => {
+      const first = createDefaultHsva()
+      const second = createDefaultHsva()
+
+      expect(first).toEqual(DEFAULT_HSVA)
+      expect(second).toEqual(DEFAULT_HSVA)
+      expect(first).not.toBe(second)
+    })
+
+    it('normalizes colors for preset comparison without treating blank as red', () => {
+      expect(normalizeColorForComparison('RGB(255, 255, 255)')).toBe('#ffffff')
+      expect(normalizeColorForComparison('')).toBe('')
     })
   })
 })

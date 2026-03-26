@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import Hue from '../src/color-picker/Hue'
 
 describe('Hue component', () => {
@@ -15,6 +15,7 @@ describe('Hue component', () => {
       props: { hue: 180, vertical: true },
     })
     expect(wrapper.find('.vue3-colorful__hue--vertical').exists()).toBe(true)
+    expect(wrapper.find('[role="slider"]').attributes('aria-valuemax')).toBe('360')
   })
 
   describe('keyboard navigation', () => {

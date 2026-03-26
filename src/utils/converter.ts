@@ -22,6 +22,23 @@ interface Converter {
   format: (hsva: HsvaColor, showAlpha: boolean) => string
 }
 
+export const DEFAULT_HSVA: Readonly<HsvaColor> = Object.freeze({
+  h: 0,
+  s: 100,
+  v: 100,
+  a: 1,
+})
+
+export const createDefaultHsva = (): HsvaColor => ({
+  ...DEFAULT_HSVA,
+})
+
+export const normalizeColorString = (color: string): string => color.trim().toLowerCase()
+
+export const isBlankColor = (color: string | null | undefined): boolean => {
+  return color === undefined || color === null || normalizeColorString(color) === ''
+}
+
 const Converters: Record<ColorModel, Converter> = {
   hex: {
     parse: hexToHsva,
@@ -50,8 +67,11 @@ const Converters: Record<ColorModel, Converter> = {
  * Detect color format and parse to HSVA
  */
 export const parseColor = (color: string): HsvaColor => {
-  if (!color) return { h: 0, s: 100, v: 100, a: 1 }
-  const trimmed = color.trim().toLowerCase()
+  if (isBlankColor(color)) {
+    return createDefaultHsva()
+  }
+
+  const trimmed = normalizeColorString(color)
 
   if (trimmed.startsWith('#') || /^[0-9a-fA-F]{3,8}$/.test(trimmed))
     return hexToHsva(trimmed.startsWith('#') ? trimmed : '#' + trimmed)
@@ -68,4 +88,12 @@ export const parseColor = (color: string): HsvaColor => {
  */
 export const formatColor = (hsva: HsvaColor, model: ColorModel, showAlpha: boolean): string => {
   return Converters[model].format(hsva, showAlpha)
+}
+
+export const normalizeColorForComparison = (color: string): string => {
+  if (isBlankColor(color)) {
+    return ''
+  }
+
+  return formatColor(parseColor(color), 'hex', false)
 }

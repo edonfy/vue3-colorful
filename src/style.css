@@ -14,8 +14,14 @@
   --vc-preset-gap: 8px;
   --vc-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   --vc-bg-color: #fff;
-  --vc-text-color: #fff;
+  --vc-text-color: #111827;
   --vc-border-color: rgba(0, 0, 0, 0.05);
+  --vc-input-bg-color: rgba(0, 0, 0, 0.03);
+  --vc-pointer-border-color: #fff;
+  --vc-focus-ring-color: rgba(59, 130, 246, 0.1);
+  --vc-error-color: #ef4444;
+  --vc-error-ring-color: rgba(239, 68, 68, 0.1);
+  --vc-preset-active-ring-color: rgba(59, 130, 246, 0.3);
 
   position: relative;
   display: flex;
@@ -25,6 +31,7 @@
   user-select: none;
   cursor: default;
   background: var(--vc-bg-color);
+  color: var(--vc-text-color);
   border-radius: var(--vc-border-radius);
 }
 
@@ -54,15 +61,18 @@
 /* Dark Theme */
 .vue3-colorful--dark {
   --vc-bg-color: #222;
+  --vc-text-color: #f3f4f6;
   --vc-border-color: rgba(255, 255, 255, 0.1);
+  --vc-input-bg-color: rgba(255, 255, 255, 0.05);
+  --vc-pointer-border-color: #444;
 }
 
 .vue3-colorful--dark .vue3-colorful__label-text {
-  color: #d1d5db;
+  color: var(--vc-text-color);
 }
 
 .vue3-colorful--dark .vue3-colorful__pointer {
-  border-color: #444;
+  border-color: var(--vc-pointer-border-color);
 }
 
 .vue3-colorful--dark .vue3-colorful__eyedropper {
@@ -81,10 +91,10 @@
   width: var(--vc-pointer-size);
   height: var(--vc-pointer-size);
   transform: translate(-50%, -50%);
-  background-color: #fff;
-  border: 2px solid #fff;
+  background-color: var(--vc-pointer-border-color);
+  border: 2px solid var(--vc-pointer-border-color);
   border-radius: 50%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--vc-shadow);
   will-change: transform;
 }
 
@@ -208,7 +218,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--vc-shadow);
 }
 
 @media (hover: hover) {
@@ -264,7 +274,7 @@
 
 .vue3-colorful__preset--active {
   border-color: var(--vc-accent-color);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 0 2px var(--vc-preset-active-ring-color);
 }
 
 .vue3-colorful > *:last-child {
@@ -284,19 +294,19 @@
 .vue3-colorful__input-label {
   font-size: 12px;
   font-weight: 600;
-  color: #888;
+  color: var(--vc-text-color);
   text-transform: uppercase;
 }
 
 .vue3-colorful__input {
   flex-grow: 1;
-  background: rgba(0, 0, 0, 0.03);
+  background: var(--vc-input-bg-color);
   border: 1px solid var(--vc-border-color);
   border-radius: 4px;
   padding: 4px 8px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 13px;
-  color: inherit;
+  color: var(--vc-text-color);
   outline: none;
   transition: all 0.2s ease;
 }
@@ -314,22 +324,22 @@
 }
 
 .vue3-colorful--dark .vue3-colorful__input {
-  background: rgba(255, 255, 255, 0.05);
-  color: #eee;
+  background: var(--vc-input-bg-color);
+  color: var(--vc-text-color);
 }
 
 .vue3-colorful__input:focus {
   border-color: var(--vc-accent-color);
   background: var(--vc-bg-color);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 2px var(--vc-focus-ring-color);
 }
 
 .vue3-colorful__input.vue3-colorful__input--invalid {
-  border-color: #ef4444;
+  border-color: var(--vc-error-color);
 }
 
 .vue3-colorful__input.vue3-colorful__input--invalid:focus {
-  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1);
+  box-shadow: 0 0 0 2px var(--vc-error-ring-color);
 }
 
 /* Popover Mode */
@@ -345,7 +355,7 @@
   border: 1px solid var(--vc-border-color);
   cursor: pointer;
   padding: 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--vc-shadow);
   transition: transform 0.2s ease;
 }
 
@@ -357,7 +367,7 @@
 
 .vue3-colorful__popover-content {
   z-index: 1000;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--vc-shadow);
   border-radius: var(--vc-border-radius);
   overflow: hidden;
 
