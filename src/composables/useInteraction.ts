@@ -1,5 +1,5 @@
 import { onMounted, onUnmounted, reactive, Ref } from 'vue'
-import { clamp } from '@/utils/clamp'
+import { clamp } from '../utils/clamp'
 
 export interface Interaction {
   left: number

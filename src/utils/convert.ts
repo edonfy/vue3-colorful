@@ -1,5 +1,5 @@
 import { round } from './round'
-import { RgbaColor, RgbColor, HslaColor, HslColor, HsvaColor, HsvColor, CmykColor } from '@/types'
+import { RgbaColor, RgbColor, HslaColor, HslColor, HsvaColor, HsvColor, CmykColor } from '../types'
 
 /**
  * Valid CSS <angle> units.

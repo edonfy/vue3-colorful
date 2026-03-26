@@ -1,5 +1,5 @@
 import { defineComponent, ref, watch, onUnmounted } from 'vue'
-import { isBlankColor, parseColor } from '@/utils/converter'
+import { isBlankColor, parseColor } from '../utils/converter'
 
 export default defineComponent({
   name: 'ColorInput',

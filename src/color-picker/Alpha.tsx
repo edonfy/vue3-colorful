@@ -1,8 +1,8 @@
 import { PropType, CSSProperties, computed, defineComponent } from 'vue'
-import { HsvaColor } from '@/types'
-import { Interaction } from '@/composables/useInteraction'
-import { hsvaToRgbaString } from '@/utils/convert'
-import { clamp } from '@/utils/clamp'
+import { HsvaColor } from '../types'
+import { Interaction } from '../composables/useInteraction'
+import { hsvaToRgbaString } from '../utils/convert'
+import { clamp } from '../utils/clamp'
 import Pointer from './Pointer'
 import Interactive from './Interactive'
 

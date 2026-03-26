@@ -1,5 +1,5 @@
 import { defineComponent, PropType, computed } from 'vue'
-import { isBlankColor, normalizeColorForComparison, normalizeColorString } from '@/utils/converter'
+import { isBlankColor, normalizeColorForComparison, normalizeColorString } from '../utils/converter'
 
 export default defineComponent({
   name: 'Presets',

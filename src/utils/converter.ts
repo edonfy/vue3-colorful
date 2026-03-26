@@ -1,4 +1,4 @@
-import { HsvaColor, ColorModel } from '@/types'
+import { HsvaColor, ColorModel } from '../types'
 import {
   hsvaToHex,
   hsvaToRgbString,

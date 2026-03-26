@@ -1,6 +1,6 @@
 import { computed, defineComponent } from 'vue'
-import { Interaction } from '@/composables/useInteraction'
-import { hsvaToHslString } from '@/utils/convert'
+import { Interaction } from '../composables/useInteraction'
+import { hsvaToHslString } from '../utils/convert'
 import Pointer from './Pointer'
 import Interactive from './Interactive'
 

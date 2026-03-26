@@ -5,7 +5,7 @@ import Alpha from './Alpha'
 import Eyedropper from './Eyedropper'
 import Presets from './Presets'
 import ColorInput from './ColorInput'
-import { HsvaColor } from '@/types'
+import { HsvaColor } from '../types'
 
 export default defineComponent({
   name: 'BasePicker',

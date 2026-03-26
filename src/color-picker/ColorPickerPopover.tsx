@@ -2,8 +2,8 @@ import { defineComponent, ref, PropType, onMounted, onUnmounted, Teleport } from
 import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/vue'
 import { commonPickerProps } from './PickerFactory'
 import ColorPicker from './ColorPicker'
-import { ColorModel } from '@/types'
-import { useTransitionStatus } from '@/composables/useTransitionStatus'
+import { ColorModel } from '../types'
+import { useTransitionStatus } from '../composables/useTransitionStatus'
 
 export default defineComponent({
   name: 'ColorPickerPopover',

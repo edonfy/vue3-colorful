@@ -1,5 +1,5 @@
 import { defineComponent, ref, PropType } from 'vue'
-import { useInteraction } from '@/composables/useInteraction'
+import { useInteraction } from '../composables/useInteraction'
 
 export default defineComponent({
   name: 'Interactive',
