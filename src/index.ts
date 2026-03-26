@@ -14,6 +14,4 @@ export const VERSION = __VERSION__
 export { default as ColorPickerPopover } from './color-picker/ColorPickerPopover'
 export { ColorPicker }
 
-// Plugins (Exported via subpaths in package.json)
-
 export default ColorPicker

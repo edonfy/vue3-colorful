@@ -2,7 +2,6 @@ import js from '@eslint/js'
 import ts from 'typescript-eslint'
 import vue from 'eslint-plugin-vue'
 import prettier from 'eslint-config-prettier'
-import storybook from 'eslint-plugin-storybook'
 import vitest from 'eslint-plugin-vitest'
 import globals from 'globals'
 
@@ -11,14 +10,6 @@ export default ts.config(
   ...ts.configs.recommended,
   ...vue.configs['flat/recommended'],
   prettier,
-  {
-    plugins: {
-      storybook,
-    },
-    rules: {
-      ...storybook.configs.recommended.rules,
-    },
-  },
   {
     files: ['test/**/*.ts'],
     plugins: {
@@ -36,10 +27,11 @@ export default ts.config(
       'stats.html',
       'coverage/**',
       'storybook-static/**',
+      'test-results/**',
     ],
   },
   {
-    files: ['**/*.{js,ts,vue,tsx}'],
+    files: ['**/*.{js,ts,tsx}'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',

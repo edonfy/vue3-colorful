@@ -1,43 +1,40 @@
 import { defineConfig } from 'vite'
-import Vue from '@vitejs/plugin-vue'
 import VueJsx from '@vitejs/plugin-vue-jsx'
-import UnoCSS from 'unocss/vite'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { resolve } from 'node:path'
 import { readFileSync } from 'node:fs'
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf-8'))
+const plugins = [VueJsx()]
+
+if (process.env.ANALYZE) {
+  plugins.push(
+    visualizer({
+      filename: 'stats.html',
+      gzipSize: true,
+      brotliSize: true,
+      open: true,
+    })
+  )
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
   define: {
     __VERSION__: JSON.stringify(packageJson.version),
   },
-  plugins: [
-    Vue(),
-    VueJsx(),
-    UnoCSS(),
-    !!process.env.ANALYZE &&
-      visualizer({
-        filename: 'stats.html',
-        gzipSize: true,
-        brotliSize: true,
-        open: true,
-      }),
-  ].filter(Boolean) as any,
+  plugins,
   build: {
     lib: {
       entry: {
         index: resolve(__dirname, './src/index.ts'),
         tailwind: resolve(__dirname, './src/plugins/tailwind.ts'),
-        unocss: resolve(__dirname, './src/plugins/unocss.ts'),
-        nuxt: resolve(__dirname, './src/plugins/nuxt.ts'),
       },
       name: 'vue3-colorful',
       formats: ['es', 'cjs'],
     },
     rollupOptions: {
-      external: ['vue', '@floating-ui/vue', 'tailwindcss/plugin', 'unocss', '@nuxt/kit'],
+      external: ['vue', '@floating-ui/vue', 'tailwindcss/plugin'],
       output: {
         globals: {
           vue: 'Vue',

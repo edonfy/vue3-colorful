@@ -1,19 +1,16 @@
 import { defineConfig } from 'vite'
-import Vue from '@vitejs/plugin-vue'
 import VueJsx from '@vitejs/plugin-vue-jsx'
-import UnoCSS from 'unocss/vite'
+import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
-export default defineConfig({
-  base: '/vue3-colorful/',
-  plugins: [Vue(), VueJsx(), UnoCSS()],
-  css: {
-    preprocessorOptions: {
-      less: {
-        math: 'always',
-      },
-    },
+const packageJson = JSON.parse(readFileSync('./package.json', 'utf-8'))
+
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/vue3-colorful/' : '/',
+  define: {
+    __VERSION__: JSON.stringify(packageJson.version),
   },
+  plugins: [VueJsx()],
   build: {
     outDir: 'dist-example',
   },
@@ -23,4 +20,4 @@ export default defineConfig({
       '~': resolve(__dirname, './src'),
     },
   },
-})
+}))

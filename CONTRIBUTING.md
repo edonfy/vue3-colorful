@@ -4,6 +4,8 @@ Thank you for your interest in contributing to vue3-colorful! This guide will he
 
 ## Development Setup
 
+This project is **TSX-only**. Please do not add Vue SFC files (`.vue`); components should be implemented with `defineComponent` and render functions in `.tsx` files.
+
 1. **Fork and clone the repository**
 
    ```bash
@@ -18,8 +20,15 @@ Thank you for your interest in contributing to vue3-colorful! This guide will he
    ```
 
 3. **Start development server**
+
    ```bash
    pnpm dev
+   ```
+
+   To preview the demo site locally:
+
+   ```bash
+   pnpm vite --config vite.config.example.ts
    ```
 
 ## Development Workflow
@@ -67,6 +76,9 @@ Thank you for your interest in contributing to vue3-colorful! This guide will he
 
 - Follow the existing code style
 - Use TypeScript for all new code
+- Use `pnpm` for scripts and dependency management
+- Keep component implementations in `.tsx` files only
+- Do not introduce Vue SFC files (`.vue`)
 - Write meaningful commit messages
 - Add JSDoc comments for public APIs
 

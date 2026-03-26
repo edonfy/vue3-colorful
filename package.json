@@ -39,26 +39,6 @@
         "default": "./dist/tailwind.cjs"
       }
     },
-    "./unocss": {
-      "import": {
-        "types": "./dist/plugins/unocss.d.ts",
-        "default": "./dist/unocss.js"
-      },
-      "require": {
-        "types": "./dist/plugins/unocss.d.ts",
-        "default": "./dist/unocss.cjs"
-      }
-    },
-    "./nuxt": {
-      "import": {
-        "types": "./dist/plugins/nuxt.d.ts",
-        "default": "./dist/nuxt.js"
-      },
-      "require": {
-        "types": "./dist/plugins/nuxt.d.ts",
-        "default": "./dist/nuxt.cjs"
-      }
-    },
     "./style.css": "./dist/vue3-colorful.css"
   },
   "repository": {
@@ -66,7 +46,7 @@
     "url": "git@github.com:edonfy/vue3-colorful.git"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,vue}": [
+    "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
       "prettier --write"
     ],
@@ -87,9 +67,12 @@
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
     "type-check": "vue-tsc --noEmit",
-    "prepare": "husky",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "size": "node ./scripts/size-report.mjs",
+    "size:check": "node ./scripts/size-report.mjs --check",
+    "size:baseline": "node ./scripts/size-report.mjs --write",
+    "perf": "node ./scripts/perf-baseline.mjs",
+    "perf:baseline": "node ./scripts/perf-baseline.mjs --write",
+    "prepare": "husky"
   },
   "peerDependencies": {
     "@floating-ui/vue": ">=1.0.0",
@@ -97,30 +80,19 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.30.0",
-    "@chromatic-com/storybook": "^5.0.2",
     "@edonfy/eslint-config": "^0.0.5",
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^9.21.0",
     "@floating-ui/vue": "^1.1.11",
-    "@nuxt/kit": "^4.4.2",
     "@playwright/test": "^1.58.2",
-    "@storybook/addon-a11y": "^10.3.3",
-    "@storybook/addon-docs": "^10.3.3",
-    "@storybook/addon-onboarding": "^10.3.3",
-    "@storybook/addon-vitest": "^10.3.3",
-    "@storybook/vue3": "^10.3.3",
-    "@storybook/vue3-vite": "^10.3.3",
     "@types/node": "^22.0.0",
     "@typescript-eslint/eslint-plugin": "^8.57.2",
     "@typescript-eslint/parser": "^8.57.2",
-    "@vitejs/plugin-vue": "^5.2.0",
     "@vitejs/plugin-vue-jsx": "^4.0.0",
-    "@vitest/browser": "3.2.4",
     "@vitest/coverage-v8": "^3.2.4",
     "@vue/test-utils": "^2.4.6",
     "eslint": "9.21.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-storybook": "^10.3.3",
     "eslint-plugin-vitest": "^0.5.4",
     "eslint-plugin-vue": "^10.8.0",
     "globals": "^17.4.0",
@@ -130,11 +102,9 @@
     "playwright": "^1.58.2",
     "prettier": "^3.8.1",
     "rollup-plugin-visualizer": "^7.0.1",
-    "storybook": "^10.3.3",
     "tailwindcss": "^4.2.2",
     "typescript": "^5.8.0",
     "typescript-eslint": "^8.57.2",
-    "unocss": "^66.6.7",
     "vite": "^6.0.0",
     "vitest": "^3.0.0",
     "vue": "^3.5.0",

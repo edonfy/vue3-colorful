@@ -1,10 +1,9 @@
 import { defineConfig } from 'vitest/config'
-import Vue from '@vitejs/plugin-vue'
 import VueJsx from '@vitejs/plugin-vue-jsx'
 import { resolve } from 'node:path'
 
 export default defineConfig({
-  plugins: [Vue(), VueJsx()],
+  plugins: [VueJsx()],
 
   resolve: {
     alias: {
@@ -18,8 +17,8 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      include: ['src/**/*.{js,ts,vue,tsx}'],
-      exclude: ['src/**/*.d.ts', 'src/**/index.ts', 'src/**/*.stories.{js,ts}'],
+      include: ['src/**/*.{js,ts,tsx}'],
+      exclude: ['src/**/*.d.ts', 'src/**/index.ts'],
       thresholds: {
         statements: 80,
         branches: 80,

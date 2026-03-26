@@ -54,13 +54,6 @@ pnpm test:visual                # 视觉回归测试
 pnpm test:visual:update         # 更新快照
 ```
 
-### Storybook
-
-```bash
-pnpm storybook         # 开发服务器（端口 6006）
-pnpm build-storybook   # 构建静态产物
-```
-
 ---
 
 ## 编码规范
