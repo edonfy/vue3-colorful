@@ -1,6 +1,18 @@
 import { test, expect, Page } from '@playwright/test'
 
 test.describe('Visual Regression', () => {
+  test('Showcase playground picker should keep a visible saturation area', async ({
+    page,
+  }: {
+    page: Page
+  }) => {
+    await page.goto('/')
+    await page.waitForSelector('.master-showcase__picker.vue3-colorful')
+    await expect(page.locator('.master-showcase__picker.vue3-colorful')).toHaveScreenshot(
+      'showcase-playground-picker.png'
+    )
+  })
+
   test('HexColorPicker should match snapshot', async ({ page }: { page: Page }) => {
     await page.goto('/?view=hex')
     await page.waitForSelector('[data-testid="hex-picker"] .vue3-colorful')

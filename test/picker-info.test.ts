@@ -36,6 +36,13 @@ describe('Picker info features', () => {
     await wrapper.find('.vue3-colorful__copy-button').trigger('click')
 
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith('#3b82f5')
+    expect(wrapper.find('.vue3-colorful__copy-button').text()).toBe('HEX Copied')
+    expect(wrapper.find('.vue3-colorful__copy-button').classes()).toContain(
+      'vue3-colorful__copy-button--copied'
+    )
+    expect(wrapper.find('.vue3-colorful__copy-button').attributes('aria-label')).toBe(
+      'HEX value copied'
+    )
   })
 
   it('collects recent colors on committed changes', async () => {

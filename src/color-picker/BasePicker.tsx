@@ -236,13 +236,22 @@ export default defineComponent({
                     ]}
                     disabled={props.disabled || props.readOnly || isBlankColor(props.activeColor)}
                     onClick={() => void copyValue(format)}
-                    aria-label={`Copy ${format.toUpperCase()} value`}
+                    aria-label={
+                      copiedFormat.value === format
+                        ? `${format.toUpperCase()} value copied`
+                        : `Copy ${format.toUpperCase()} value`
+                    }
                   >
-                    {copiedFormat.value === format
-                      ? `${format.toUpperCase()} Copied`
-                      : `Copy ${format.toUpperCase()}`}
+                    <span class="vue3-colorful__copy-button-label">
+                      {copiedFormat.value === format
+                        ? `${format.toUpperCase()} Copied`
+                        : `Copy ${format.toUpperCase()}`}
+                    </span>
                   </button>
                 ))}
+                <span class="vue3-colorful__sr-only" aria-live="polite">
+                  {copiedFormat.value ? `${copiedFormat.value.toUpperCase()} value copied` : ''}
+                </span>
               </div>
             )}
             {contrastInfo.value && (

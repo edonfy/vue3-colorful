@@ -426,14 +426,35 @@
   gap: 8px;
 }
 
+.vue3-colorful__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .vue3-colorful__copy-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 4px 8px;
+  min-width: 96px;
+  min-height: 28px;
   border: 1px solid var(--vc-border-color);
   border-radius: 4px;
   background: var(--vc-input-bg-color);
   color: var(--vc-text-color);
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.vue3-colorful__copy-button-label {
+  line-height: 1;
 }
 
 .vue3-colorful__copy-button--copied {

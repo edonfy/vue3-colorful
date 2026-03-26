@@ -456,12 +456,22 @@ body::before {
 .master-showcase__picker-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   min-width: 280px;
 }
 
-.master-showcase__picker-container .vue3-colorful {
+.master-showcase__picker.vue3-colorful {
   flex-shrink: 0;
+  height: auto;
+  min-height: var(--vc-height);
+}
+
+.master-showcase__picker.vue3-colorful .vue3-colorful__body {
+  min-height: clamp(240px, 32vw, 320px);
+}
+
+.master-showcase__picker.vue3-colorful:not(.vue3-colorful--vertical) .vue3-colorful__saturation {
+  min-height: clamp(180px, 24vw, 260px);
 }
 
 .master-showcase__preview-value {

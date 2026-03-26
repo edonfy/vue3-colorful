@@ -295,6 +295,7 @@ export default defineComponent({
 
               <div class="master-showcase__picker-container">
                 <ColorPicker
+                  class="master-showcase__picker"
                   v-model={masterColor.value}
                   colorModel={masterModel.value}
                   showAlpha={masterShowAlpha.value}
