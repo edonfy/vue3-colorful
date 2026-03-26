@@ -74,6 +74,7 @@ import 'vue3-colorful/style.css'
 | `HexColorPicker`                                                           | Your app stores HEX strings                     | Best default for simple product UIs            |
 | `RgbColorPicker` / `HslColorPicker` / `HsvColorPicker` / `CmykColorPicker` | Your app already uses one fixed format          | Smallest, clearest API for that model          |
 | `ColorPicker`                                                              | Users need to switch formats at runtime         | Add `colorModel` to control parsing and output |
+| `ColorPickerPanel`                                                         | You want the raw panel without a trigger        | Great for custom dialog, drawer, or dropdown   |
 | `ColorPickerPopover`                                                       | You need a compact picker opened from a trigger | Requires `@floating-ui/vue`                    |
 
 If the color model is fixed, prefer a specialized picker for the simplest bundle and API surface.
@@ -100,10 +101,12 @@ export default defineComponent({
 
 Available specialized pickers:
 
+- `HexColorInput`
 - `HexColorPicker`
 - `RgbColorPicker`
 - `HslColorPicker`
 - `HsvColorPicker`
+- `HwbColorPicker`
 - `CmykColorPicker`
 
 ### Generic `ColorPicker`
@@ -126,9 +129,27 @@ export default defineComponent({
 })
 ```
 
-| Prop         | Type                                         | Default | Description                                |
-| ------------ | -------------------------------------------- | ------- | ------------------------------------------ |
-| `colorModel` | `'hex' \| 'rgb' \| 'hsl' \| 'hsv' \| 'cmyk'` | `'hex'` | Controls parsing and emitted string format |
+| Prop         | Type                                                  | Default | Description                                |
+| ------------ | ----------------------------------------------------- | ------- | ------------------------------------------ |
+| `colorModel` | `'hex' \| 'rgb' \| 'hsl' \| 'hsv' \| 'hwb' \| 'cmyk'` | `'hex'` | Controls parsing and emitted string format |
+
+### `ColorPickerPanel`
+
+Use the panel component when your app already has its own dialog, drawer, or dropdown shell.
+
+```tsx
+import { defineComponent, ref } from 'vue'
+import { ColorPickerPanel } from 'vue3-colorful'
+
+export default defineComponent({
+  name: 'ExamplePanelPicker',
+  setup() {
+    const color = ref('#0ea5e9')
+
+    return () => <ColorPickerPanel v-model={color.value} showInput clearable />
+  },
+})
+```
 
 ### `ColorPickerPopover`
 
@@ -166,10 +187,19 @@ Custom trigger via the default slot:
 
 Scoped slot data:
 
-| Binding  | Type      | Description                 |
-| -------- | --------- | --------------------------- |
-| `isOpen` | `boolean` | Whether the popover is open |
-| `color`  | `string`  | Current color value         |
+| Binding    | Type               | Description                     |
+| ---------- | ------------------ | ------------------------------- |
+| `isOpen`   | `boolean`          | Whether the popover is open     |
+| `color`    | `string \| object` | Current color value             |
+| `disabled` | `boolean`          | Whether the trigger is disabled |
+| `readOnly` | `boolean`          | Whether the panel is read-only  |
+
+Expose API:
+
+- `open()`
+- `close()`
+- `toggle()`
+- `focusTrigger()`
 
 ---
 
@@ -177,20 +207,79 @@ Scoped slot data:
 
 All specialized pickers, `ColorPicker`, and `ColorPickerPopover` accept these props:
 
-| Prop             | Type       | Default | Description                                       |
-| ---------------- | ---------- | ------- | ------------------------------------------------- |
-| `modelValue`     | `string`   | `''`    | Bound color string                                |
-| `showAlpha`      | `boolean`  | `false` | Shows the alpha slider                            |
-| `showEyedropper` | `boolean`  | `false` | Shows the native EyeDropper button                |
-| `presets`        | `string[]` | `[]`    | Preset swatches                                   |
-| `dark`           | `boolean`  | `false` | Applies the built-in dark theme                   |
-| `showInput`      | `boolean`  | `false` | Shows the editable text input                     |
-| `vertical`       | `boolean`  | `false` | Switches hue and alpha sliders to vertical layout |
-| `colorLabel`     | `string`   | `''`    | Accessible label for the input                    |
+| Prop              | Type                          | Default    | Description                                                    |
+| ----------------- | ----------------------------- | ---------- | -------------------------------------------------------------- |
+| `modelValue`      | `string \| object`            | `''`       | Bound color string or typed object value                       |
+| `showAlpha`       | `boolean`                     | `false`    | Shows the alpha slider                                         |
+| `showEyedropper`  | `boolean`                     | `false`    | Shows the native EyeDropper button                             |
+| `presets`         | `PresetCollectionItem[]`      | `[]`       | Flat swatches, labeled swatches, or grouped preset collections |
+| `dark`            | `boolean`                     | `false`    | Applies the built-in dark theme                                |
+| `showInput`       | `boolean`                     | `false`    | Shows the editable text input                                  |
+| `vertical`        | `boolean`                     | `false`    | Switches hue and alpha sliders to vertical layout              |
+| `colorLabel`      | `string`                      | `''`       | Accessible label for the input                                 |
+| `disabled`        | `boolean`                     | `false`    | Disables the trigger, sliders, input, presets, and eyedropper  |
+| `readOnly`        | `boolean`                     | `false`    | Keeps the UI visible while preventing value changes            |
+| `editable`        | `boolean`                     | `true`     | Controls whether the text input can be edited manually         |
+| `clearable`       | `boolean`                     | `false`    | Shows a clear action and allows committing a blank color       |
+| `valueType`       | `'string' \| 'object'`        | `'string'` | Emits string values or typed object values                     |
+| `showRecent`      | `boolean`                     | `false`    | Tracks and renders recently committed colors                   |
+| `maxRecentColors` | `number`                      | `5`        | Limits the recent color history                                |
+| `copyFormats`     | `('hex' \| 'rgb' \| 'hsl')[]` | `[]`       | Shows one-click copy buttons for selected formats              |
+| `showContrast`    | `boolean`                     | `false`    | Displays contrast ratios against white and black               |
+
+### Events
+
+| Event               | Payload            | Description                                      |
+| ------------------- | ------------------ | ------------------------------------------------ |
+| `update:modelValue` | `string \| object` | Fires when a change is committed                 |
+| `active-change`     | `string \| object` | Fires while sliders move or valid input previews |
+
+### Controlled and Uncontrolled Patterns
+
+Controlled usage:
+
+```tsx
+<ColorPickerPanel
+  modelValue={color.value}
+  onUpdate:modelValue={(nextColor: string) => {
+    color.value = nextColor
+  }}
+/>
+```
+
+Uncontrolled-style local state:
+
+```tsx
+import { defineComponent, ref } from 'vue'
+import { HexColorPicker } from 'vue3-colorful'
+
+export default defineComponent({
+  name: 'ExampleLocalPicker',
+  setup() {
+    const localColor = ref('#22c55e')
+
+    return () => <HexColorPicker v-model={localColor.value} />
+  },
+})
+```
+
+Clearable and disabled examples:
+
+```tsx
+<ColorPickerPanel v-model={color.value} showInput clearable />
+
+<ColorPickerPopover v-model={color.value} disabled showInput />
+```
+
+Read-only input with interactive panel:
+
+```tsx
+<ColorPickerPanel v-model={color.value} showInput editable={false} />
+```
 
 ### Accepted `modelValue` Formats
 
-`modelValue` is always a string. The supported formats depend on the picker you use:
+By default, `modelValue` is a string. The supported formats depend on the picker you use:
 
 | Model  | Example                                           |
 | ------ | ------------------------------------------------- |
@@ -198,9 +287,141 @@ All specialized pickers, `ColorPicker`, and `ColorPickerPopover` accept these pr
 | `rgb`  | `rgb(59, 130, 246)` / `rgba(59, 130, 246, 0.8)`   |
 | `hsl`  | `hsl(217, 91%, 60%)` / `hsla(217, 91%, 60%, 0.8)` |
 | `hsv`  | `hsv(217, 76%, 96%)` / `hsva(217, 76%, 96%, 0.8)` |
+| `hwb`  | `hwb(217 4% 4%)` / `hwb(217 4% 4% / 0.8)`         |
 | `cmyk` | `cmyk(76%, 47%, 0%, 4%)`                          |
 
 Specialized pickers always emit their own model. `ColorPicker` emits the format selected by `colorModel`.
+
+### Object Value API
+
+Set `valueType="object"` to emit typed color objects instead of strings:
+
+```tsx
+import { defineComponent, ref } from 'vue'
+import { RgbColorPicker, HsvColorPicker } from 'vue3-colorful'
+import type { RgbColor, HsvaColor } from 'vue3-colorful'
+
+export default defineComponent({
+  name: 'ExampleObjectValues',
+  setup() {
+    const rgbColor = ref<RgbColor>({ r: 59, g: 130, b: 246 })
+    const hsvaColor = ref<HsvaColor>({ h: 217, s: 76, v: 96, a: 1 })
+
+    return () => (
+      <>
+        <RgbColorPicker v-model={rgbColor.value} valueType="object" />
+        <HsvColorPicker v-model={hsvaColor.value} valueType="object" showAlpha />
+      </>
+    )
+  },
+})
+```
+
+Supported object outputs:
+
+| Picker / `colorModel` | `showAlpha=false` | `showAlpha=true` |
+| --------------------- | ----------------- | ---------------- |
+| `rgb`                 | `RgbColor`        | `RgbaColor`      |
+| `hsl`                 | `HslColor`        | `HslaColor`      |
+| `hsv`                 | `HsvColor`        | `HsvaColor`      |
+| `hwb`                 | `HwbColor`        | `HwbaColor`      |
+| `cmyk`                | `CmykColor`       | `CmykColor`      |
+| `hex`                 | `HsvaColor`       | `HsvaColor`      |
+
+Blank values still use `''` so `clearable` stays consistent across string and object modes.
+
+### `HexColorInput`
+
+Use the standalone input when you want the library validation and clear action without the picker UI.
+
+```tsx
+import { defineComponent, ref } from 'vue'
+import { HexColorInput } from 'vue3-colorful'
+
+export default defineComponent({
+  name: 'ExampleHexInput',
+  setup() {
+    const color = ref('#3b82f6')
+
+    return () => <HexColorInput v-model={color.value} clearable />
+  },
+})
+```
+
+### Feature Matrix
+
+| Feature             | `ColorPickerPanel` | `ColorPickerPopover` | Specialized Pickers | `HexColorInput` |
+| ------------------- | ------------------ | -------------------- | ------------------- | --------------- |
+| Triggerless panel   | Yes                | No                   | No                  | No              |
+| Disabled / readOnly | Yes                | Yes                  | Yes                 | Yes             |
+| Clearable           | Yes                | Yes                  | Yes                 | Yes             |
+| Grouped presets     | Yes                | Yes                  | Yes                 | No              |
+| Recent colors       | Yes                | Yes                  | Yes                 | No              |
+| Copy actions        | Yes                | Yes                  | Yes                 | No              |
+| Contrast info       | Yes                | Yes                  | Yes                 | No              |
+| Object value mode   | Yes                | Yes                  | Yes                 | No              |
+
+### Advanced Presets, Copy, and Contrast
+
+```tsx
+<ColorPickerPanel
+  v-model={color.value}
+  showInput
+  showRecent
+  showContrast
+  copyFormats={['hex', 'rgb', 'hsl']}
+  presets={[
+    {
+      label: 'Brand',
+      colors: [
+        { label: 'Primary', value: '#6366f1' },
+        { label: 'Accent', value: '#ec4899' },
+      ],
+    },
+    {
+      label: 'System',
+      colors: ['#f59e0b', '#10b981', '#3b82f6'],
+    },
+  ]}
+/>
+```
+
+### Integration Examples
+
+Form field:
+
+```tsx
+<label>
+  Brand Color
+  <HexColorInput v-model={brandColor.value} clearable />
+</label>
+```
+
+Dialog / drawer shell:
+
+```tsx
+<Dialog open={dialogOpen.value}>
+  <ColorPickerPanel v-model={color.value} showInput showRecent />
+</Dialog>
+```
+
+Design token panel:
+
+```tsx
+<ColorPickerPanel
+  v-model={tokenColor.value}
+  colorModel="hsl"
+  copyFormats={['hex', 'hsl']}
+  showContrast
+  presets={tokenPresets}
+/>
+```
+
+### Modern Color Spaces
+
+- `HWB` is supported today via `HwbColorPicker` and `colorModel="hwb"`.
+- `OKLCH`, `OKLab`, and `Display-P3` are still deferred to keep the core package lightweight.
+- If these land later, the plan is to add them behind focused APIs rather than expanding the default surface too aggressively.
 
 ---
 

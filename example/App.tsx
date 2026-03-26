@@ -4,10 +4,13 @@ import type { CSSProperties } from 'vue'
 import {
   CmykColorPicker,
   ColorPicker,
+  ColorPickerPanel,
   ColorPickerPopover,
+  HexColorInput,
   HexColorPicker,
   HslColorPicker,
   HsvColorPicker,
+  HwbColorPicker,
   RgbColorPicker,
   VERSION,
 } from '@/index'
@@ -16,7 +19,7 @@ import { formatColor, parseColor } from '@/utils/converter'
 
 import './example.css'
 
-type DemoView = 'showcase' | 'hex' | 'popover' | 'cmyk'
+type DemoView = 'showcase' | 'hex' | 'popover' | 'cmyk' | 'panel' | 'disabled'
 
 const GITHUB_REPO_URL = 'https://github.com/edonfy/vue3-colorful'
 
@@ -26,7 +29,13 @@ function getDemoView(): DemoView {
   }
 
   const view = new URLSearchParams(window.location.search).get('view')
-  if (view === 'hex' || view === 'popover' || view === 'cmyk') {
+  if (
+    view === 'hex' ||
+    view === 'popover' ||
+    view === 'cmyk' ||
+    view === 'panel' ||
+    view === 'disabled'
+  ) {
     return view
   }
 
@@ -101,12 +110,26 @@ export default defineComponent({
     const rgbColor = ref('rgba(16, 185, 129, 0.8)')
     const hslColor = ref('hsl(346, 84%, 61%)')
     const hsvColor = ref('hsv(38, 93%, 96%)')
+    const hwbColor = ref('hwb(38 0% 4%)')
     const cmykColor = ref('cmyk(0%, 50%, 100%, 0%)')
     const popoverColor = ref('#8b5cf6')
+    const hexInputColor = ref('#3b82f6')
 
     const themedColor = ref('#ec4899')
 
-    const presets = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6']
+    const groupedPresets = [
+      {
+        label: 'Brand',
+        colors: [
+          { label: 'Primary', value: '#6366f1' },
+          { label: 'Accent', value: '#ec4899' },
+        ],
+      },
+      {
+        label: 'System',
+        colors: ['#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'],
+      },
+    ]
 
     // --- Computed ---
     const masterPreviewStyle = computed<CSSProperties>(() => {
@@ -130,8 +153,11 @@ export default defineComponent({
         <section data-testid="hex-picker">
           <HexColorPicker
             v-model={hexColor.value}
-            presets={presets}
+            presets={groupedPresets}
             showInput
+            showRecent
+            copyFormats={['hex', 'rgb']}
+            showContrast
             colorLabel="HEX"
             style={{ '--vc-height': '268px' }}
           />
@@ -150,6 +176,25 @@ export default defineComponent({
         </section>
       )
 
+      const clearablePanel = (
+        <section data-testid="panel-picker">
+          <ColorPickerPanel v-model={hexColor.value} showInput clearable colorLabel="HEX" />
+        </section>
+      )
+
+      const disabledPanel = (
+        <section data-testid="disabled-picker">
+          <HexColorPicker
+            v-model={hexColor.value}
+            showInput
+            clearable
+            disabled
+            presets={groupedPresets}
+            colorLabel="HEX"
+          />
+        </section>
+      )
+
       if (view === 'hex') {
         return <div class={['demo-container', 'demo-container--visual']}>{hexPanel}</div>
       }
@@ -160,6 +205,14 @@ export default defineComponent({
 
       if (view === 'popover') {
         return <div class={['demo-container', 'demo-container--visual']}>{popoverPanel}</div>
+      }
+
+      if (view === 'panel') {
+        return <div class={['demo-container', 'demo-container--visual']}>{clearablePanel}</div>
+      }
+
+      if (view === 'disabled') {
+        return <div class={['demo-container', 'demo-container--visual']}>{disabledPanel}</div>
       }
 
       return (
@@ -210,6 +263,7 @@ export default defineComponent({
                       <option value="rgb">RGB</option>
                       <option value="hsl">HSL</option>
                       <option value="hsv">HSV</option>
+                      <option value="hwb">HWB</option>
                       <option value="cmyk">CMYK</option>
                     </select>
                   </div>
@@ -248,7 +302,10 @@ export default defineComponent({
                   dark={masterDark.value}
                   vertical={masterVertical.value}
                   showEyedropper={masterShowEyedropper.value}
-                  presets={presets}
+                  presets={groupedPresets}
+                  showRecent
+                  copyFormats={['hex', 'rgb', 'hsl']}
+                  showContrast
                   style={{
                     '--vc-height': masterVertical.value ? '300px' : '350px',
                     width: masterVertical.value ? 'auto' : '100%',
@@ -290,6 +347,12 @@ export default defineComponent({
               )}
 
               {renderPickerCard(
+                'HWB Picker',
+                hwbColor.value,
+                <HwbColorPicker v-model={hwbColor.value} style={{ width: '100%' }} />
+              )}
+
+              {renderPickerCard(
                 'CMYK Picker',
                 cmykColor.value,
                 <CmykColorPicker v-model={cmykColor.value} style={{ width: '100%' }} />
@@ -301,6 +364,14 @@ export default defineComponent({
                 <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--demo-bg); border-radius: 1rem;">
                   <ColorPickerPopover v-model={popoverColor.value} showInput />
                   <span style="font-size: 0.875rem; font-weight: 500;">Click swatch to open</span>
+                </div>
+              )}
+
+              {renderPickerCard(
+                'Hex Input',
+                hexInputColor.value,
+                <div style="padding: 1rem; background: var(--demo-bg); border-radius: 1rem;">
+                  <HexColorInput v-model={hexInputColor.value} clearable />
                 </div>
               )}
             </div>
