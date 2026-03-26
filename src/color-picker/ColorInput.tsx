@@ -1,5 +1,6 @@
-import { defineComponent, ref, watch, onUnmounted } from 'vue'
+import { defineComponent, ref, watch, onUnmounted, PropType } from 'vue'
 import { isBlankColor, parseColor } from '../utils/converter'
+import { hexToHsva } from '../utils/convert'
 
 export default defineComponent({
   name: 'ColorInput',
@@ -12,13 +13,35 @@ export default defineComponent({
       type: String,
       default: '',
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    readOnly: {
+      type: Boolean,
+      default: false,
+    },
+    editable: {
+      type: Boolean,
+      default: true,
+    },
+    clearable: {
+      type: Boolean,
+      default: false,
+    },
+    format: {
+      type: String as PropType<'color' | 'hex'>,
+      default: 'color',
+    },
   },
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'active-change', 'clear'],
   setup(props, { emit }) {
     const internalValue = ref(props.modelValue)
     const isInvalid = ref(false)
-    const lastEmittedValue = ref(props.modelValue)
+    const lastCommittedValue = ref(props.modelValue)
+    const lastActiveValue = ref(props.modelValue)
     let debounceTimer: ReturnType<typeof setTimeout> | null = null
+    const isInputReadOnly = () => props.readOnly || !props.editable
 
     watch(
       () => props.modelValue,
@@ -27,7 +50,8 @@ export default defineComponent({
         if (newVal !== internalValue.value) {
           internalValue.value = newVal
           isInvalid.value = false
-          lastEmittedValue.value = newVal
+          lastCommittedValue.value = newVal
+          lastActiveValue.value = newVal
         }
       }
     )
@@ -36,44 +60,119 @@ export default defineComponent({
       if (debounceTimer) clearTimeout(debounceTimer)
     })
 
-    const tryEmit = (val: string) => {
-      const trimmed = val.trim()
-      if (isBlankColor(trimmed)) return
+    const normalizeInputValue = (value: string): string => {
+      const trimmed = value.trim()
+
+      if (props.format === 'hex' && /^[0-9a-fA-F]{3,8}$/.test(trimmed)) {
+        return `#${trimmed}`
+      }
+
+      return trimmed
+    }
+
+    const validateInputValue = (value: string) => {
+      if (props.format === 'hex') {
+        const normalizedValue = normalizeInputValue(value)
+        if (!/^#[0-9a-fA-F]{3,8}$/.test(normalizedValue)) {
+          throw new Error(`Invalid HEX color: ${value}`)
+        }
+        hexToHsva(normalizedValue)
+        return normalizedValue
+      }
+
+      parseColor(value)
+      return value
+    }
+
+    const emitActiveValue = (value: string) => {
+      if (value !== lastActiveValue.value) {
+        lastActiveValue.value = value
+        emit('active-change', value)
+      }
+    }
+
+    const commitValue = (value: string) => {
+      if (value !== lastCommittedValue.value) {
+        lastCommittedValue.value = value
+        emit('update:modelValue', value)
+      }
+    }
+
+    const tryEmitPreview = (val: string) => {
+      const trimmed = normalizeInputValue(val)
+      if (isBlankColor(trimmed)) {
+        if (props.clearable) {
+          isInvalid.value = false
+          emitActiveValue('')
+        }
+        return
+      }
 
       try {
-        parseColor(trimmed)
+        validateInputValue(trimmed)
         isInvalid.value = false
-        if (trimmed !== lastEmittedValue.value) {
-          lastEmittedValue.value = trimmed
-          emit('update:modelValue', trimmed)
+        emitActiveValue(trimmed)
+      } catch {
+        isInvalid.value = true
+      }
+    }
+
+    const tryCommit = (val: string) => {
+      const trimmed = normalizeInputValue(val)
+
+      if (isBlankColor(trimmed)) {
+        if (!props.clearable) {
+          return
         }
+
+        isInvalid.value = false
+        emitActiveValue('')
+        commitValue('')
+        emit('clear')
+        return
+      }
+
+      try {
+        validateInputValue(trimmed)
+        isInvalid.value = false
+        emitActiveValue(trimmed)
+        commitValue(trimmed)
       } catch {
         isInvalid.value = true
       }
     }
 
     const handleChange = (e: Event) => {
+      if (props.disabled || isInputReadOnly()) {
+        return
+      }
+
       const val = (e.target as HTMLInputElement).value
       internalValue.value = val
       isInvalid.value = false
 
       if (debounceTimer) clearTimeout(debounceTimer)
 
+      tryEmitPreview(val)
+
       debounceTimer = setTimeout(() => {
         // If user continued typing and internalValue changed, ignore stale timer
         if (val !== internalValue.value) return
-        tryEmit(val)
+        tryCommit(val)
       }, 100)
     }
 
     const handlePaste = (e: ClipboardEvent) => {
+      if (props.disabled || isInputReadOnly()) {
+        return
+      }
       e.preventDefault()
       const text = (e.clipboardData && e.clipboardData.getData('text')) || ''
       const cleaned = text.trim()
       const final = /^[0-9a-fA-F]{3,8}$/.test(cleaned) ? `#${cleaned}` : cleaned
 
       internalValue.value = final
-      tryEmit(final)
+      tryCommit(final)
     }
 
     const handleBlur = () => {
@@ -83,43 +182,68 @@ export default defineComponent({
       }
 
       const trimmed = internalValue.value.trim()
-      if (trimmed !== internalValue.value) {
-        internalValue.value = trimmed
+      const normalizedValue = normalizeInputValue(trimmed)
+      if (normalizedValue !== internalValue.value) {
+        internalValue.value = normalizedValue
       }
-      if (isBlankColor(trimmed)) {
-        internalValue.value = lastEmittedValue.value
-        isInvalid.value = false
+      if (isBlankColor(normalizedValue)) {
+        if (props.clearable) {
+          internalValue.value = ''
+          tryCommit('')
+        } else {
+          internalValue.value = lastCommittedValue.value
+          isInvalid.value = false
+        }
         return
       }
 
-      try {
-        parseColor(trimmed)
-        isInvalid.value = false
-        if (trimmed !== lastEmittedValue.value) {
-          lastEmittedValue.value = trimmed
-          emit('update:modelValue', trimmed)
-        }
-      } catch {
-        isInvalid.value = true
+      tryCommit(normalizedValue)
+    }
+
+    const handleClear = () => {
+      if (props.disabled || props.readOnly) {
+        return
       }
+
+      internalValue.value = ''
+      isInvalid.value = false
+      tryCommit('')
     }
 
     return () => (
       <div class="vue3-colorful__input-wrapper">
+        {props.label && <span class="vue3-colorful__label-text">{props.label}</span>}
         <label class="vue3-colorful__input-label">
-          {props.label && <span class="vue3-colorful__label-text">{props.label}</span>}
           <input
             role="textbox"
             aria-label={props.label || 'Color Value'}
             aria-invalid={isInvalid.value}
+            aria-readonly={isInputReadOnly() ? 'true' : undefined}
             aria-describedby={props.label ? `${props.label.toLowerCase()}-error` : 'color-error'}
-            class={['vue3-colorful__input', isInvalid.value && 'vue3-colorful__input--invalid']}
+            class={[
+              'vue3-colorful__input',
+              isInvalid.value && 'vue3-colorful__input--invalid',
+              isInputReadOnly() && 'vue3-colorful__input--readonly',
+            ]}
             value={internalValue.value}
             onInput={handleChange}
             onBlur={handleBlur}
             onPaste={handlePaste}
             spellcheck={false}
+            disabled={props.disabled}
+            readonly={isInputReadOnly()}
           />
+          {props.clearable && (
+            <button
+              type="button"
+              class="vue3-colorful__clear"
+              onClick={handleClear}
+              disabled={props.disabled || props.readOnly}
+              aria-label="Clear color"
+            >
+              Clear
+            </button>
+          )}
           <span
             id={props.label ? `${props.label.toLowerCase()}-error` : 'color-error'}
             class="vue3-colorful__error-text"
