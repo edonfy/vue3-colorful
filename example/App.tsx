@@ -18,6 +18,8 @@ import './example.css'
 
 type DemoView = 'showcase' | 'hex' | 'popover' | 'cmyk'
 
+const GITHUB_REPO_URL = 'https://github.com/edonfy/vue3-colorful'
+
 function getDemoView(): DemoView {
   if (typeof window === 'undefined') {
     return 'showcase'
@@ -162,7 +164,17 @@ export default defineComponent({
 
       return (
         <div class="demo-container" style="position: relative;">
-          <Badge text={`v${VERSION} • Vue 3 • TSX`} />
+          <div class="demo-hero__badges">
+            <Badge text={`v${VERSION} • Vue 3 • TSX`} />
+            <a
+              class="demo-hero__badge-link"
+              href={GITHUB_REPO_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub
+            </a>
+          </div>
           <header class="demo-hero">
             <h1 class="demo-hero__title">vue3-colorful</h1>
             <p class="demo-hero__subtitle">

@@ -8,8 +8,8 @@ Baseline generated from the current `dist/` artifacts.
 | `dist/index.js`          |     28.44 KiB |      7.24 KiB |      6.35 KiB |
 | `dist/tailwind.cjs`      |         887 B |         459 B |         388 B |
 | `dist/tailwind.js`       |        1005 B |         438 B |         387 B |
-| `dist/vue3-colorful.css` |      7.71 KiB |      2.06 KiB |      1.78 KiB |
-| **Total**                | **58.16 KiB** | **16.44 KiB** | **14.50 KiB** |
+| `dist/vue3-colorful.css` |      7.70 KiB |      2.06 KiB |      1.78 KiB |
+| **Total**                | **58.14 KiB** | **16.44 KiB** | **14.49 KiB** |
 
 ## Refresh
 

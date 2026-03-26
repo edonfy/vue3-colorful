@@ -7,7 +7,7 @@
   --demo-card-bg: rgba(255, 255, 255, 0.8);
   --demo-card-border: rgba(15, 23, 42, 0.08);
   --demo-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  --demo-font: "Inter", system-ui, -apple-system, sans-serif;
+  --demo-font: 'Inter', system-ui, -apple-system, sans-serif;
   --vc-accent-color: var(--demo-accent);
 }
 
@@ -40,14 +40,14 @@ body {
 
 /* Animated Mesh Background */
 body::before {
-  content: "";
+  content: '';
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   z-index: -1;
-  background: 
+  background:
     radial-gradient(at 0% 0%, hsla(217, 91%, 60%, 0.1) 0, transparent 50%),
     radial-gradient(at 50% 0%, hsla(250, 84%, 63%, 0.1) 0, transparent 50%),
     radial-gradient(at 100% 0%, hsla(320, 81%, 55%, 0.1) 0, transparent 50%),
@@ -58,9 +58,15 @@ body::before {
 }
 
 @keyframes mesh-glow {
-  0% { transform: scale(1) translate(0, 0); }
-  50% { transform: scale(1.1) translate(2%, 2%); }
-  100% { transform: scale(1) translate(-2%, -2%); }
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    transform: scale(1.1) translate(2%, 2%);
+  }
+  100% {
+    transform: scale(1) translate(-2%, -2%);
+  }
 }
 
 .demo-container {
@@ -82,10 +88,18 @@ body::before {
   animation: fadeInDown 0.8s ease-out;
 }
 
-.demo-hero__badge {
+.demo-hero__badges {
   position: absolute;
   top: 1rem;
   right: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  max-width: min(100%, 28rem);
+}
+
+.demo-hero__badge {
   display: inline-block;
   padding: 0.25rem 0.75rem;
   background: rgba(255, 255, 255, 0.1);
@@ -98,6 +112,37 @@ body::before {
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.demo-hero__badge-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--demo-text);
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.demo-hero__badge-link:hover {
+  color: var(--demo-accent);
+  border-color: rgba(99, 102, 241, 0.35);
+  transform: translateY(-1px);
+}
+
+.demo-hero__badge-link:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.45);
+  outline-offset: 2px;
 }
 
 .demo-hero__title {
@@ -133,7 +178,7 @@ body::before {
 }
 
 .demo-section__title::before {
-  content: "";
+  content: '';
   display: block;
   width: 4px;
   height: 1.25rem;
@@ -158,15 +203,17 @@ body::before {
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 
+  box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.05),
     0 20px 25px -5px rgba(0, 0, 0, 0.05);
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+  transition:
+    transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    box-shadow 0.4s ease;
 }
 
 .master-showcase:hover {
   transform: translateY(-4px);
-  box-shadow: 
+  box-shadow:
     0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 30px 40px -10px rgba(0, 0, 0, 0.1);
 }
@@ -271,12 +318,14 @@ body::before {
   flex-direction: column;
   gap: 1.5rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+  transition:
+    transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    box-shadow 0.4s ease;
 }
 
 .picker-card:hover {
   transform: translateY(-8px) scale(1.02);
-  box-shadow: 
+  box-shadow:
     0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
@@ -312,12 +361,14 @@ body::before {
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: var(--demo-shadow);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
 }
 
 .theming-container:hover {
   transform: translateY(-4px);
-  box-shadow: 
+  box-shadow:
     0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
@@ -362,7 +413,8 @@ body::before {
 }
 
 @media (max-width: 1024px) {
-  .master-showcase, .theming-container {
+  .master-showcase,
+  .theming-container {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
@@ -372,7 +424,9 @@ body::before {
   .demo-container {
     padding: 2rem 1rem;
   }
-  .master-showcase, .theming-container, .picker-card {
+  .master-showcase,
+  .theming-container,
+  .picker-card {
     padding: 1.5rem;
   }
   .theme-config {
@@ -389,7 +443,7 @@ body::before {
   border: 4px solid var(--demo-accent);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .custom-pointer--hue {
@@ -415,7 +469,7 @@ body::before {
 }
 
 .master-showcase__preview-value.copied::after {
-  content: "Copied!";
+  content: 'Copied!';
   position: absolute;
   top: -2.5rem;
   left: 50%;
@@ -430,15 +484,27 @@ body::before {
 }
 
 @keyframes fade-up {
-  0% { opacity: 0; transform: translate(-50%, 10px); }
-  20% { opacity: 1; transform: translate(-50%, 0); }
-  80% { opacity: 1; transform: translate(-50%, 0); }
-  100% { opacity: 0; transform: translate(-50%, -10px); }
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
 }
 
 @media (prefers-color-scheme: dark) {
   body::before {
-    background: 
+    background:
       radial-gradient(at 0% 0%, hsla(217, 91%, 30%, 0.1) 0, transparent 50%),
       radial-gradient(at 50% 0%, hsla(250, 84%, 30%, 0.1) 0, transparent 50%),
       radial-gradient(at 100% 0%, hsla(320, 81%, 30%, 0.1) 0, transparent 50%);

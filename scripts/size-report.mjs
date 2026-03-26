@@ -3,11 +3,22 @@
 import { readFileSync, statSync, writeFileSync } from 'node:fs'
 import { resolve, relative } from 'node:path'
 import { gzipSync, brotliCompressSync, constants as zlibConstants } from 'node:zlib'
+import { format, resolveConfig } from 'prettier'
 
 const workspaceRoot = process.cwd()
 const packageJson = JSON.parse(readFileSync(resolve(workspaceRoot, 'package.json'), 'utf-8'))
 
 const markdownOutputPath = resolve(workspaceRoot, 'docs/size-baseline.md')
+
+const formatMarkdown = async (markdown) => {
+  const prettierConfig = (await resolveConfig(markdownOutputPath)) ?? {}
+
+  return format(markdown, {
+    ...prettierConfig,
+    filepath: markdownOutputPath,
+    parser: 'markdown',
+  })
+}
 
 const getRuntimeFiles = () => {
   const files = new Set()
@@ -124,7 +135,7 @@ const toMarkdown = () => {
   return `${lines.join('\n')}`
 }
 
-const generatedMarkdown = toMarkdown()
+const generatedMarkdown = await formatMarkdown(toMarkdown())
 
 const printTable = () => {
   const header = ['File', 'Raw', 'Gzip', 'Brotli']
@@ -135,7 +146,12 @@ const printTable = () => {
     formatBytes(row.brotli),
   ])
 
-  body.push(['Total', formatBytes(totals.raw), formatBytes(totals.gzip), formatBytes(totals.brotli)])
+  body.push([
+    'Total',
+    formatBytes(totals.raw),
+    formatBytes(totals.gzip),
+    formatBytes(totals.brotli),
+  ])
 
   const widths = header.map((column, index) => {
     return Math.max(column.length, ...body.map((row) => row[index].length))
@@ -157,8 +173,9 @@ const printTable = () => {
 
 if (process.argv.includes('--check')) {
   const currentMarkdown = readFileSync(markdownOutputPath, 'utf-8')
+  const normalizedCurrentMarkdown = await formatMarkdown(currentMarkdown)
 
-  if (currentMarkdown !== generatedMarkdown) {
+  if (normalizedCurrentMarkdown !== generatedMarkdown) {
     console.error('Size baseline is out of date. Run `pnpm build && pnpm size:baseline`.')
     process.exit(1)
   }
