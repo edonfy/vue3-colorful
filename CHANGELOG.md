@@ -1,3 +1,12 @@
+## 0.5.0-alpha.0 (2026-03-26)
+
+### 🚀 Alpha Preview
+
+- ✨ Added `disabled`, `readOnly`, `editable`, `clearable`, and `active-change` support across picker interactions, inputs, presets, eyedropper, and popover trigger flows.
+- 🧩 Added `ColorPickerPanel`, expanded `ColorPickerPopover` expose APIs, and introduced `HexColorInput` for triggerless and input-only integrations.
+- 🎨 Added object value mode, grouped presets, recent colors, copy actions, contrast hints, and `HWB` picker/model support.
+- 📚 Refreshed the README, example app, integration demos, and visual regression coverage for the new APIs and behaviors.
+
 ## 0.4.6
 
 ### Patch Changes
