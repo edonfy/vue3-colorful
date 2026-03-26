@@ -16,6 +16,10 @@ vi.mock('@floating-ui/vue', () => ({
 // ColorPickerPopover exposes isOpen via expose()
 interface PopoverExposed {
   isOpen: boolean
+  open: () => void
+  close: () => void
+  toggle: () => void
+  focusTrigger: () => Promise<void>
 }
 
 const isOpen = (vm: unknown): boolean => (vm as PopoverExposed).isOpen
@@ -44,6 +48,28 @@ describe('ColorPickerPopover', () => {
     expect(isOpen(wrapper.vm)).toBe(false)
   })
 
+  it('supports the expose control methods', async () => {
+    const wrapper = mount(ColorPickerPopover, {
+      props: { modelValue: '#ffffff' },
+      attachTo: document.body,
+    })
+
+    ;(wrapper.vm as PopoverExposed).open()
+    await wrapper.vm.$nextTick()
+    expect(isOpen(wrapper.vm)).toBe(true)
+    ;(wrapper.vm as PopoverExposed).toggle()
+    await wrapper.vm.$nextTick()
+    expect(isOpen(wrapper.vm)).toBe(false)
+    ;(wrapper.vm as PopoverExposed).open()
+    await wrapper.vm.$nextTick()
+    ;(wrapper.vm as PopoverExposed).close()
+    await wrapper.vm.$nextTick()
+    expect(isOpen(wrapper.vm)).toBe(false)
+
+    await (wrapper.vm as PopoverExposed).focusTrigger()
+    expect(document.activeElement).not.toBeNull()
+  })
+
   it('closes on click outside', async () => {
     const wrapper = mount(ColorPickerPopover, {
       props: { modelValue: '#ffffff' },
@@ -63,6 +89,16 @@ describe('ColorPickerPopover', () => {
       },
     })
     expect(wrapper.find('.custom-trigger').exists()).toBe(true)
+  })
+
+  it('does not open when disabled', async () => {
+    const wrapper = mount(ColorPickerPopover, {
+      props: { modelValue: '#ffffff', disabled: true },
+    })
+
+    await wrapper.find('.vue3-colorful__popover-trigger').trigger('click')
+    expect(isOpen(wrapper.vm)).toBe(false)
+    expect(wrapper.find('.vue3-colorful__popover-trigger').attributes('aria-disabled')).toBe('true')
   })
 
   it('closes on Escape key', async () => {

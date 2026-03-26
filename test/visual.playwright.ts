@@ -19,6 +19,26 @@ test.describe('Visual Regression', () => {
     await expect(popover).toHaveScreenshot('popover-opened.png')
   })
 
+  test('ColorPickerPanel clearable mode should match snapshot', async ({
+    page,
+  }: {
+    page: Page
+  }) => {
+    await page.goto('/?view=panel')
+    await page.waitForSelector('[data-testid="panel-picker"] .vue3-colorful')
+    await expect(page.locator('[data-testid="panel-picker"] .vue3-colorful')).toHaveScreenshot(
+      'panel-clearable.png'
+    )
+  })
+
+  test('Disabled picker should match snapshot', async ({ page }: { page: Page }) => {
+    await page.goto('/?view=disabled')
+    await page.waitForSelector('[data-testid="disabled-picker"] .vue3-colorful')
+    await expect(page.locator('[data-testid="disabled-picker"] .vue3-colorful')).toHaveScreenshot(
+      'picker-disabled.png'
+    )
+  })
+
   test('CMYK Picker should match snapshot', async ({ page }: { page: Page }) => {
     await page.goto('/?view=cmyk')
     await page.waitForSelector('[data-testid="cmyk-picker"] .vue3-colorful')

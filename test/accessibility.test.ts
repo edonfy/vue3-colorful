@@ -117,5 +117,30 @@ describe('Accessibility', () => {
         'Alpha'
       )
     })
+
+    it('marks controls as disabled when picker is disabled', () => {
+      const wrapper = mount(ColorPicker, {
+        props: { disabled: true, showInput: true },
+      })
+
+      const slider = wrapper.find('.vue3-colorful__hue [role="slider"]')
+      const input = wrapper.find('input')
+
+      expect(slider.attributes('aria-disabled')).toBe('true')
+      expect(input.attributes('disabled')).toBeDefined()
+    })
+
+    it('marks controls as read-only when picker is readOnly', () => {
+      const wrapper = mount(ColorPicker, {
+        props: { readOnly: true, showInput: true },
+      })
+
+      const slider = wrapper.find('.vue3-colorful__hue [role="slider"]')
+      const input = wrapper.find('input')
+
+      expect(slider.attributes('aria-readonly')).toBe('true')
+      expect(input.attributes('readonly')).toBeDefined()
+      expect(input.attributes('aria-readonly')).toBe('true')
+    })
   })
 })

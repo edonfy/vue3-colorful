@@ -10,6 +10,7 @@ interface PackageExports {
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf-8')) as PackageExports
 const readme = readFileSync('./README.md', 'utf-8')
 const contributing = readFileSync('./CONTRIBUTING.md', 'utf-8')
+const sourceIndex = readFileSync('./src/index.ts', 'utf-8')
 
 const collectDeclarationFiles = (directoryPath: string): string[] => {
   const declarationFiles: string[] = []
@@ -74,6 +75,12 @@ describe('Public contracts', () => {
     expect(readme).not.toContain("import 'vue3-colorful/dist/vue3-colorful.css'")
   })
 
+  it('exports ColorPickerPanel from the source entry', () => {
+    expect(sourceIndex).toContain('export { default as ColorPickerPanel }')
+    expect(sourceIndex).toContain('export { default as HexColorInput }')
+    expect(sourceIndex).toContain('export { default as HwbColorPicker }')
+  })
+
   it('does not document removed ecosystem entrypoints', () => {
     expect(readme).not.toContain('vue3-colorful/nuxt')
     expect(readme).not.toContain('vue3-colorful/unocss')
@@ -83,5 +90,24 @@ describe('Public contracts', () => {
     expect(contributing).toContain('TSX')
     expect(contributing).toContain('pnpm')
     expect(contributing).toContain('.vue')
+  })
+
+  it('documents disabled, clearable, and panel usage', () => {
+    expect(readme).toContain('ColorPickerPanel')
+    expect(readme).toContain('clearable')
+    expect(readme).toContain('disabled')
+  })
+
+  it('documents the object value API', () => {
+    expect(readme).toContain('valueType')
+    expect(readme).toContain('RgbColor')
+    expect(readme).toContain('HsvaColor')
+  })
+
+  it('documents the feature matrix and integration examples', () => {
+    expect(readme).toContain('Feature Matrix')
+    expect(readme).toContain('Integration Examples')
+    expect(readme).toContain('HexColorInput')
+    expect(readme).toContain('HwbColorPicker')
   })
 })

@@ -27,6 +27,18 @@ describe('ColorInput', () => {
   })
 
   describe('input handling', () => {
+    it('emits active-change on valid color input before commit', async () => {
+      const wrapper = mount(ColorInput, {
+        props: { modelValue: '#ff0000' },
+      })
+
+      const input = wrapper.find('input')
+      await input.setValue('#00ff00')
+
+      expect(wrapper.emitted('active-change')?.[0]?.[0]).toBe('#00ff00')
+      expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    })
+
     it('emits update:modelValue on valid color input after debounce', async () => {
       vi.useFakeTimers()
       const wrapper = mount(ColorInput, {
@@ -96,6 +108,48 @@ describe('ColorInput', () => {
 
       vi.useRealTimers()
     })
+
+    it('commits an empty value when clearable is enabled', async () => {
+      const wrapper = mount(ColorInput, {
+        props: { modelValue: '#ff0000', clearable: true },
+      })
+
+      const input = wrapper.find('input')
+      await input.setValue('')
+      await input.trigger('blur')
+
+      expect(wrapper.emitted('active-change')?.[0]?.[0]).toBe('')
+      expect(wrapper.emitted('update:modelValue')?.[0]?.[0]).toBe('')
+      expect(wrapper.emitted('clear')).toBeTruthy()
+    })
+
+    it('does not emit changes when readOnly', async () => {
+      const wrapper = mount(ColorInput, {
+        props: { modelValue: '#ff0000', readOnly: true },
+      })
+
+      const input = wrapper.find('input')
+      await input.setValue('#00ff00')
+      await input.trigger('blur')
+
+      expect(wrapper.emitted('active-change')).toBeUndefined()
+      expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+      expect(input.attributes('readonly')).toBeDefined()
+    })
+
+    it('does not emit changes when editable is false', async () => {
+      const wrapper = mount(ColorInput, {
+        props: { modelValue: '#ff0000', editable: false },
+      })
+
+      const input = wrapper.find('input')
+      await input.setValue('#00ff00')
+      await input.trigger('blur')
+
+      expect(wrapper.emitted('active-change')).toBeUndefined()
+      expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+      expect(input.attributes('readonly')).toBeDefined()
+    })
   })
 
   describe('blur handling', () => {
@@ -153,6 +207,18 @@ describe('ColorInput', () => {
       expect(wrapper.emitted('update:modelValue')).toBeUndefined()
       expect(wrapper.find('input').element.value).toBe('#ff0000')
       expect(wrapper.find('input').attributes('aria-invalid')).toBe('false')
+    })
+
+    it('clears via the clear button', async () => {
+      const wrapper = mount(ColorInput, {
+        props: { modelValue: '#ff0000', clearable: true },
+      })
+
+      await wrapper.find('.vue3-colorful__clear').trigger('click')
+
+      expect(wrapper.find('input').element.value).toBe('')
+      expect(wrapper.emitted('update:modelValue')?.[0]?.[0]).toBe('')
+      expect(wrapper.emitted('clear')).toBeTruthy()
     })
   })
 
