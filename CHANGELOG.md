@@ -1,3 +1,18 @@
+## 0.4.5 (2026-03-26)
+
+### 🐛 Bug Fixes
+
+- 🐛 **Review Follow-ups**: Fixed invalid `ColorInput` blur emission, aligned README exports, and tightened public contract checks.
+- 🎨 **Example App**: Restored dedicated `view` routes for visual regression, refreshed snapshots, and fixed the Hex demo saturation height.
+- ♿ **Runtime Behavior**: Improved blank color handling, preset normalization, hue slider ARIA metadata, and pointer capture guards.
+
+### 🏠 Tooling
+
+- 🧪 **Visual Testing**: Switched visual coverage to the Vite example app and kept stable snapshot entrypoints.
+- 🏗️ **Demo Infrastructure**: Replaced the old Storybook setup with a TSX example app plus size/performance baseline tooling.
+
+---
+
 ## 0.4.4 (2026-03-25)
 
 ### 🐛 Bug Fixes
