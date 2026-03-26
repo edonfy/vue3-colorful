@@ -3,12 +3,24 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'Eyedropper',
 
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    readOnly: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
   emits: ['select'],
 
-  setup(_, { emit }) {
+  setup(props, { emit }) {
     const isSupported = typeof window !== 'undefined' && 'EyeDropper' in window
 
     const openDropper = async () => {
+      if (props.disabled || props.readOnly) return
       if (!isSupported) return
 
       try {
@@ -26,7 +38,8 @@ export default defineComponent({
         type="button"
         class="vue3-colorful__eyedropper"
         onClick={openDropper}
-        disabled={!isSupported}
+        disabled={!isSupported || props.disabled || props.readOnly}
+        aria-disabled={!isSupported || props.disabled || props.readOnly ? 'true' : undefined}
         aria-label="Pick color from screen"
         title={isSupported ? 'Pick color from screen' : 'EyeDropper not supported in this browser'}
       >

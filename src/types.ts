@@ -28,12 +28,36 @@ export interface HsvaColor extends HsvColor {
   a: number
 }
 
+export interface HwbColor {
+  h: number
+  w: number
+  b: number
+}
+
+export interface HwbaColor extends HwbColor {
+  a: number
+}
+
 export interface CmykColor {
   c: number
   m: number
   y: number
   k: number
 }
+
+export interface PresetSwatch {
+  value: string
+  label?: string
+}
+
+export interface PresetGroup {
+  label: string
+  colors: Array<string | PresetSwatch>
+}
+
+export type PresetCollectionItem = string | PresetSwatch | PresetGroup
+
+export type CopyFormat = 'hex' | 'rgb' | 'hsl'
 
 export type ObjectColor =
   | RgbColor
@@ -42,8 +66,12 @@ export type ObjectColor =
   | RgbaColor
   | HslaColor
   | HsvaColor
+  | HwbColor
+  | HwbaColor
   | CmykColor
 
 export type AnyColor = string | ObjectColor
 
-export type ColorModel = 'hex' | 'rgb' | 'hsv' | 'hsl' | 'cmyk'
+export type ColorModel = 'hex' | 'rgb' | 'hsv' | 'hsl' | 'hwb' | 'cmyk'
+
+export type ColorValueType = 'string' | 'object'

@@ -4,6 +4,7 @@ import HexColorPicker from '../src/color-picker/HexColorPicker'
 import RgbColorPicker from '../src/color-picker/RgbColorPicker'
 import HslColorPicker from '../src/color-picker/HslColorPicker'
 import HsvColorPicker from '../src/color-picker/HsvColorPicker'
+import HwbColorPicker from '../src/color-picker/HwbColorPicker'
 import CmykColorPicker from '../src/color-picker/CmykColorPicker'
 
 import { nextTick } from 'vue'
@@ -23,16 +24,19 @@ describe('Specialized Pickers', () => {
 
     // Change Hue to 180 (Cyan)
     await base.vm.$emit('hueChange', 180)
+    await base.vm.$emit('hueChangeComplete')
     await nextTick()
     expect(updatedValue).toBe('#00ffff')
 
     // Change Alpha to 0.5
     await base.vm.$emit('alphaChange', 0.5)
+    await base.vm.$emit('alphaChangeComplete')
     await nextTick()
     expect(updatedValue).toBe('#00ffff80')
 
     // Change Saturation/Value
     await base.vm.$emit('saturationChange', { s: 50, v: 50 })
+    await base.vm.$emit('saturationChangeComplete')
     await nextTick()
     expect(updatedValue).toBe('#40808080')
   })
@@ -48,8 +52,26 @@ describe('Specialized Pickers', () => {
 
     const base = wrapper.findComponent({ name: 'BasePicker' })
     await base.vm.$emit('hueChange', 120) // Green
+    await base.vm.$emit('hueChangeComplete')
     await nextTick()
     expect(updatedValue).toBe('rgb(0, 255, 0)')
+  })
+
+  it('RgbColorPicker supports object values', async () => {
+    let updatedValue: unknown = null
+    const wrapper = mount(RgbColorPicker, {
+      props: {
+        modelValue: { r: 255, g: 0, b: 0 },
+        valueType: 'object',
+        'onUpdate:modelValue': (val: unknown) => (updatedValue = val),
+      },
+    })
+
+    const base = wrapper.findComponent({ name: 'BasePicker' })
+    await base.vm.$emit('hueChange', 120)
+    await base.vm.$emit('hueChangeComplete')
+    await nextTick()
+    expect(updatedValue).toEqual({ r: 0, g: 255, b: 0 })
   })
 
   it('HslColorPicker should update on interaction', async () => {
@@ -62,8 +84,26 @@ describe('Specialized Pickers', () => {
     })
     const base = wrapper.findComponent({ name: 'BasePicker' })
     await base.vm.$emit('hueChange', 120)
+    await base.vm.$emit('hueChangeComplete')
     await nextTick()
     expect(updatedValue).toBe('hsl(120, 100%, 50%)')
+  })
+
+  it('HslColorPicker supports object values', async () => {
+    let updatedValue: unknown = null
+    const wrapper = mount(HslColorPicker, {
+      props: {
+        modelValue: { h: 0, s: 100, l: 50 },
+        valueType: 'object',
+        'onUpdate:modelValue': (val: unknown) => (updatedValue = val),
+      },
+    })
+
+    const base = wrapper.findComponent({ name: 'BasePicker' })
+    await base.vm.$emit('hueChange', 120)
+    await base.vm.$emit('hueChangeComplete')
+    await nextTick()
+    expect(updatedValue).toEqual({ h: 120, s: 100, l: 50 })
   })
 
   it('HsvColorPicker should update on interaction', async () => {
@@ -76,8 +116,43 @@ describe('Specialized Pickers', () => {
     })
     const base = wrapper.findComponent({ name: 'BasePicker' })
     await base.vm.$emit('hueChange', 120)
+    await base.vm.$emit('hueChangeComplete')
     await nextTick()
     expect(updatedValue).toBe('hsv(120, 100%, 100%)')
+  })
+
+  it('HsvColorPicker supports HSVA object values', async () => {
+    let updatedValue: unknown = null
+    const wrapper = mount(HsvColorPicker, {
+      props: {
+        modelValue: { h: 0, s: 100, v: 100, a: 1 },
+        valueType: 'object',
+        showAlpha: true,
+        'onUpdate:modelValue': (val: unknown) => (updatedValue = val),
+      },
+    })
+
+    const base = wrapper.findComponent({ name: 'BasePicker' })
+    await base.vm.$emit('alphaChange', 0.5)
+    await base.vm.$emit('alphaChangeComplete')
+    await nextTick()
+    expect(updatedValue).toEqual({ h: 0, s: 100, v: 100, a: 0.5 })
+  })
+
+  it('HwbColorPicker should update on interaction', async () => {
+    let updatedValue = ''
+    const wrapper = mount(HwbColorPicker, {
+      props: {
+        modelValue: 'hwb(0 0% 0%)',
+        'onUpdate:modelValue': (val: string) => (updatedValue = val),
+      },
+    })
+
+    const base = wrapper.findComponent({ name: 'BasePicker' })
+    await base.vm.$emit('hueChange', 120)
+    await base.vm.$emit('hueChangeComplete')
+    await nextTick()
+    expect(updatedValue).toBe('hwb(120 0% 0%)')
   })
 
   it('CmykColorPicker should update on interaction', async () => {
@@ -90,6 +165,7 @@ describe('Specialized Pickers', () => {
     })
     const base = wrapper.findComponent({ name: 'BasePicker' })
     await base.vm.$emit('hueChange', 120)
+    await base.vm.$emit('hueChangeComplete')
     await nextTick()
     expect(updatedValue).toBe('cmyk(100%, 0%, 100%, 0%)')
   })
@@ -140,12 +216,8 @@ describe('Specialized Pickers', () => {
     })
 
     const base = wrapper.findComponent({ name: 'BasePicker' })
-    const hue = base.getComponent({ name: 'Hue' })
-    const interactive = hue.getComponent({ name: 'Interactive' })
-
-    // Simulate vertical movement on hue slider
-    // Mid point (0.5) should be h=180 (cyan)
-    await interactive.vm.$emit('move', { left: 0, top: 0.5 })
+    await base.vm.$emit('hueChange', 180)
+    await base.vm.$emit('hueChangeComplete')
     await nextTick()
     expect(updatedValue).toBe('#00ffff')
   })

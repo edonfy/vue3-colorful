@@ -18,6 +18,7 @@ const getRelativePosition = (node: HTMLElement, event: PointerEvent | MouseEvent
 
 export interface UseInteractionOptions {
   onMove: (interaction: Interaction) => void
+  onMoveEnd?: () => void
   onKey?: (event: KeyboardEvent) => void
 }
 
@@ -31,7 +32,7 @@ export const useInteraction = (
   rootRef: Ref<HTMLElement | undefined>,
   options: UseInteractionOptions
 ): UseInteractionReturn => {
-  const { onMove, onKey } = options
+  const { onMove, onMoveEnd, onKey } = options
   const interaction = reactive<Interaction>({
     left: 0,
     top: 0,
@@ -93,6 +94,7 @@ export const useInteraction = (
   }
 
   const end = (e?: PointerEvent | MouseEvent | TouchEvent) => {
+    const shouldEmitMoveEnd = isStart
     isStart = false
     if (
       rootRef.value &&
@@ -116,6 +118,9 @@ export const useInteraction = (
     if (frameId !== null) {
       cancelAnimationFrame(frameId)
       frameId = null
+    }
+    if (shouldEmitMoveEnd) {
+      onMoveEnd?.()
     }
   }
 

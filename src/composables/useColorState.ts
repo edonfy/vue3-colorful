@@ -1,88 +1,172 @@
 import { ref, watch, computed, Ref, ComputedRef } from 'vue'
-import { HsvaColor, ColorModel } from '../types'
-import { createDefaultHsva, parseColor, formatColor, isBlankColor } from '../utils/converter'
+import { AnyColor, ColorModel, ColorValueType, HsvaColor } from '../types'
+import {
+  createDefaultHsva,
+  formatColor,
+  formatColorValue,
+  isBlankColorValue,
+  isEqualColorValue,
+  parseColorValue,
+} from '../utils/converter'
 
 interface UseColorStateOptions {
-  modelValue: Ref<string>
+  modelValue: Ref<AnyColor>
   colorModel: Ref<ColorModel>
   showAlpha: Ref<boolean>
-  emit: (event: 'update:modelValue', value: string) => void
+  valueType: Ref<ColorValueType>
+  emit: (event: 'update:modelValue' | 'active-change', value: AnyColor) => void
 }
 
 interface UseColorStateReturn {
   hsva: Ref<HsvaColor>
-  outputValue: ComputedRef<string>
+  displayValue: ComputedRef<string>
+  outputValue: ComputedRef<AnyColor>
+  handleHueChange: (value: number) => void
+  handleAlphaChange: (value: number) => void
   handleSaturation: (val: { s: number; v: number }) => void
-  handleSelect: (color: string) => void
+  handleSelect: (color: string, options?: { commit?: boolean }) => void
+  clearColor: () => void
+  commitCurrentValue: () => void
 }
 
 export function useColorState(options: UseColorStateOptions): UseColorStateReturn {
-  const { modelValue, colorModel, showAlpha, emit } = options
+  const { modelValue, colorModel, showAlpha, valueType, emit } = options
   const hsva = ref<HsvaColor>(createDefaultHsva())
+  const isBlank = ref(isBlankColorValue(modelValue.value))
+  const formatDisplayValue = (): string =>
+    isBlank.value ? '' : formatColor(hsva.value, colorModel.value, showAlpha.value)
+  const formatOutputValue = (): AnyColor =>
+    isBlank.value
+      ? ''
+      : formatColorValue(hsva.value, colorModel.value, showAlpha.value, valueType.value)
 
-  if (!isBlankColor(modelValue.value)) {
+  if (!isBlank.value) {
     try {
-      hsva.value = parseColor(modelValue.value)
+      hsva.value = parseColorValue(modelValue.value)
     } catch {
       console.warn(`[vue3-colorful] Initial color value is invalid: ${modelValue.value}`)
     }
   }
-  const lastEmittedValue = ref<string>(modelValue.value)
+  const lastCommittedValue = ref<AnyColor>(modelValue.value)
+  const lastActiveValue = ref<AnyColor>(formatOutputValue())
 
-  const outputValue = computed(() => formatColor(hsva.value, colorModel.value, showAlpha.value))
+  const displayValue = computed(() => formatDisplayValue())
+  const outputValue = computed(() => formatOutputValue())
 
-  watch(outputValue, (newValue) => {
-    if (newValue !== lastEmittedValue.value) {
-      lastEmittedValue.value = newValue
-      emit('update:modelValue', newValue)
+  const emitActiveValue = (value: AnyColor) => {
+    if (!isEqualColorValue(value, lastActiveValue.value)) {
+      lastActiveValue.value = value
+      emit('active-change', value)
     }
-  })
+  }
+
+  const commitValue = (value: AnyColor) => {
+    if (!isEqualColorValue(value, lastCommittedValue.value)) {
+      lastCommittedValue.value = value
+      emit('update:modelValue', value)
+    }
+  }
 
   watch(modelValue, (newValue) => {
-    // If the incoming value matches the last value we emitted, it's an echo; skip it.
-    if (newValue === lastEmittedValue.value) {
+    if (isEqualColorValue(newValue, lastCommittedValue.value)) {
       return
     }
 
     if (newValue !== undefined && newValue !== null) {
-      if (isBlankColor(newValue)) {
+      if (isBlankColorValue(newValue)) {
         hsva.value = createDefaultHsva()
-        lastEmittedValue.value = outputValue.value
+        isBlank.value = true
+        lastCommittedValue.value = ''
+        lastActiveValue.value = ''
         return
       }
 
       try {
-        hsva.value = parseColor(newValue)
+        hsva.value = parseColorValue(newValue)
+        isBlank.value = false
+        lastCommittedValue.value = newValue
+        lastActiveValue.value = formatOutputValue()
       } catch {
         console.warn(`[vue3-colorful] Invalid color value: ${newValue}`)
-        // Record the incoming (invalid) value as last seen external value
-        // to avoid confusing the echo-detection logic.
-        lastEmittedValue.value = newValue
+        lastCommittedValue.value = newValue
       }
     }
   })
 
-  const handleSaturation = ({ s, v }: { s: number; v: number }) => {
-    hsva.value.s = s
-    hsva.value.v = v
+  const updateHsva = (updater: (color: HsvaColor) => void, shouldCommit = false) => {
+    isBlank.value = false
+    updater(hsva.value)
+
+    const nextValue = formatOutputValue()
+    emitActiveValue(nextValue)
+
+    if (shouldCommit) {
+      commitValue(nextValue)
+    }
   }
 
-  const handleSelect = (color: string) => {
-    if (isBlankColor(color)) {
+  const handleHueChange = (value: number) => {
+    updateHsva((color) => {
+      color.h = value
+    })
+  }
+
+  const handleAlphaChange = (value: number) => {
+    updateHsva((color) => {
+      color.a = value
+    })
+  }
+
+  const handleSaturation = ({ s, v }: { s: number; v: number }) => {
+    updateHsva((color) => {
+      color.s = s
+      color.v = v
+    })
+  }
+
+  const handleSelect = (color: string, selectionOptions: { commit?: boolean } = {}) => {
+    if (isBlankColorValue(color)) {
+      isBlank.value = true
+      emitActiveValue('')
+      if (selectionOptions.commit) {
+        commitValue('')
+      }
       return
     }
 
     try {
-      hsva.value = parseColor(color)
+      hsva.value = parseColorValue(color)
+      isBlank.value = false
+      const nextValue = formatOutputValue()
+      emitActiveValue(nextValue)
+
+      if (selectionOptions.commit) {
+        commitValue(nextValue)
+      }
     } catch {
       console.warn(`[vue3-colorful] Invalid selection color: ${color.trim()}`)
     }
   }
 
+  const clearColor = () => {
+    isBlank.value = true
+    emitActiveValue('')
+    commitValue('')
+  }
+
+  const commitCurrentValue = () => {
+    commitValue(formatOutputValue())
+  }
+
   return {
     hsva,
+    displayValue,
     outputValue,
+    handleHueChange,
+    handleAlphaChange,
     handleSaturation,
     handleSelect,
+    clearColor,
+    commitCurrentValue,
   }
 }

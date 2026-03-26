@@ -14,9 +14,17 @@ export default defineComponent({
       type: Object as PropType<HsvaColor>,
       required: true,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    readOnly: {
+      type: Boolean,
+      default: false,
+    },
   },
 
-  emits: ['change'],
+  emits: ['change', 'changeComplete'],
 
   setup(props, { emit, slots }) {
     const handleMove = (position: Interaction) => {
@@ -34,6 +42,9 @@ export default defineComponent({
     }))
 
     const handleKey = (e: KeyboardEvent) => {
+      if (props.disabled || props.readOnly) {
+        return
+      }
       // Small step 1%, large step 10%
       const step = e.shiftKey ? 10 : 1
       const s = props.hsva.s
@@ -57,27 +68,35 @@ export default defineComponent({
       switch (e.key) {
         case 'ArrowLeft':
           emit('change', { s: clamp(s - step, 0, 100), v })
+          emit('changeComplete')
           break
         case 'ArrowRight':
           emit('change', { s: clamp(s + step, 0, 100), v })
+          emit('changeComplete')
           break
         case 'ArrowUp':
           emit('change', { s, v: clamp(v + step, 0, 100) })
+          emit('changeComplete')
           break
         case 'ArrowDown':
           emit('change', { s, v: clamp(v - step, 0, 100) })
+          emit('changeComplete')
           break
         case 'Home':
           emit('change', { s: 0, v })
+          emit('changeComplete')
           break
         case 'End':
           emit('change', { s: 100, v })
+          emit('changeComplete')
           break
         case 'PageUp':
           emit('change', { s, v: 100 })
+          emit('changeComplete')
           break
         case 'PageDown':
           emit('change', { s, v: 0 })
+          emit('changeComplete')
           break
       }
     }
@@ -86,8 +105,11 @@ export default defineComponent({
       <div class="vue3-colorful__saturation" style={containerStyle.value}>
         <Interactive
           onMove={handleMove}
+          onMoveEnd={() => emit('changeComplete')}
           onKey={handleKey}
           role="slider"
+          disabled={props.disabled}
+          readOnly={props.readOnly}
           aria-label="Saturation and Value"
           aria-valuenow={Math.round(props.hsva.s)}
           aria-valuetext={`Saturation ${Math.round(props.hsva.s)}%, Value ${Math.round(props.hsva.v)}%`}

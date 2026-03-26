@@ -18,9 +18,17 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    readOnly: {
+      type: Boolean,
+      default: false,
+    },
   },
 
-  emits: ['change'],
+  emits: ['change', 'changeComplete'],
 
   setup(props, { emit, slots }) {
     const handleMove = (position: Interaction) => {
@@ -39,6 +47,9 @@ export default defineComponent({
     const pointerColor = computed(() => hsvaToRgbaString(props.hsva))
 
     const handleKey = (e: KeyboardEvent) => {
+      if (props.disabled || props.readOnly) {
+        return
+      }
       // 10% step for Shift or Page keys
       const isLargeStep = e.shiftKey || e.key === 'PageUp' || e.key === 'PageDown'
       const step = isLargeStep ? 0.1 : 0.01
@@ -69,12 +80,16 @@ export default defineComponent({
 
       if (isDown) {
         emit('change', clamp(props.hsva.a - step))
+        emit('changeComplete')
       } else if (isUp) {
         emit('change', clamp(props.hsva.a + step))
+        emit('changeComplete')
       } else if (e.key === 'Home') {
         emit('change', 0)
+        emit('changeComplete')
       } else if (e.key === 'End') {
         emit('change', 1)
+        emit('changeComplete')
       }
     }
 
@@ -85,8 +100,11 @@ export default defineComponent({
         )}
         <Interactive
           onMove={handleMove}
+          onMoveEnd={() => emit('changeComplete')}
           onKey={handleKey}
           role="slider"
+          disabled={props.disabled}
+          readOnly={props.readOnly}
           aria-label="Alpha"
           aria-orientation={props.vertical ? 'vertical' : 'horizontal'}
           aria-valuenow={Math.round(props.hsva.a * 100)}

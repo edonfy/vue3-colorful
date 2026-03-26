@@ -4,8 +4,10 @@ import {
   DEFAULT_HSVA,
   createDefaultHsva,
   formatColor,
+  formatColorValue,
   normalizeColorForComparison,
   parseColor,
+  parseColorValue,
 } from '../src/utils/converter'
 
 describe('ColorConverter', () => {
@@ -50,6 +52,33 @@ describe('ColorConverter', () => {
       expect(formatColor(hsva, 'hsl', false)).toBe('hsl(0, 0%, 100%)')
       expect(formatColor(hsva, 'hsl', true)).toBe('hsla(0, 0%, 100%, 1)')
     })
+
+    it('should format to hwb', () => {
+      expect(formatColor({ h: 0, s: 100, v: 100, a: 1 }, 'hwb', false)).toBe('hwb(0 0% 0%)')
+    })
+
+    it('formats typed object values when valueType is object', () => {
+      const objectHsva = { h: 180, s: 50, v: 50, a: 0.5 }
+
+      expect(formatColorValue(objectHsva, 'rgb', false, 'object')).toEqual({
+        r: 64,
+        g: 128,
+        b: 128,
+      })
+      expect(formatColorValue(objectHsva, 'rgb', true, 'object')).toEqual({
+        r: 64,
+        g: 128,
+        b: 128,
+        a: 0.5,
+      })
+      expect(formatColorValue(objectHsva, 'hsl', false, 'object')).toEqual({ h: 180, s: 33, l: 38 })
+      expect(formatColorValue(objectHsva, 'hsv', true, 'object')).toEqual({
+        h: 180,
+        s: 50,
+        v: 50,
+        a: 0.5,
+      })
+    })
   })
 
   describe('Memoization', () => {
@@ -75,6 +104,18 @@ describe('ColorConverter', () => {
     it('normalizes colors for preset comparison without treating blank as red', () => {
       expect(normalizeColorForComparison('RGB(255, 255, 255)')).toBe('#ffffff')
       expect(normalizeColorForComparison('')).toBe('')
+    })
+
+    it('parses object color values', () => {
+      expect(parseColorValue({ r: 255, g: 0, b: 0 })).toEqual({ h: 0, s: 100, v: 100, a: 1 })
+      expect(parseColorValue({ h: 120, s: 100, l: 50 })).toEqual({ h: 120, s: 100, v: 100, a: 1 })
+      expect(parseColorValue({ h: 240, s: 100, v: 100, a: 0.5 })).toEqual({
+        h: 240,
+        s: 100,
+        v: 100,
+        a: 0.5,
+      })
+      expect(parseColorValue({ h: 0, w: 0, b: 0 })).toEqual({ h: 0, s: 100, v: 100, a: 1 })
     })
   })
 })

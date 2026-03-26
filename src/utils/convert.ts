@@ -1,5 +1,15 @@
 import { round } from './round'
-import { RgbaColor, RgbColor, HslaColor, HslColor, HsvaColor, HsvColor, CmykColor } from '../types'
+import {
+  RgbaColor,
+  RgbColor,
+  HslaColor,
+  HslColor,
+  HsvaColor,
+  HsvColor,
+  CmykColor,
+  HwbColor,
+  HwbaColor,
+} from '../types'
 
 /**
  * Valid CSS <angle> units.
@@ -18,6 +28,7 @@ const angleUnits: Record<string, number> = {
 const COLOR_PATTERNS = {
   hsl: /hsla?\(?\s*(-?\d*\.?\d+)(deg|rad|grad|turn)?[,\s]+(-?\d*\.?\d+)%?[,\s]+(-?\d*\.?\d+)%?,?\s*[/\s]*(-?\d*\.?\d+)?(%)?\s*\)?/i,
   hsv: /hsva?\(?\s*(-?\d*\.?\d+)(deg|rad|grad|turn)?[,\s]+(-?\d*\.?\d+)%?[,\s]+(-?\d*\.?\d+)%?,?\s*[/\s]*(-?\d*\.?\d+)?(%)?\s*\)?/i,
+  hwb: /hwb\(?\s*(-?\d*\.?\d+)(deg|rad|grad|turn)?[,\s]+(-?\d*\.?\d+)%[,\s]+(-?\d*\.?\d+)%\s*[/\s]*(-?\d*\.?\d+)?(%)?\s*\)?/i,
   rgb: /rgba?\(?\s*(-?\d*\.?\d+)(%)?[,\s]+(-?\d*\.?\d+)(%)?[,\s]+(-?\d*\.?\d+)(%)?,?\s*[/\s]*(-?\d*\.?\d+)?(%)?\s*\)?/i,
   cmyk: /cmyk\(\s*(-?\d*\.?\d+)%?\s*,\s*(-?\d*\.?\d+)%?\s*,\s*(-?\d*\.?\d+)%?\s*,\s*(-?\d*\.?\d+)%?\s*\)/i,
 }
@@ -118,6 +129,29 @@ export const hsvaToHsvString = (hsva: HsvaColor): string => {
 export const hsvaToHsvaString = (hsva: HsvaColor): string => {
   const { h, s, v, a } = roundHsva(hsva)
   return `hsva(${h}, ${s}%, ${v}%, ${a})`
+}
+
+export const hsvaToHwb = (hsva: HsvaColor): HwbaColor => {
+  const rgba = hsvaToRgba(hsva)
+  const maxChannel = Math.max(rgba.r, rgba.g, rgba.b) / 255
+  const minChannel = Math.min(rgba.r, rgba.g, rgba.b) / 255
+
+  return {
+    h: round(hsva.h),
+    w: round(minChannel * 100),
+    b: round((1 - maxChannel) * 100),
+    a: round(hsva.a, 2),
+  }
+}
+
+export const hsvaToHwbString = (hsva: HsvaColor): string => {
+  const { h, w, b } = hsvaToHwb(hsva)
+  return `hwb(${h} ${w}% ${b}%)`
+}
+
+export const hsvaToHwbaString = (hsva: HsvaColor): string => {
+  const { h, w, b, a } = hsvaToHwb(hsva)
+  return `hwb(${h} ${w}% ${b}% / ${a})`
 }
 
 /**
@@ -231,6 +265,19 @@ export const hsvaStringToHsva = (hsvString: string): HsvaColor => {
   })
 }
 
+export const hwbStringToHsva = (hwbString: string): HsvaColor => {
+  const match = COLOR_PATTERNS.hwb.exec(hwbString)
+
+  if (!match) throw new Error(`Invalid HWB color: ${hwbString}`)
+
+  return hwbaToHsva({
+    h: parseHue(match[1], match[2]),
+    w: Number(match[3]),
+    b: Number(match[4]),
+    a: match[5] === undefined ? 1 : Number(match[5]) / (match[6] ? 100 : 1),
+  })
+}
+
 /**
  * Convert RGBA string to HSVA color object
  */
@@ -288,6 +335,26 @@ export const rgbaToHsva = ({ r, g, b, a }: RgbaColor): HsvaColor => {
   }
 }
 
+export const hwbaToHsva = ({ h, w, b, a }: HwbaColor): HsvaColor => {
+  const whiteRatio = Math.max(0, Math.min(100, w)) / 100
+  const blackRatio = Math.max(0, Math.min(100, b)) / 100
+
+  if (whiteRatio + blackRatio >= 1) {
+    const grayscaleChannel = round((whiteRatio / (whiteRatio + blackRatio || 1)) * 255)
+    return rgbaToHsva({ r: grayscaleChannel, g: grayscaleChannel, b: grayscaleChannel, a })
+  }
+
+  const pureHue = hsvaToRgba({ h, s: 100, v: 100, a })
+  const factor = 1 - whiteRatio - blackRatio
+
+  return rgbaToHsva({
+    r: round((pureHue.r / 255) * factor * 255 + whiteRatio * 255),
+    g: round((pureHue.g / 255) * factor * 255 + whiteRatio * 255),
+    b: round((pureHue.b / 255) * factor * 255 + whiteRatio * 255),
+    a,
+  })
+}
+
 /**
  * Round HSVA values
  */
@@ -315,6 +382,12 @@ export const hsvaToHsv = (hsva: HsvaColor): HsvColor => {
   const { h, s, v } = roundHsva(hsva)
   return { h, s, v }
 }
+
+export const hwbaToHwb = ({ h, w, b }: HwbaColor): HwbColor => ({
+  h: round(h),
+  w: round(w),
+  b: round(b),
+})
 
 /**
  * Convert RGBA color object to CMYK

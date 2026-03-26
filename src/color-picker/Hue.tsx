@@ -16,9 +16,17 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    readOnly: {
+      type: Boolean,
+      default: false,
+    },
   },
 
-  emits: ['change'],
+  emits: ['change', 'changeComplete'],
 
   setup(props, { emit, slots }) {
     const handleMove = (position: Interaction) => {
@@ -27,6 +35,9 @@ export default defineComponent({
     }
 
     const handleKey = (e: KeyboardEvent) => {
+      if (props.disabled || props.readOnly) {
+        return
+      }
       // 10% step for Shift or Page keys
       const isLargeStep = e.shiftKey || e.key === 'PageUp' || e.key === 'PageDown'
       const step = isLargeStep ? 36 : 1
@@ -57,13 +68,17 @@ export default defineComponent({
 
       if (isDown) {
         emit('change', (((props.hue - step) % 360) + 360) % 360)
+        emit('changeComplete')
       } else if (isUp) {
         emit('change', (props.hue + step) % 360)
+        emit('changeComplete')
       } else if (e.key === 'Home') {
         emit('change', 0)
+        emit('changeComplete')
       } else if (e.key === 'End') {
         // Emit 360 for clearer semantic end-of-range (visual result is same as 0)
         emit('change', 360)
+        emit('changeComplete')
       }
     }
 
@@ -75,8 +90,11 @@ export default defineComponent({
       <div class={['vue3-colorful__hue', { 'vue3-colorful__hue--vertical': props.vertical }]}>
         <Interactive
           onMove={handleMove}
+          onMoveEnd={() => emit('changeComplete')}
           onKey={handleKey}
           role="slider"
+          disabled={props.disabled}
+          readOnly={props.readOnly}
           aria-label="Hue"
           aria-orientation={props.vertical ? 'vertical' : 'horizontal'}
           aria-valuenow={Math.round(props.hue)}

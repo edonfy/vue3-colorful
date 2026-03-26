@@ -37,6 +37,7 @@ describe('ColorPicker', () => {
       })
       const hueComponent = wrapper.findComponent({ name: 'Hue' })
       await hueComponent.vm.$emit('change', 180)
+      await hueComponent.vm.$emit('changeComplete')
       const emitted = wrapper.emitted('update:modelValue')
       expect(emitted?.[0]?.[0]).toMatch(/^#[0-9a-f]{6}$/)
     })
@@ -50,6 +51,7 @@ describe('ColorPicker', () => {
       })
       const hueComponent = wrapper.findComponent({ name: 'Hue' })
       await hueComponent.vm.$emit('change', 180)
+      await hueComponent.vm.$emit('changeComplete')
       const emitted = wrapper.emitted('update:modelValue')
       expect(emitted?.[0]?.[0]).toMatch(/^rgb\(/)
     })
@@ -63,6 +65,7 @@ describe('ColorPicker', () => {
       })
       const hueComponent = wrapper.findComponent({ name: 'Hue' })
       await hueComponent.vm.$emit('change', 180)
+      await hueComponent.vm.$emit('changeComplete')
       const emitted = wrapper.emitted('update:modelValue')
       expect(emitted?.[0]?.[0]).toMatch(/^hsl\(/)
     })
@@ -76,8 +79,23 @@ describe('ColorPicker', () => {
       })
       const hueComponent = wrapper.findComponent({ name: 'Hue' })
       await hueComponent.vm.$emit('change', 180)
+      await hueComponent.vm.$emit('changeComplete')
       const emitted = wrapper.emitted('update:modelValue')
       expect(emitted?.[0]?.[0]).toMatch(/^hsv\(/)
+    })
+
+    it('emits hwb format when colorModel is hwb', async () => {
+      const wrapper = mount(ColorPicker, {
+        props: {
+          modelValue: '#ff0000',
+          colorModel: 'hwb',
+        },
+      })
+      const hueComponent = wrapper.findComponent({ name: 'Hue' })
+      await hueComponent.vm.$emit('change', 180)
+      await hueComponent.vm.$emit('changeComplete')
+      const emitted = wrapper.emitted('update:modelValue')
+      expect(emitted?.[0]?.[0]).toMatch(/^hwb\(/)
     })
 
     it('emits cmyk format when colorModel is cmyk', async () => {
@@ -89,6 +107,7 @@ describe('ColorPicker', () => {
       })
       const hueComponent = wrapper.findComponent({ name: 'Hue' })
       await hueComponent.vm.$emit('change', 180)
+      await hueComponent.vm.$emit('changeComplete')
       const emitted = wrapper.emitted('update:modelValue')
       expect(emitted?.[0]?.[0]).toMatch(/^cmyk\(/)
     })
@@ -204,7 +223,7 @@ describe('ColorPicker', () => {
   })
 
   describe('events', () => {
-    it('emits update:modelValue on hue change', async () => {
+    it('emits active-change on hue change and commits on completion', async () => {
       const wrapper = mount(ColorPicker, {
         props: {
           modelValue: '#ff0000',
@@ -212,10 +231,14 @@ describe('ColorPicker', () => {
       })
       const hueComponent = wrapper.findComponent({ name: 'Hue' })
       await hueComponent.vm.$emit('change', 180)
-      expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+      expect(wrapper.emitted('active-change')?.[0]?.[0]).toMatch(/^#[0-9a-f]{6}$/)
+      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+
+      await hueComponent.vm.$emit('changeComplete')
+      expect(wrapper.emitted('update:modelValue')?.[0]?.[0]).toMatch(/^#[0-9a-f]{6}$/)
     })
 
-    it('emits update:modelValue on saturation change', async () => {
+    it('emits update:modelValue on saturation change completion', async () => {
       const wrapper = mount(ColorPicker, {
         props: {
           modelValue: '#ff0000',
@@ -223,10 +246,14 @@ describe('ColorPicker', () => {
       })
       const saturationComponent = wrapper.findComponent({ name: 'Saturation' })
       await saturationComponent.vm.$emit('change', { s: 50, v: 50 })
+      expect(wrapper.emitted('active-change')).toBeTruthy()
+      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+
+      await saturationComponent.vm.$emit('changeComplete')
       expect(wrapper.emitted('update:modelValue')).toBeTruthy()
     })
 
-    it('emits update:modelValue on alpha change', async () => {
+    it('emits update:modelValue on alpha change completion', async () => {
       const wrapper = mount(ColorPicker, {
         props: {
           modelValue: '#ff0000',
@@ -235,7 +262,75 @@ describe('ColorPicker', () => {
       })
       const alphaComponent = wrapper.findComponent({ name: 'Alpha' })
       await alphaComponent.vm.$emit('change', 0.5)
+      expect(wrapper.emitted('active-change')).toBeTruthy()
+      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+
+      await alphaComponent.vm.$emit('changeComplete')
       expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+    })
+  })
+
+  describe('interaction controls', () => {
+    it('does not emit when disabled', async () => {
+      const wrapper = mount(ColorPicker, {
+        props: {
+          modelValue: '#ff0000',
+          disabled: true,
+        },
+      })
+
+      const hueComponent = wrapper.findComponent({ name: 'Hue' })
+      await hueComponent.vm.$emit('change', 180)
+      await hueComponent.vm.$emit('changeComplete')
+
+      expect(wrapper.emitted('active-change')).toBeFalsy()
+      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+      expect(wrapper.find('.vue3-colorful').attributes('aria-disabled')).toBe('true')
+    })
+
+    it('does not emit when readOnly', async () => {
+      const wrapper = mount(ColorPicker, {
+        props: {
+          modelValue: '#ff0000',
+          readOnly: true,
+        },
+      })
+
+      const saturationComponent = wrapper.findComponent({ name: 'Saturation' })
+      await saturationComponent.vm.$emit('change', { s: 20, v: 20 })
+      await saturationComponent.vm.$emit('changeComplete')
+
+      expect(wrapper.emitted('active-change')).toBeFalsy()
+      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+      expect(wrapper.find('.vue3-colorful').attributes('aria-readonly')).toBe('true')
+    })
+
+    it('clears the value when clearable is enabled', async () => {
+      const wrapper = mount(ColorPicker, {
+        props: {
+          modelValue: '#ff0000',
+          clearable: true,
+        },
+      })
+
+      await wrapper.find('.vue3-colorful__clear').trigger('click')
+
+      expect(wrapper.emitted('active-change')?.[0]?.[0]).toBe('')
+      expect(wrapper.emitted('update:modelValue')?.[0]?.[0]).toBe('')
+    })
+
+    it('renders the input in read-only mode when editable is false', () => {
+      const wrapper = mount(ColorPicker, {
+        props: {
+          modelValue: '#ff0000',
+          showInput: true,
+          editable: false,
+        },
+      })
+
+      const input = wrapper.find('input')
+      expect(input.attributes('readonly')).toBeDefined()
+      expect(input.attributes('aria-readonly')).toBe('true')
     })
   })
 

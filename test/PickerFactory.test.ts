@@ -53,7 +53,7 @@ describe('PickerFactory - createPicker', () => {
     expect(interactives.length).toBe(3) // Saturation, Hue, Alpha
   })
 
-  it('detects internal vs external updates to prevent loops', async () => {
+  it('syncs external updates without re-emitting them', async () => {
     const HexPicker = createPicker('HexPicker', 'hex')
     const wrapper = mount(HexPicker, {
       props: {
@@ -64,10 +64,9 @@ describe('PickerFactory - createPicker', () => {
     // Should NOT emit on mount if value is valid
     expect(wrapper.emitted('update:modelValue')).toBeFalsy()
 
-    // External update should update state and emit back
+    // External updates should sync internal state without echoing
     await wrapper.setProps({ modelValue: '#00ff00' })
 
-    const emitted = wrapper.emitted('update:modelValue')
-    expect(emitted?.[emitted.length - 1]?.[0]).toBe('#00ff00')
+    expect(wrapper.emitted('update:modelValue')).toBeFalsy()
   })
 })
