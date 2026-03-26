@@ -40,7 +40,7 @@
 }
 
 .vue3-colorful--vertical .vue3-colorful__saturation {
-  height: var(--vc-height);
+  flex-grow: 1;
 }
 
 .vue3-colorful__body {
