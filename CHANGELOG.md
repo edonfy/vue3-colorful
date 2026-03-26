@@ -1,3 +1,11 @@
+## 0.5.0-alpha.2 (2026-03-26)
+
+### 🧹 Internal Improvements
+
+- 🧱 Split `BasePicker` into focused UI sections for body, input, actions, info, and presets to reduce internal coupling ahead of the next control features.
+- 🎨 Hardened style isolation for popover and trigger rendering by forwarding theme tokens across teleported content and normalizing built-in control styles.
+- ♿ Tightened `ColorPickerPopover` trigger semantics with clearer dialog relationships, focus handling, and regression coverage for the refactored structure.
+
 ## 0.5.0-alpha.0 (2026-03-26)
 
 ### 🚀 Alpha Preview
