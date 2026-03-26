@@ -30,7 +30,7 @@ export default defineComponent({
       default: () => [],
     },
     activeColor: {
-      type: String, // String representation for the active preset highlight
+      type: String,
       default: '',
     },
     dark: {
@@ -118,16 +118,26 @@ export default defineComponent({
       }
 
       const text = formatColor(props.hsva, format, props.showAlpha)
-      await navigator.clipboard.writeText(text)
-      copiedFormat.value = format
+      try {
+        await navigator.clipboard.writeText(text)
+        copiedFormat.value = format
 
-      if (copiedTimer) {
-        clearTimeout(copiedTimer)
+        if (copiedTimer) {
+          clearTimeout(copiedTimer)
+        }
+
+        copiedTimer = setTimeout(() => {
+          copiedFormat.value = null
+        }, 1200)
+      } catch (error) {
+        if (
+          typeof process !== 'undefined' &&
+          process.env &&
+          process.env.NODE_ENV !== 'production'
+        ) {
+          console.warn('[vue3-colorful] Failed to copy color value', error)
+        }
       }
-
-      copiedTimer = setTimeout(() => {
-        copiedFormat.value = null
-      }, 1200)
     }
 
     onUnmounted(() => {

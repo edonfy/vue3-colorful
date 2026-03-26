@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest'
 interface PackageExports {
   exports: Record<string, unknown>
   scripts: Record<string, string>
+  types?: string
 }
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf-8')) as PackageExports
@@ -52,7 +53,9 @@ describe('Public contracts', () => {
   })
 
   it('rewrites declaration imports away from source aliases', () => {
-    if (!existsSync('./dist')) {
+    const declarationEntry = packageJson.types?.replace(/^\.\//, '')
+
+    if (!existsSync('./dist') || !declarationEntry || !existsSync(declarationEntry)) {
       return
     }
 

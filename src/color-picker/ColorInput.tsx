@@ -2,6 +2,21 @@ import { defineComponent, ref, watch, onUnmounted, PropType } from 'vue'
 import { isBlankColor, parseColor } from '../utils/converter'
 import { hexToHsva } from '../utils/convert'
 
+let colorInputId = 0
+
+const getErrorId = (label: string): string => {
+  colorInputId += 1
+  const normalizedLabel = label
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+
+  return normalizedLabel
+    ? `vue3-colorful-${normalizedLabel}-error-${colorInputId}`
+    : `vue3-colorful-color-error-${colorInputId}`
+}
+
 export default defineComponent({
   name: 'ColorInput',
   props: {
@@ -41,12 +56,12 @@ export default defineComponent({
     const lastCommittedValue = ref(props.modelValue)
     const lastActiveValue = ref(props.modelValue)
     let debounceTimer: ReturnType<typeof setTimeout> | null = null
+    const errorId = getErrorId(props.label)
     const isInputReadOnly = () => props.readOnly || !props.editable
 
     watch(
       () => props.modelValue,
       (newVal) => {
-        // If parent updates modelValue (external change), sync internal and lastEmittedValue
         if (newVal !== internalValue.value) {
           internalValue.value = newVal
           isInvalid.value = false
@@ -156,7 +171,6 @@ export default defineComponent({
       tryEmitPreview(val)
 
       debounceTimer = setTimeout(() => {
-        // If user continued typing and internalValue changed, ignore stale timer
         if (val !== internalValue.value) return
         tryCommit(val)
       }, 100)
@@ -219,7 +233,7 @@ export default defineComponent({
             aria-label={props.label || 'Color Value'}
             aria-invalid={isInvalid.value}
             aria-readonly={isInputReadOnly() ? 'true' : undefined}
-            aria-describedby={props.label ? `${props.label.toLowerCase()}-error` : 'color-error'}
+            aria-describedby={errorId}
             class={[
               'vue3-colorful__input',
               isInvalid.value && 'vue3-colorful__input--invalid',
@@ -244,11 +258,7 @@ export default defineComponent({
               Clear
             </button>
           )}
-          <span
-            id={props.label ? `${props.label.toLowerCase()}-error` : 'color-error'}
-            class="vue3-colorful__error-text"
-            aria-live="polite"
-          >
+          <span id={errorId} class="vue3-colorful__error-text" aria-live="polite">
             {isInvalid.value ? 'Invalid color format' : ''}
           </span>
         </label>

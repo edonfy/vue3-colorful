@@ -3,8 +3,8 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/vue3-colorful"><img src="https://img.shields.io/npm/v/vue3-colorful" alt="npm version"></a>
   <a href="https://github.com/edonfy/vue3-colorful/actions"><img src="https://github.com/edonfy/vue3-colorful/workflows/CI/badge.svg" alt="CI"></a>
-  <img src="https://img.shields.io/badge/coverage-94%25-green" alt="Coverage">
-  <img src="https://img.shields.io/badge/gzipped-~7KB-blue" alt="Size">
+  <img src="https://img.shields.io/badge/coverage-92%25-green" alt="Coverage">
+  <img src="https://img.shields.io/badge/esm%20gzip-~10.3KB-blue" alt="Size">
 </p>
 
 <p align="center">
@@ -69,13 +69,12 @@ import 'vue3-colorful/style.css'
 
 ## Pick The Right Component
 
-| Component                                                                  | Use it when                                     | Notes                                          |
-| -------------------------------------------------------------------------- | ----------------------------------------------- | ---------------------------------------------- |
-| `HexColorPicker`                                                           | Your app stores HEX strings                     | Best default for simple product UIs            |
-| `RgbColorPicker` / `HslColorPicker` / `HsvColorPicker` / `CmykColorPicker` | Your app already uses one fixed format          | Smallest, clearest API for that model          |
-| `ColorPicker`                                                              | Users need to switch formats at runtime         | Add `colorModel` to control parsing and output |
-| `ColorPickerPanel`                                                         | You want the raw panel without a trigger        | Great for custom dialog, drawer, or dropdown   |
-| `ColorPickerPopover`                                                       | You need a compact picker opened from a trigger | Requires `@floating-ui/vue`                    |
+| Component                                                                  | Use it when                                     | Notes                                                                                  |
+| -------------------------------------------------------------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `HexColorPicker`                                                           | Your app stores HEX strings                     | Best default for simple product UIs                                                    |
+| `RgbColorPicker` / `HslColorPicker` / `HsvColorPicker` / `CmykColorPicker` | Your app already uses one fixed format          | Smallest, clearest API for that model                                                  |
+| `ColorPicker` / `ColorPickerPanel`                                         | You want the raw panel without a trigger        | `ColorPicker` is a compatibility alias; add `colorModel` to control parsing and output |
+| `ColorPickerPopover`                                                       | You need a compact picker opened from a trigger | Requires `@floating-ui/vue`                                                            |
 
 If the color model is fixed, prefer a specialized picker for the simplest bundle and API surface.
 
@@ -111,7 +110,7 @@ Available specialized pickers:
 
 ### Generic `ColorPicker`
 
-Use the generic picker when the active color model is user-configurable.
+Use the generic picker when you want the triggerless panel API and the active color model is user-configurable. `ColorPicker` and `ColorPickerPanel` share the same implementation; `ColorPickerPanel` is the clearer name when you are mounting the panel directly.
 
 ```tsx
 import { defineComponent, ref } from 'vue'
@@ -135,7 +134,7 @@ export default defineComponent({
 
 ### `ColorPickerPanel`
 
-Use the panel component when your app already has its own dialog, drawer, or dropdown shell.
+Use the panel component when your app already has its own dialog, drawer, or dropdown shell. It is functionally equivalent to `ColorPicker`.
 
 ```tsx
 import { defineComponent, ref } from 'vue'
@@ -205,7 +204,7 @@ Expose API:
 
 ## Common Props
 
-All specialized pickers, `ColorPicker`, and `ColorPickerPopover` accept these props:
+All specialized pickers, `ColorPicker`, `ColorPickerPanel`, and `ColorPickerPopover` accept these props:
 
 | Prop              | Type                          | Default    | Description                                                    |
 | ----------------- | ----------------------------- | ---------- | -------------------------------------------------------------- |

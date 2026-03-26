@@ -61,4 +61,30 @@ describe('Picker info features', () => {
     expect(wrapper.text()).toContain('Recent')
     expect(wrapper.findAll('.vue3-colorful__preset')).toHaveLength(2)
   })
+
+  it('keeps the copy state unchanged when clipboard access fails', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+    Object.defineProperty(globalThis.navigator, 'clipboard', {
+      value: { writeText: vi.fn().mockRejectedValue(new Error('denied')) },
+      configurable: true,
+    })
+
+    const wrapper = mount(ColorPickerPanel, {
+      props: {
+        modelValue: '#3b82f6',
+        copyFormats: ['hex'],
+      },
+    })
+
+    await wrapper.find('.vue3-colorful__copy-button').trigger('click')
+
+    expect(wrapper.find('.vue3-colorful__copy-button').text()).toBe('Copy HEX')
+    expect(wrapper.find('.vue3-colorful__copy-button').classes()).not.toContain(
+      'vue3-colorful__copy-button--copied'
+    )
+    expect(warnSpy).toHaveBeenCalled()
+
+    warnSpy.mockRestore()
+  })
 })

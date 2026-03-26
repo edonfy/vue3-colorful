@@ -13,6 +13,19 @@ test.describe('Visual Regression', () => {
     )
   })
 
+  test('Showcase vertical picker should keep visible side sliders', async ({
+    page,
+  }: {
+    page: Page
+  }) => {
+    await page.goto('/')
+    await page.getByLabel('Vertical').check()
+    await page.waitForSelector('.master-showcase__picker.vue3-colorful--vertical')
+    await expect(page.locator('.master-showcase__picker.vue3-colorful--vertical')).toHaveScreenshot(
+      'showcase-vertical-picker.png'
+    )
+  })
+
   test('HexColorPicker should match snapshot', async ({ page }: { page: Page }) => {
     await page.goto('/?view=hex')
     await page.waitForSelector('[data-testid="hex-picker"] .vue3-colorful')

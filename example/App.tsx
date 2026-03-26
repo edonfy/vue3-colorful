@@ -17,8 +17,6 @@ import {
 import type { ColorModel } from '@/types'
 import { formatColor, parseColor } from '@/utils/converter'
 
-import './example.css'
-
 type DemoView = 'showcase' | 'hex' | 'popover' | 'cmyk' | 'panel' | 'disabled'
 
 const GITHUB_REPO_URL = 'https://github.com/edonfy/vue3-colorful'

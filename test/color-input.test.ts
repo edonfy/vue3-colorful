@@ -24,6 +24,22 @@ describe('ColorInput', () => {
       })
       expect(wrapper.find('input').element.value).toBe('#ff0000')
     })
+
+    it('creates unique error ids for repeated labels', () => {
+      const firstWrapper = mount(ColorInput, {
+        props: { modelValue: '#ff0000', label: 'HEX Value' },
+      })
+      const secondWrapper = mount(ColorInput, {
+        props: { modelValue: '#00ff00', label: 'HEX Value' },
+      })
+
+      const firstErrorId = firstWrapper.find('input').attributes('aria-describedby')
+      const secondErrorId = secondWrapper.find('input').attributes('aria-describedby')
+
+      expect(firstErrorId).toContain('hex-value-error')
+      expect(secondErrorId).toContain('hex-value-error')
+      expect(firstErrorId).not.toBe(secondErrorId)
+    })
   })
 
   describe('input handling', () => {

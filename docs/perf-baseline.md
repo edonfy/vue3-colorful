@@ -8,10 +8,10 @@ These numbers come from the current build artifacts and a jsdom-driven interacti
 
 | Scenario               | Iterations |     Total | Avg / op |
 | ---------------------- | ---------: | --------: | -------: |
-| `mount-default-picker` |         75 | 110.69 ms |  1.48 ms |
-| `hue-updates`          |        400 |  17.29 ms |  0.04 ms |
-| `saturation-updates`   |        300 |   8.55 ms |  0.03 ms |
-| `alpha-updates`        |        300 |   7.71 ms |  0.03 ms |
+| `mount-default-picker` |         75 | 906.96 ms | 12.09 ms |
+| `hue-updates`          |        400 | 124.09 ms |  0.31 ms |
+| `saturation-updates`   |        300 |  80.42 ms |  0.27 ms |
+| `alpha-updates`        |        300 |  27.68 ms |  0.09 ms |
 
 ## Refresh
 

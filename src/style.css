@@ -58,6 +58,7 @@
 /* Row Layout Support (Hue/Alpha beside Saturation) */
 .vue3-colorful__body--vertical {
   flex-direction: row;
+  align-items: stretch;
   height: 100%;
   padding: 6px;
 }
@@ -138,7 +139,7 @@
 .vue3-colorful__body--vertical .vue3-colorful__alpha {
   margin-left: 12px;
   width: var(--vc-slider-height);
-  height: 100%;
+  align-self: stretch;
   flex-shrink: 0;
 }
 
@@ -180,7 +181,7 @@
 .vue3-colorful__hue--vertical,
 .vue3-colorful__alpha--vertical {
   width: var(--vc-slider-height);
-  height: 100%;
+  align-self: stretch;
 }
 
 .vue3-colorful__interactive {
