@@ -1,3 +1,9 @@
+## 0.4.6
+
+### Patch Changes
+
+- Fix published TypeScript declaration imports by replacing internal source alias imports with relative paths, so npm consumers can type-check installed packages without unresolved `@/types` references.
+
 ## 0.4.5 (2026-03-26)
 
 ### 🐛 Bug Fixes
