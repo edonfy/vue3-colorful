@@ -11,107 +11,155 @@
   <a href="https://edonfy.github.io/vue3-colorful/"><strong>Live Demo</strong></a>
 </p>
 
-A tiny, fast, and accessible color picker component for Vue 3. Highly optimized and modernized with premium aesthetics and first-class ecosystem support.
+Lightweight, accessible color pickers for Vue 3, built with TSX render functions and designed for app-level theming.
+
+![vue3-colorful showcase demo](./docs/assets/showcase-demo.png)
 
 ---
 
-## 🌟 Key Features
+## Quick Start
 
-- 🌳 **Tree-shakable** - Import only the models you need (Hex, RGB, HSL, HSV, CMYK).
-- ♿ **Accessible** - Full ARIA support and comprehensive keyboard navigation.
-- 🌓 **Dark Mode** - Built-in premium dark theme with simple toggle.
-- 🚀 **Performant** - Ultra-smooth 60fps interactions via RAF throttling and LRU caching.
-- ✅ **Industrial Stability** - Automated Visual Regression & 100+ Unit tests.
-
----
-
-## 🚀 Installation
+### Install
 
 ```bash
-# Using pnpm (recommended)
 pnpm add vue3-colorful
+```
 
-# Using npm
-npm install vue3-colorful
+If you use the popover component, install its peer dependency too:
+
+```bash
+pnpm add @floating-ui/vue
+```
+
+### Minimal Example
+
+```tsx
+import { defineComponent, ref } from 'vue'
+import { HexColorPicker } from 'vue3-colorful'
+
+export default defineComponent({
+  name: 'ExampleHexPicker',
+  setup() {
+    const color = ref('#3b82f6')
+
+    return () => <HexColorPicker v-model={color.value} />
+  },
+})
+```
+
+Default styles are imported automatically from the package entry. If your setup strips CSS side effects, import the stylesheet explicitly:
+
+```tsx
+import 'vue3-colorful/style.css'
 ```
 
 ---
 
-## 📦 Components
+## Why This Library
 
-### Specialized Pickers (Recommended)
+- Tree-shakable specialized pickers for `hex`, `rgb`, `hsl`, `hsv`, and `cmyk`
+- Accessible sliders, inputs, and popovers with keyboard support
+- TSX-first Vue 3 API that fits composable-heavy codebases
+- CSS variable theming with optional dark mode and custom slots
+- Tailwind helper and CSS-variable theming hooks
 
-For the best bundle size, import the specific component for your color model.
+---
 
-```vue
-<script setup>
-import { ref } from 'vue'
+## Pick The Right Component
+
+| Component                                                                  | Use it when                                     | Notes                                          |
+| -------------------------------------------------------------------------- | ----------------------------------------------- | ---------------------------------------------- |
+| `HexColorPicker`                                                           | Your app stores HEX strings                     | Best default for simple product UIs            |
+| `RgbColorPicker` / `HslColorPicker` / `HsvColorPicker` / `CmykColorPicker` | Your app already uses one fixed format          | Smallest, clearest API for that model          |
+| `ColorPicker`                                                              | Users need to switch formats at runtime         | Add `colorModel` to control parsing and output |
+| `ColorPickerPopover`                                                       | You need a compact picker opened from a trigger | Requires `@floating-ui/vue`                    |
+
+If the color model is fixed, prefer a specialized picker for the simplest bundle and API surface.
+
+---
+
+## Components
+
+### Specialized Pickers
+
+```tsx
+import { defineComponent, ref } from 'vue'
 import { HexColorPicker } from 'vue3-colorful'
-import 'vue3-colorful/dist/vue3-colorful.css'
 
-const color = ref('#3b82f6')
-</script>
+export default defineComponent({
+  name: 'ExampleHexPicker',
+  setup() {
+    const color = ref('#3b82f6')
 
-<template>
-  <HexColorPicker v-model="color" />
-</template>
+    return () => <HexColorPicker v-model={color.value} showInput presets={['#3b82f6', '#8b5cf6']} />
+  },
+})
 ```
 
-**Available**: `HexColorPicker`, `RgbColorPicker`, `HslColorPicker`, `HsvColorPicker`, `CmykColorPicker`.
+Available specialized pickers:
 
-All specialized pickers share the same [props](#-props) and [slots](#-slots).
+- `HexColorPicker`
+- `RgbColorPicker`
+- `HslColorPicker`
+- `HsvColorPicker`
+- `CmykColorPicker`
 
-### Generic ColorPicker
+### Generic `ColorPicker`
 
-A flexible component that supports switching between color models at runtime.
+Use the generic picker when the active color model is user-configurable.
 
-```vue
-<script setup>
-import { ref } from 'vue'
+```tsx
+import { defineComponent, ref } from 'vue'
 import { ColorPicker } from 'vue3-colorful'
-import 'vue3-colorful/dist/vue3-colorful.css'
+import type { ColorModel } from 'vue3-colorful'
 
-const color = ref('#3b82f6')
-</script>
+export default defineComponent({
+  name: 'ExampleColorPicker',
+  setup() {
+    const color = ref('#3b82f6')
+    const colorModel = ref<ColorModel>('hex')
 
-<template>
-  <ColorPicker v-model="color" color-model="rgb" />
-</template>
+    return () => <ColorPicker v-model={color.value} colorModel={colorModel.value} showInput />
+  },
+})
 ```
 
-| Prop         | Type                                         | Default | Description        |
-| ------------ | -------------------------------------------- | ------- | ------------------ |
-| `colorModel` | `'hex' \| 'rgb' \| 'hsl' \| 'hsv' \| 'cmyk'` | `'hex'` | Active color model |
+| Prop         | Type                                         | Default | Description                                |
+| ------------ | -------------------------------------------- | ------- | ------------------------------------------ |
+| `colorModel` | `'hex' \| 'rgb' \| 'hsl' \| 'hsv' \| 'cmyk'` | `'hex'` | Controls parsing and emitted string format |
 
-Additionally accepts all [common props](#-props).
+### `ColorPickerPopover`
 
-### Popover Mode （support with `@floating-ui`）
+Popover mode is useful for buttons, dropdown forms, inspectors, and design tools.
 
-A compact floating picker that opens on click, powered by `@floating-ui`.
-
-```vue
-<script setup>
-import { ref } from 'vue'
+```tsx
+import { defineComponent, ref } from 'vue'
 import { ColorPickerPopover } from 'vue3-colorful'
-import 'vue3-colorful/dist/vue3-colorful.css'
 
-const color = ref('#3b82f6')
-</script>
+export default defineComponent({
+  name: 'ExamplePopoverPicker',
+  setup() {
+    const color = ref('#8b5cf6')
 
-<template>
-  <!-- Basic usage with built-in trigger -->
-  <ColorPickerPopover v-model="color" show-input />
-</template>
+    return () => <ColorPickerPopover v-model={color.value} showInput />
+  },
+})
 ```
 
-**Custom trigger via default slot:**
+Custom trigger via the default slot:
 
-```vue
-<ColorPickerPopover v-model="color" show-input>
-  <template #default="{ isOpen, color }">
-    <button>Custom Trigger (Current: {{ color }})</button>
-  </template>
-</ColorPickerPopover>
+```tsx
+<ColorPickerPopover
+  v-model={color.value}
+  showInput
+  v-slots={{
+    default: ({ color: currentColor, isOpen }) => (
+      <button type="button">
+        {isOpen ? 'Close' : 'Open'} picker · {currentColor}
+      </button>
+    ),
+  }}
+/>
 ```
 
 Scoped slot data:
@@ -121,110 +169,125 @@ Scoped slot data:
 | `isOpen` | `boolean` | Whether the popover is open |
 | `color`  | `string`  | Current color value         |
 
-Additionally accepts all [common props](#-props).
+---
+
+## Common Props
+
+All specialized pickers, `ColorPicker`, and `ColorPickerPopover` accept these props:
+
+| Prop             | Type       | Default | Description                                       |
+| ---------------- | ---------- | ------- | ------------------------------------------------- |
+| `modelValue`     | `string`   | `''`    | Bound color string                                |
+| `showAlpha`      | `boolean`  | `false` | Shows the alpha slider                            |
+| `showEyedropper` | `boolean`  | `false` | Shows the native EyeDropper button                |
+| `presets`        | `string[]` | `[]`    | Preset swatches                                   |
+| `dark`           | `boolean`  | `false` | Applies the built-in dark theme                   |
+| `showInput`      | `boolean`  | `false` | Shows the editable text input                     |
+| `vertical`       | `boolean`  | `false` | Switches hue and alpha sliders to vertical layout |
+| `colorLabel`     | `string`   | `''`    | Accessible label for the input                    |
+
+### Accepted `modelValue` Formats
+
+`modelValue` is always a string. The supported formats depend on the picker you use:
+
+| Model  | Example                                           |
+| ------ | ------------------------------------------------- |
+| `hex`  | `#3b82f6`                                         |
+| `rgb`  | `rgb(59, 130, 246)` / `rgba(59, 130, 246, 0.8)`   |
+| `hsl`  | `hsl(217, 91%, 60%)` / `hsla(217, 91%, 60%, 0.8)` |
+| `hsv`  | `hsv(217, 76%, 96%)` / `hsva(217, 76%, 96%, 0.8)` |
+| `cmyk` | `cmyk(76%, 47%, 0%, 4%)`                          |
+
+Specialized pickers always emit their own model. `ColorPicker` emits the format selected by `colorModel`.
 
 ---
 
-## 🛠️ Props
+## Slots
 
-All pickers (Specialized, Generic, and Popover) accept the following props:
+All pickers support named slots for custom pointers and track backgrounds:
 
-| Prop             | Type       | Default | Description                   |
-| ---------------- | ---------- | ------- | ----------------------------- |
-| `modelValue`     | `string`   | `''`    | Color value (v-model)         |
-| `showAlpha`      | `boolean`  | `false` | Enable alpha channel slider   |
-| `showEyedropper` | `boolean`  | `false` | Enable native EyeDropper tool |
-| `presets`        | `string[]` | `[]`    | List of color swatches        |
-| `dark`           | `boolean`  | `false` | Enable premium dark theme     |
-| `showInput`      | `boolean`  | `false` | Show manual text input        |
-| `vertical`       | `boolean`  | `false` | Orient sliders vertically     |
-| `colorLabel`     | `string`   | `''`    | Label for accessibility       |
+| Slot                 | Scope                  | Description                                  |
+| -------------------- | ---------------------- | -------------------------------------------- |
+| `saturation-pointer` | `{ top, left, color }` | Custom pointer inside the 2D saturation area |
+| `saturation-track`   | —                      | Custom saturation background                 |
+| `hue-pointer`        | `{ left, top, color }` | Custom hue pointer                           |
+| `hue-track`          | —                      | Custom hue background                        |
+| `alpha-pointer`      | `{ left, top, color }` | Custom alpha pointer                         |
+| `alpha-track`        | —                      | Custom alpha background                      |
 
 ---
 
-## 🎰 Slots
-
-All pickers support the following named slots for custom pointers and track backgrounds:
-
-| Slot                 | Scope                  | Description                    |
-| -------------------- | ---------------------- | ------------------------------ |
-| `saturation-pointer` | `{ top, left, color }` | Custom pointer in 2D area      |
-| `saturation-track`   | —                      | Custom track background        |
-| `hue-pointer`        | `{ left, top, color }` | Custom pointer on hue slider   |
-| `hue-track`          | —                      | Custom hue slider background   |
-| `alpha-pointer`      | `{ left, top, color }` | Custom pointer on alpha slider |
-| `alpha-track`        | —                      | Custom alpha slider background |
-
----
-
-## 🎨 Customization
+## Customization
 
 ### CSS Variables
 
-Override these variables to theme the picker globally:
+Override CSS variables on a wrapper element to theme the picker:
 
-| Variable             | Default               |
-| -------------------- | --------------------- |
-| `--vc-width`         | `200px`               |
-| `--vc-height`        | `200px`               |
-| `--vc-border-radius` | `8px`                 |
-| `--vc-pointer-size`  | `28px`                |
-| `--vc-slider-height` | `24px`                |
-| `--vc-accent-color`  | `#3b82f6`             |
-| `--vc-bg-color`      | `#fff`                |
-| `--vc-border-color`  | `rgba(0, 0, 0, 0.05)` |
-| `--vc-preset-gap`    | `8px`                 |
+| Variable                        | Default                         |
+| ------------------------------- | ------------------------------- |
+| `--vc-width`                    | `200px`                         |
+| `--vc-height`                   | `200px`                         |
+| `--vc-border-radius`            | `8px`                           |
+| `--vc-pointer-size`             | `28px`                          |
+| `--vc-slider-height`            | `24px`                          |
+| `--vc-accent-color`             | `#3b82f6`                       |
+| `--vc-bg-color`                 | `#fff`                          |
+| `--vc-text-color`               | `#111827`                       |
+| `--vc-border-color`             | `rgba(0, 0, 0, 0.05)`           |
+| `--vc-input-bg-color`           | `rgba(0, 0, 0, 0.03)`           |
+| `--vc-pointer-border-color`     | `#fff`                          |
+| `--vc-focus-ring-color`         | `rgba(59, 130, 246, 0.1)`       |
+| `--vc-error-color`              | `#ef4444`                       |
+| `--vc-error-ring-color`         | `rgba(239, 68, 68, 0.1)`        |
+| `--vc-preset-active-ring-color` | `rgba(59, 130, 246, 0.3)`       |
+| `--vc-shadow`                   | `0 4px 12px rgba(0, 0, 0, 0.1)` |
+| `--vc-preset-gap`               | `8px`                           |
 
 ```css
-.vue3-colorful {
-  --vc-accent-color: #8b5cf6;
-  --vc-border-radius: 12px;
+.brand-picker {
+  --vc-accent-color: #0ea5e9;
+  --vc-border-radius: 16px;
+  --vc-shadow: 0 18px 50px rgba(14, 165, 233, 0.18);
 }
 ```
 
 ### Dark Mode
 
-Enable via the `dark` prop — no CSS import needed:
+Use the `dark` prop to switch to the bundled dark theme:
 
-```vue
-<HexColorPicker v-model="color" dark />
+```tsx
+<HexColorPicker v-model={color.value} dark />
 ```
-
-This applies the `.vue3-colorful--dark` class, which uses dark-themed colors defined in the bundled stylesheet.
 
 ---
 
-## ♿ Accessibility
+## Accessibility
 
 ### Keyboard Navigation
 
-| Shortcut              | Action                           |
-| --------------------- | -------------------------------- |
-| `Arrow Keys`          | Move pointer in 1% increments    |
-| `Shift + Arrow`       | Move in 10% increments           |
-| `Home` / `End`        | Move to minimum / maximum values |
-| `PageUp` / `PageDown` | Move in large increments         |
-| `Tab`                 | Focus between sliders and input  |
+| Shortcut              | Action                         |
+| --------------------- | ------------------------------ |
+| `Arrow Keys`          | Move in small increments       |
+| `Shift + Arrow`       | Move in larger increments      |
+| `Home` / `End`        | Jump to min or max             |
+| `PageUp` / `PageDown` | Move in large steps            |
+| `Tab`                 | Move between sliders and input |
 
 ### ARIA Support
 
-All interactive elements include proper ARIA attributes:
-
-- Sliders use `role="slider"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax`
-- Inputs use `role="textbox"` with `aria-label` and `aria-invalid`
-- Popover trigger uses `aria-haspopup` and `aria-expanded`
+- Sliders expose `role="slider"` and value attributes
+- Inputs expose `aria-label` and `aria-invalid`
+- Popover triggers expose `aria-haspopup` and `aria-expanded`
 
 ### EyeDropper
 
-The EyeDropper button uses the native [EyeDropper API](https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API). When unsupported (Firefox, Safari), the button is disabled with a tooltip explaining the limitation. No polyfill required.
+`showEyedropper` uses the native [EyeDropper API](https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API). It works in Chromium-based browsers and degrades gracefully elsewhere.
 
 ---
 
-## 🧩 Ecosystem Integration
+## Ecosystem Integration
 
 ### Tailwind CSS
-
-Automatically maps your Tailwind theme config to CSS variables.
 
 ```js
 // tailwind.config.js
@@ -235,61 +298,52 @@ export default {
     vue3Colorful: {
       accentColor: '#3b82f6',
       borderRadius: '12px',
-      // Supports: width, height, pointerSize, sliderHeight, bgColor, textColor, borderColor
+      // Also supports width, height, pointerSize, sliderHeight, bgColor, textColor,
+      // borderColor, inputBgColor, pointerBorderColor, focusRingColor, errorColor,
+      // errorRingColor, presetActiveRingColor, and shadow.
     },
   },
   plugins: [tailwindPlugin],
 }
 ```
 
-### Nuxt 3
+## Browser Support
 
-Auto-imports all components and injects CSS.
-
-```ts
-// nuxt.config.ts
-export default defineNuxtConfig({
-  modules: ['vue3-colorful/nuxt'],
-  vue3Colorful: {
-    disableCss: false, // Set to true to use your own styles
-  },
-})
-```
-
-### UnoCSS
-
-Generates utility classes for picker theming.
-
-```ts
-// uno.config.ts
-import { presetVue3Colorful } from 'vue3-colorful/unocss'
-
-export default defineConfig({
-  presets: [presetVue3Colorful()],
-})
-```
+- Vue: `^3.2.0`
+- Browsers: current Chrome, Firefox, Safari, and Edge
+- EyeDropper: Chromium-based browsers only
 
 ---
 
-## 💻 Browser Compatibility
+## Troubleshooting
 
-- **Vue**: ^3.2.0
-- **Modern Browsers**: Chrome, Firefox, Safari, Edge.
-- **EyeDropper API**: Chromium-based only (Chrome, Edge, Opera). Graceful fallback elsewhere.
+**Styles are missing**
+
+Your bundler may be stripping CSS side effects. Import the stylesheet explicitly:
+
+```tsx
+import 'vue3-colorful/style.css'
+```
+
+**Popover does not render**
+
+Install the popover peer dependency:
+
+```bash
+pnpm add @floating-ui/vue
+```
+
+**EyeDropper is disabled**
+
+That browser does not support the native EyeDropper API. This is expected in Firefox and Safari.
 
 ---
 
-## ❓ Troubleshooting
+## Contributing
 
-**Styles not appearing:**
-Ensure you import the CSS file in your main entry point:
-
-```js
-import 'vue3-colorful/dist/vue3-colorful.css'
-```
-
-**Nuxt 3 SSR errors:**
-Ensure the module is added to `nuxt.config.ts` modules array as shown in the [Ecosystem](#nuxt-3) section.
+- Use `pnpm` for repo commands
+- Keep components in TSX; do not add `.vue` SFC files
+- Run `pnpm type-check`, `pnpm lint`, `pnpm format`, and `pnpm test:run` before opening a PR
 
 ---
 

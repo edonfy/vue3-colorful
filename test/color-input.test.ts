@@ -124,6 +124,36 @@ describe('ColorInput', () => {
       const emitted = wrapper.emitted('update:modelValue')
       expect(emitted?.[0]?.[0]).toBe('#00ff00')
     })
+
+    it('does not emit an invalid value when blurred before debounce completes', async () => {
+      vi.useFakeTimers()
+      const wrapper = mount(ColorInput, {
+        props: { modelValue: '#ff0000' },
+      })
+
+      const input = wrapper.find('input')
+      await input.setValue('not-a-color')
+      await input.trigger('blur')
+
+      expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+      expect(wrapper.find('input').attributes('aria-invalid')).toBe('true')
+
+      vi.useRealTimers()
+    })
+
+    it('restores the last valid value when cleared and blurred', async () => {
+      const wrapper = mount(ColorInput, {
+        props: { modelValue: '#ff0000' },
+      })
+
+      const input = wrapper.find('input')
+      await input.setValue('')
+      await input.trigger('blur')
+
+      expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+      expect(wrapper.find('input').element.value).toBe('#ff0000')
+      expect(wrapper.find('input').attributes('aria-invalid')).toBe('false')
+    })
   })
 
   describe('external modelValue sync', () => {

@@ -1,5 +1,5 @@
 import { defineComponent, ref, watch, onUnmounted } from 'vue'
-import { parseColor } from '@/utils/converter'
+import { isBlankColor, parseColor } from '@/utils/converter'
 
 export default defineComponent({
   name: 'ColorInput',
@@ -38,7 +38,7 @@ export default defineComponent({
 
     const tryEmit = (val: string) => {
       const trimmed = val.trim()
-      if (!trimmed) return
+      if (isBlankColor(trimmed)) return
 
       try {
         parseColor(trimmed)
@@ -77,16 +77,30 @@ export default defineComponent({
     }
 
     const handleBlur = () => {
+      if (debounceTimer) {
+        clearTimeout(debounceTimer)
+        debounceTimer = null
+      }
+
       const trimmed = internalValue.value.trim()
       if (trimmed !== internalValue.value) {
         internalValue.value = trimmed
       }
-      if (!isInvalid.value) {
-        // On blur, ensure parent is updated and lastEmittedValue kept in sync
+      if (isBlankColor(trimmed)) {
+        internalValue.value = lastEmittedValue.value
+        isInvalid.value = false
+        return
+      }
+
+      try {
+        parseColor(trimmed)
+        isInvalid.value = false
         if (trimmed !== lastEmittedValue.value) {
           lastEmittedValue.value = trimmed
           emit('update:modelValue', trimmed)
         }
+      } catch {
+        isInvalid.value = true
       }
     }
 
