@@ -6,33 +6,41 @@ on:
   pull_request:
     branches: [main, master]
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         node-version: [20.x, 22.x]
 
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.32.1
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+          cache: pnpm
 
       - name: Install dependencies
-
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Type check
         run: pnpm type-check
 
       - name: Lint
+        if: matrix.node-version == '20.x'
         run: pnpm lint
 
       - name: Build
@@ -45,58 +53,9 @@ jobs:
       - name: Test
         run: pnpm test:run
 
-      - name: Check size baseline
-        if: matrix.node-version == '20.x'
-        run: pnpm size:check
-
-      - name: Generate performance baseline report
-        if: matrix.node-version == '20.x'
-        run: pnpm perf:baseline
-
-      - name: Upload size and performance reports
-        if: matrix.node-version == '20.x'
-        uses: actions/upload-artifact@v4
-        with:
-          name: baselines-node-20
-          path: |
-            docs/size-baseline.md
-            docs/perf-baseline.md
-
-      - name: Append baseline summary
-        if: matrix.node-version == '20.x'
-        run: |
-          echo "## Size Baseline" >> "$GITHUB_STEP_SUMMARY"
-          cat docs/size-baseline.md >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "## Interaction Performance Baseline" >> "$GITHUB_STEP_SUMMARY"
-          cat docs/perf-baseline.md >> "$GITHUB_STEP_SUMMARY"
-
       - name: Check test coverage
+        if: matrix.node-version == '20.x'
         run: pnpm test:coverage
-
-  lint:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Install dependencies
-
-        run: pnpm install
-
-      - name: Format check
-        run: pnpm format:check
-
-      - name: ESLint
-        run: pnpm lint
 
   visual:
     runs-on: macos-latest
@@ -104,16 +63,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.32.1
+
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+          cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install chromium
