@@ -35,3 +35,4 @@ coverage
 .pnpm-store
 test-results
 playwright-report
+.worktrees
