@@ -39,6 +39,10 @@ jobs:
       - name: Type check
         run: pnpm type-check
 
+      - name: Format check
+        if: matrix.node-version == '20.x'
+        run: pnpm format:check
+
       - name: Lint
         if: matrix.node-version == '20.x'
         run: pnpm lint
