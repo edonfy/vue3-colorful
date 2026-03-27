@@ -45,14 +45,6 @@ jobs:
       - name: Test
         run: pnpm test:run
 
-      - name: Install Playwright browsers
-        if: matrix.node-version == '20.x'
-        run: pnpm exec playwright install --with-deps chromium
-
-      - name: Visual regression tests
-        if: matrix.node-version == '20.x'
-        run: pnpm test:visual
-
       - name: Check size baseline
         if: matrix.node-version == '20.x'
         run: pnpm size:check
@@ -105,3 +97,26 @@ jobs:
 
       - name: ESLint
         run: pnpm lint
+
+  visual:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install chromium
+
+      - name: Visual regression tests
+        run: pnpm test:visual
