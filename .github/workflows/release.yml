@@ -57,7 +57,7 @@ jobs:
 
       - name: Verify tagged commit is on main
         run: |
-          git fetch origin main --depth=1
+          git fetch origin main --no-tags
           git merge-base --is-ancestor "$GITHUB_SHA" "origin/main"
 
       - name: Build package
@@ -93,14 +93,30 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build package
+        run: pnpm build
+
       - name: Publish package when version is not on npm yet
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           PACKAGE_VERSION: ${{ needs.verify-tag.outputs.package_version }}
         run: |
-          if pnpm view "vue3-colorful@$PACKAGE_VERSION" version >/dev/null 2>&1; then
+          set +e
+          PROBE_OUTPUT=$(pnpm view "vue3-colorful@$PACKAGE_VERSION" version 2>&1)
+          PROBE_STATUS=$?
+          set -e
+
+          if [ "$PROBE_STATUS" -eq 0 ]; then
             echo "Version $PACKAGE_VERSION is already published; skipping publish."
             exit 0
+          fi
+
+          if printf '%s' "$PROBE_OUTPUT" | grep -Eq 'E404|404 Not Found|No match found for version'; then
+            echo "Version $PACKAGE_VERSION is not published yet; continuing to publish."
+          else
+            echo "$PROBE_OUTPUT" >&2
+            echo "Failed to verify whether version $PACKAGE_VERSION exists on npm." >&2
+            exit 1
           fi
 
           pnpm publish --no-git-checks
@@ -109,6 +125,9 @@ jobs:
     name: Deploy example site
     needs: publish-npm
     runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: false
 
     environment:
       name: github-pages
@@ -177,7 +196,7 @@ jobs:
 
       - name: Create or update GitHub release
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
             gh release edit "$GITHUB_REF_NAME" \
