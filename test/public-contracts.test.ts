@@ -5,6 +5,8 @@ import { describe, expect, it } from 'vitest'
 interface PackageExports {
   exports: Record<string, unknown>
   scripts: Record<string, string>
+  peerDependencies?: Record<string, string>
+  peerDependenciesMeta?: Record<string, { optional?: boolean }>
   types?: string
 }
 
@@ -43,6 +45,11 @@ describe('Public contracts', () => {
     expect(packageJson.exports['./tailwind']).toBeUndefined()
     expect(packageJson.exports['./unocss']).toBeUndefined()
     expect(packageJson.exports['./nuxt']).toBeUndefined()
+  })
+
+  it('marks the floating-ui peer as optional for non-popover consumers', () => {
+    expect(packageJson.peerDependencies?.['@floating-ui/vue']).toBeDefined()
+    expect(packageJson.peerDependenciesMeta?.['@floating-ui/vue']?.optional).toBe(true)
   })
 
   it('exposes size baseline scripts', () => {

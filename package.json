@@ -79,6 +79,11 @@
     "@floating-ui/vue": ">=1.0.0",
     "vue": "^3.2.0"
   },
+  "peerDependenciesMeta": {
+    "@floating-ui/vue": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@changesets/cli": "^2.30.0",
     "@edonfy/eslint-config": "^0.0.5",
