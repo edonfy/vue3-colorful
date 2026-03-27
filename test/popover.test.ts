@@ -27,6 +27,8 @@ const isOpen = (vm: unknown): boolean => (vm as PopoverExposed).isOpen
 describe('ColorPickerPopover', () => {
   afterEach(() => {
     document.body.innerHTML = ''
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
   })
 
   it('renders trigger by default', () => {
@@ -101,6 +103,28 @@ describe('ColorPickerPopover', () => {
 
     await trigger.trigger('click')
     expect(isOpen(wrapper.vm)).toBe(true)
+  })
+
+  it('falls back to the legacy trigger without throwing when process is unavailable', () => {
+    vi.stubGlobal('process', undefined)
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    const mountPopover = () =>
+      mount(ColorPickerPopover, {
+        props: { modelValue: '#ffffff' },
+        slots: {
+          default: '<span>Invalid</span><span>Trigger</span>',
+        },
+      })
+
+    expect(mountPopover).not.toThrow()
+
+    const wrapper = mountPopover()
+    const trigger = wrapper.find('.vue3-colorful__popover-trigger')
+
+    expect(trigger.exists()).toBe(true)
+    expect(trigger.element.tagName).toBe('DIV')
+    expect(warnSpy).not.toHaveBeenCalled()
   })
 
   it('does not open when disabled', async () => {

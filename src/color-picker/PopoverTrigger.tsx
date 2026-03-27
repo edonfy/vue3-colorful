@@ -96,7 +96,11 @@ export default defineComponent({
       const triggerNode = nodes.length === 1 && isVNode(nodes[0]) ? nodes[0] : null
 
       if (!triggerNode || typeof triggerNode.type !== 'string') {
-        if (process.env.NODE_ENV !== 'production') {
+        if (
+          typeof process !== 'undefined' &&
+          process.env &&
+          process.env.NODE_ENV !== 'production'
+        ) {
           console.warn(
             '[vue3-colorful] ColorPickerPopover custom trigger should return a single native element.'
           )

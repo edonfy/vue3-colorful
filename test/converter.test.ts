@@ -5,6 +5,7 @@ import {
   createDefaultHsva,
   formatColor,
   formatColorValue,
+  isEqualColorValue,
   normalizeColorForComparison,
   parseColor,
   parseColorValue,
@@ -116,6 +117,28 @@ describe('ColorConverter', () => {
         a: 0.5,
       })
       expect(parseColorValue({ h: 0, w: 0, b: 0 })).toEqual({ h: 0, s: 100, v: 100, a: 1 })
+    })
+
+    it('treats semantically equivalent colors as equal across formats', () => {
+      expect(isEqualColorValue('#fff', '#ffffff')).toBe(true)
+      expect(isEqualColorValue(' rgba(255, 0, 0, 1) ', { r: 255, g: 0, b: 0, a: 1 })).toBe(true)
+      expect(isEqualColorValue({ r: 255, g: 0, b: 0 }, { b: 0, g: 0, r: 255 })).toBe(true)
+    })
+
+    it('treats alpha differences as distinct', () => {
+      expect(isEqualColorValue({ r: 255, g: 0, b: 0, a: 1 }, { r: 255, g: 0, b: 0, a: 0.5 })).toBe(
+        false
+      )
+    })
+
+    it('falls back to normalized string comparison for invalid values', () => {
+      expect(isEqualColorValue(' Invalid ', 'invalid')).toBe(true)
+      expect(isEqualColorValue('invalid', 'different-invalid')).toBe(false)
+    })
+
+    it('does not treat blank values as equivalent to the default color', () => {
+      expect(isEqualColorValue('', '#ff0000')).toBe(false)
+      expect(isEqualColorValue('', { r: 255, g: 0, b: 0 })).toBe(false)
     })
   })
 })

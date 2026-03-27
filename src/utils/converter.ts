@@ -242,17 +242,44 @@ export const getColorDisplayValue = (color: AnyColor): string => {
   return formatColor(parseColorValue(color), 'hex', false)
 }
 
+const areHsvaColorsEqual = (left: HsvaColor, right: HsvaColor): boolean => {
+  const normalizedLeft = roundHsva(left)
+  const normalizedRight = roundHsva(right)
+
+  return (
+    normalizedLeft.h === normalizedRight.h &&
+    normalizedLeft.s === normalizedRight.s &&
+    normalizedLeft.v === normalizedRight.v &&
+    normalizedLeft.a === normalizedRight.a
+  )
+}
+
 export const isEqualColorValue = (left: AnyColor, right: AnyColor): boolean => {
   if (isBlankColorValue(left) && isBlankColorValue(right)) {
     return true
   }
 
-  if (typeof left === 'string' && typeof right === 'string') {
-    return normalizeColorString(left) === normalizeColorString(right)
+  if (isBlankColorValue(left) || isBlankColorValue(right)) {
+    return false
   }
 
-  if (isObjectColor(left) && isObjectColor(right)) {
-    return JSON.stringify(left) === JSON.stringify(right)
+  if (typeof left === 'string' && typeof right === 'string') {
+    try {
+      return areHsvaColorsEqual(parseColorValue(left), parseColorValue(right))
+    } catch {
+      return normalizeColorString(left) === normalizeColorString(right)
+    }
+  }
+
+  if (
+    (typeof left === 'string' || isObjectColor(left)) &&
+    (typeof right === 'string' || isObjectColor(right))
+  ) {
+    try {
+      return areHsvaColorsEqual(parseColorValue(left), parseColorValue(right))
+    } catch {
+      return false
+    }
   }
 
   return false
