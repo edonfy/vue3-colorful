@@ -1,10 +1,9 @@
 import { defineComponent, PropType } from 'vue'
 import PickerBody from './PickerBody'
 import PickerActions from './PickerActions'
-import PickerInfo from './PickerInfo'
 import PickerInputSection from './PickerInputSection'
 import PickerPresetsSection from './PickerPresetsSection'
-import { CopyFormat, HsvaColor, PresetCollectionItem } from '../types'
+import { HsvaColor, PresetCollectionItem } from '../types'
 
 export default defineComponent({
   name: 'BasePicker',
@@ -59,18 +58,6 @@ export default defineComponent({
       default: true,
     },
     clearable: {
-      type: Boolean,
-      default: false,
-    },
-    recentColors: {
-      type: Array as PropType<string[]>,
-      default: () => [],
-    },
-    copyFormats: {
-      type: Array as PropType<CopyFormat[]>,
-      default: () => [],
-    },
-    showContrast: {
       type: Boolean,
       default: false,
     },
@@ -146,18 +133,8 @@ export default defineComponent({
             onClear={() => emit('clear')}
           />
         )}
-        <PickerInfo
-          hsva={props.hsva}
-          activeColor={props.activeColor}
-          showAlpha={props.showAlpha}
-          copyFormats={props.copyFormats}
-          showContrast={props.showContrast}
-          disabled={props.disabled}
-          readOnly={props.readOnly}
-        />
         <PickerPresetsSection
           presets={props.presets}
-          recentColors={props.recentColors}
           activeColor={props.activeColor}
           disabled={props.disabled}
           readOnly={props.readOnly}

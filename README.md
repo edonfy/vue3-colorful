@@ -93,7 +93,7 @@ export default defineComponent({
   setup() {
     const color = ref('#3b82f6')
 
-    return () => <HexColorPicker v-model={color.value} showInput presets={['#3b82f6', '#8b5cf6']} />
+    return () => <HexColorPicker v-model={color.value} showInput />
   },
 })
 ```
@@ -206,25 +206,21 @@ Expose API:
 
 All specialized pickers, `ColorPicker`, `ColorPickerPanel`, and `ColorPickerPopover` accept these props:
 
-| Prop              | Type                          | Default    | Description                                                    |
-| ----------------- | ----------------------------- | ---------- | -------------------------------------------------------------- |
-| `modelValue`      | `string \| object`            | `''`       | Bound color string or typed object value                       |
-| `showAlpha`       | `boolean`                     | `false`    | Shows the alpha slider                                         |
-| `showEyedropper`  | `boolean`                     | `false`    | Shows the native EyeDropper button                             |
-| `presets`         | `PresetCollectionItem[]`      | `[]`       | Flat swatches, labeled swatches, or grouped preset collections |
-| `dark`            | `boolean`                     | `false`    | Applies the built-in dark theme                                |
-| `showInput`       | `boolean`                     | `false`    | Shows the editable text input                                  |
-| `vertical`        | `boolean`                     | `false`    | Switches hue and alpha sliders to vertical layout              |
-| `colorLabel`      | `string`                      | `''`       | Accessible label for the input                                 |
-| `disabled`        | `boolean`                     | `false`    | Disables the trigger, sliders, input, presets, and eyedropper  |
-| `readOnly`        | `boolean`                     | `false`    | Keeps the UI visible while preventing value changes            |
-| `editable`        | `boolean`                     | `true`     | Controls whether the text input can be edited manually         |
-| `clearable`       | `boolean`                     | `false`    | Shows a clear action and allows committing a blank color       |
-| `valueType`       | `'string' \| 'object'`        | `'string'` | Emits string values or typed object values                     |
-| `showRecent`      | `boolean`                     | `false`    | Tracks and renders recently committed colors                   |
-| `maxRecentColors` | `number`                      | `5`        | Limits the recent color history                                |
-| `copyFormats`     | `('hex' \| 'rgb' \| 'hsl')[]` | `[]`       | Shows one-click copy buttons for selected formats              |
-| `showContrast`    | `boolean`                     | `false`    | Displays contrast ratios against white and black               |
+| Prop             | Type                     | Default    | Description                                                   |
+| ---------------- | ------------------------ | ---------- | ------------------------------------------------------------- |
+| `modelValue`     | `string \| object`       | `''`       | Bound color string or typed object value                      |
+| `showAlpha`      | `boolean`                | `false`    | Shows the alpha slider                                        |
+| `showEyedropper` | `boolean`                | `false`    | Shows the native EyeDropper button                            |
+| `presets`        | `PresetCollectionItem[]` | `[]`       | Renders flat swatches or labeled swatches when provided       |
+| `dark`           | `boolean`                | `false`    | Applies the built-in dark theme                               |
+| `showInput`      | `boolean`                | `false`    | Shows the editable text input                                 |
+| `vertical`       | `boolean`                | `false`    | Switches hue and alpha sliders to vertical layout             |
+| `colorLabel`     | `string`                 | `''`       | Accessible label for the input                                |
+| `disabled`       | `boolean`                | `false`    | Disables the trigger, sliders, input, presets, and eyedropper |
+| `readOnly`       | `boolean`                | `false`    | Keeps the UI visible while preventing value changes           |
+| `editable`       | `boolean`                | `true`     | Controls whether the text input can be edited manually        |
+| `clearable`      | `boolean`                | `false`    | Shows a clear action and allows committing a blank color      |
+| `valueType`      | `'string' \| 'object'`   | `'string'` | Emits string values or typed object values                    |
 
 ### Events
 
@@ -354,34 +350,16 @@ export default defineComponent({
 | Triggerless panel   | Yes                | No                   | No                  | No              |
 | Disabled / readOnly | Yes                | Yes                  | Yes                 | Yes             |
 | Clearable           | Yes                | Yes                  | Yes                 | Yes             |
-| Grouped presets     | Yes                | Yes                  | Yes                 | No              |
-| Recent colors       | Yes                | Yes                  | Yes                 | No              |
-| Copy actions        | Yes                | Yes                  | Yes                 | No              |
-| Contrast info       | Yes                | Yes                  | Yes                 | No              |
+| Presets             | Yes                | Yes                  | Yes                 | No              |
 | Object value mode   | Yes                | Yes                  | Yes                 | No              |
 
-### Advanced Presets, Copy, and Contrast
+### Presets
 
 ```tsx
 <ColorPickerPanel
   v-model={color.value}
   showInput
-  showRecent
-  showContrast
-  copyFormats={['hex', 'rgb', 'hsl']}
-  presets={[
-    {
-      label: 'Brand',
-      colors: [
-        { label: 'Primary', value: '#6366f1' },
-        { label: 'Accent', value: '#ec4899' },
-      ],
-    },
-    {
-      label: 'System',
-      colors: ['#f59e0b', '#10b981', '#3b82f6'],
-    },
-  ]}
+  presets={['#6366f1', { label: 'Accent', value: '#ec4899' }, '#10b981', '#3b82f6']}
 />
 ```
 
@@ -400,20 +378,14 @@ Dialog / drawer shell:
 
 ```tsx
 <Dialog open={dialogOpen.value}>
-  <ColorPickerPanel v-model={color.value} showInput showRecent />
+  <ColorPickerPanel v-model={color.value} showInput />
 </Dialog>
 ```
 
 Design token panel:
 
 ```tsx
-<ColorPickerPanel
-  v-model={tokenColor.value}
-  colorModel="hsl"
-  copyFormats={['hex', 'hsl']}
-  showContrast
-  presets={tokenPresets}
-/>
+<ColorPickerPanel v-model={tokenColor.value} colorModel="hsl" presets={tokenPresets} />
 ```
 
 ### Modern Color Spaces

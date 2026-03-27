@@ -9,7 +9,7 @@ import ComponentShowcase from './components/ComponentShowcase'
 import ThemingShowcase from './components/ThemingShowcase'
 import QuickStart from './components/QuickStart'
 
-import { GROUPED_PRESETS } from './constants'
+import { PRESET_SWATCHES } from './constants'
 
 // --- Visual Regression View Router ---
 
@@ -54,12 +54,8 @@ export default defineComponent({
             <section data-testid="hex-picker">
               <HexColorPicker
                 v-model={hexColor.value}
-                presets={GROUPED_PRESETS}
+                presets={PRESET_SWATCHES}
                 showInput
-                showRecent
-                copyFormats={['hex', 'rgb']}
-                showContrast
-                colorLabel="HEX"
                 style={{ '--vc-height': '268px' }}
               />
             </section>
@@ -94,7 +90,7 @@ export default defineComponent({
         return (
           <div class={['demo-container', 'demo-container--visual']}>
             <section data-testid="panel-picker">
-              <ColorPickerPanel v-model={hexColor.value} showInput clearable colorLabel="HEX" />
+              <ColorPickerPanel v-model={hexColor.value} showInput clearable />
             </section>
           </div>
         )
@@ -110,8 +106,7 @@ export default defineComponent({
                 showInput
                 clearable
                 disabled
-                presets={GROUPED_PRESETS}
-                colorLabel="HEX"
+                presets={PRESET_SWATCHES}
               />
             </section>
           </div>

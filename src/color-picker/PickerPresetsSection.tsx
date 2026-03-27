@@ -10,10 +10,6 @@ export default defineComponent({
       type: Array as PropType<PresetCollectionItem[]>,
       default: () => [],
     },
-    recentColors: {
-      type: Array as PropType<string[]>,
-      default: () => [],
-    },
     activeColor: {
       type: String,
       default: '',
@@ -32,14 +28,13 @@ export default defineComponent({
 
   setup(props, { emit }) {
     return () => {
-      if (props.presets.length === 0 && props.recentColors.length === 0) {
+      if (props.presets.length === 0) {
         return null
       }
 
       return (
         <Presets
           presets={props.presets}
-          recentColors={props.recentColors}
           activeColor={props.activeColor}
           disabled={props.disabled}
           readOnly={props.readOnly}

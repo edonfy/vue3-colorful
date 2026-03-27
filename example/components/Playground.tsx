@@ -3,7 +3,7 @@ import type { CSSProperties } from 'vue'
 import { ColorPicker } from '@/index'
 import type { ColorModel } from '@/types'
 import { formatColor, parseColor } from '@/utils/converter'
-import { COLOR_MODELS, GROUPED_PRESETS } from '../constants'
+import { COLOR_MODELS } from '../constants'
 import CodeBlock from './CodeBlock'
 
 export default defineComponent({
@@ -83,8 +83,8 @@ export default defineComponent({
               </button>
             </div>
 
-            <div class="playground__control-group">
-              <label class="playground__label">Color Model</label>
+            <label class="playground__control-group">
+              <span class="playground__label">Color Model</span>
               <select class="playground__select" value={colorModel.value} onChange={updateModel}>
                 {COLOR_MODELS.map((m) => (
                   <option key={m.value} value={m.value}>
@@ -92,7 +92,7 @@ export default defineComponent({
                   </option>
                 ))}
               </select>
-            </div>
+            </label>
 
             <div class="playground__checkboxes">
               <label class="playground__checkbox">
@@ -128,14 +128,6 @@ export default defineComponent({
               dark={dark.value}
               vertical={vertical.value}
               showEyedropper={showEyedropper.value}
-              presets={GROUPED_PRESETS}
-              showRecent
-              copyFormats={['hex', 'rgb', 'hsl']}
-              showContrast
-              style={{
-                '--vc-height': vertical.value ? '300px' : '350px',
-                width: vertical.value ? 'auto' : '100%',
-              }}
             />
           </div>
         </div>

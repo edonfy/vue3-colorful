@@ -12,28 +12,24 @@ const hsva = {
 describe('BasePicker', () => {
   afterEach(() => {
     vi.restoreAllMocks()
+    vi.useRealTimers()
   })
 
-  it('renders composed sections for body, input, info, and presets', () => {
+  it('renders composed sections for body, input, and presets', () => {
     const wrapper = mount(BasePicker, {
       props: {
         hsva,
         activeColor: '#ff0000',
         showInput: true,
         colorLabel: 'HEX',
-        copyFormats: ['hex'],
-        showContrast: true,
         presets: ['#ff0000'],
-        recentColors: ['#00ff00'],
       },
     })
 
     expect(wrapper.findComponent({ name: 'PickerBody' }).exists()).toBe(true)
     expect(wrapper.findComponent({ name: 'PickerInputSection' }).exists()).toBe(true)
-    expect(wrapper.findComponent({ name: 'PickerInfo' }).exists()).toBe(true)
     expect(wrapper.findComponent({ name: 'PickerPresetsSection' }).exists()).toBe(true)
-    expect(wrapper.find('.vue3-colorful__contrast').exists()).toBe(true)
-    expect(wrapper.findAll('.vue3-colorful__preset')).toHaveLength(2)
+    expect(wrapper.findAll('.vue3-colorful__preset')).toHaveLength(1)
   })
 
   it('renders clear actions when input is hidden and picker is clearable', async () => {
@@ -87,23 +83,14 @@ describe('BasePicker', () => {
     expect(wrapper.emitted('colorSelect')?.[0]?.[0]).toBe('#00ff00')
   })
 
-  it('copies formatted colors through the info section', async () => {
-    const writeText = vi.fn().mockResolvedValue(undefined)
-    Object.defineProperty(navigator, 'clipboard', {
-      configurable: true,
-      value: { writeText },
-    })
-
+  it('does not render the presets section when no presets are configured', () => {
     const wrapper = mount(BasePicker, {
       props: {
         hsva,
         activeColor: '#ff0000',
-        copyFormats: ['hex'],
       },
     })
 
-    await wrapper.find('.vue3-colorful__copy-button').trigger('click')
-
-    expect(writeText).toHaveBeenCalledWith('#ff0000')
+    expect(wrapper.find('.vue3-colorful__presets').exists()).toBe(false)
   })
 })

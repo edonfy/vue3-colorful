@@ -102,6 +102,7 @@ button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 .navbar__logo {
@@ -122,6 +123,7 @@ button {
 .navbar__links {
   display: flex;
   gap: 0.25rem;
+  min-width: 0;
 }
 
 .navbar__link {
@@ -129,8 +131,11 @@ button {
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--demo-text-muted);
+  background: none;
+  border: none;
   border-radius: var(--demo-radius);
   cursor: pointer;
+  white-space: nowrap;
   transition:
     color 0.15s,
     background 0.15s;
@@ -212,6 +217,13 @@ button {
   color: var(--demo-text-muted);
   margin: 0 0 2rem;
   font-size: 1rem;
+}
+
+.playground,
+.showcase,
+.theming,
+.quickstart {
+  scroll-margin-top: 72px;
 }
 
 /* --- Playground --- */
@@ -313,7 +325,13 @@ button {
 }
 
 .playground__picker {
+  --vc-width: 100%;
+  --vc-height: 350px;
   flex-shrink: 0;
+}
+
+.playground__picker.vue3-colorful--vertical {
+  --vc-height: 300px;
 }
 
 .playground__code {
@@ -599,6 +617,19 @@ button {
   }
 
   .navbar__links {
+    flex: 1;
+    justify-content: flex-end;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .navbar__links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navbar__github {
     display: none;
   }
 

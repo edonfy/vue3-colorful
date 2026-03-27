@@ -49,13 +49,15 @@ export default defineComponent({
           </div>
           <div class="navbar__links">
             {NAV_ITEMS.map((item) => (
-              <a
+              <button
                 key={item.id}
+                type="button"
                 class={['navbar__link', activeSection.value === item.id && 'navbar__link--active']}
                 onClick={() => scrollTo(item.id)}
+                aria-pressed={activeSection.value === item.id}
               >
                 {item.label}
-              </a>
+              </button>
             ))}
           </div>
           <a class="navbar__github" href={GITHUB_REPO_URL} target="_blank" rel="noreferrer">

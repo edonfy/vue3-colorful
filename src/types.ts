@@ -50,14 +50,7 @@ export interface PresetSwatch {
   label?: string
 }
 
-export interface PresetGroup {
-  label: string
-  colors: Array<string | PresetSwatch>
-}
-
-export type PresetCollectionItem = string | PresetSwatch | PresetGroup
-
-export type CopyFormat = 'hex' | 'rgb' | 'hsl'
+export type PresetCollectionItem = string | PresetSwatch
 
 export type ObjectColor =
   | RgbColor

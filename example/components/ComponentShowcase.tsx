@@ -8,9 +8,8 @@ import {
   CmykColorPicker,
   ColorPickerPanel,
   ColorPickerPopover,
-  HexColorInput,
 } from '@/index'
-import { COMPONENT_DEMOS, GROUP_ORDER, GROUP_LABELS, GROUPED_PRESETS } from '../constants'
+import { COMPONENT_DEMOS, GROUP_ORDER, GROUP_LABELS } from '../constants'
 import ComponentCard from './ComponentCard'
 
 export default defineComponent({
@@ -24,23 +23,11 @@ export default defineComponent({
     const cmykColor = ref('cmyk(0%, 50%, 100%, 0%)')
     const popoverColor = ref('#8b5cf6')
     const panelColor = ref('#3b82f6')
-    const inputColor = ref('#3b82f6')
 
     const renderPickerContent = (id: string) => {
       switch (id) {
         case 'hex':
-          return (
-            <HexColorPicker
-              v-model={hexColor.value}
-              presets={GROUPED_PRESETS}
-              showInput
-              showRecent
-              copyFormats={['hex', 'rgb']}
-              showContrast
-              colorLabel="HEX"
-              style={{ width: '100%' }}
-            />
-          )
+          return <HexColorPicker v-model={hexColor.value} style={{ width: '100%' }} />
         case 'rgb':
           return <RgbColorPicker v-model={rgbColor.value} showAlpha style={{ width: '100%' }} />
         case 'hsl':
@@ -59,12 +46,9 @@ export default defineComponent({
               v-model={panelColor.value}
               showInput
               clearable
-              colorLabel="HEX"
               style={{ width: '100%' }}
             />
           )
-        case 'input':
-          return <HexColorInput v-model={inputColor.value} clearable />
         default:
           return null
       }

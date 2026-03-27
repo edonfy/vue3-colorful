@@ -7,8 +7,8 @@ test.describe('Visual Regression', () => {
     page: Page
   }) => {
     await page.goto('/')
-    await page.waitForSelector('.master-showcase__picker.vue3-colorful')
-    await expect(page.locator('.master-showcase__picker.vue3-colorful')).toHaveScreenshot(
+    await page.waitForSelector('.playground__picker.vue3-colorful')
+    await expect(page.locator('.playground__picker.vue3-colorful')).toHaveScreenshot(
       'showcase-playground-picker.png'
     )
   })
@@ -20,8 +20,8 @@ test.describe('Visual Regression', () => {
   }) => {
     await page.goto('/')
     await page.getByLabel('Vertical').check()
-    await page.waitForSelector('.master-showcase__picker.vue3-colorful--vertical')
-    await expect(page.locator('.master-showcase__picker.vue3-colorful--vertical')).toHaveScreenshot(
+    await page.waitForSelector('.playground__picker.vue3-colorful--vertical')
+    await expect(page.locator('.playground__picker.vue3-colorful--vertical')).toHaveScreenshot(
       'showcase-vertical-picker.png'
     )
   })
@@ -30,7 +30,7 @@ test.describe('Visual Regression', () => {
     await page.goto('/')
     await page.getByLabel('Dark Mode').check()
     await expect(page.locator('body')).toHaveClass(/demo-body--dark/)
-    await expect(page.locator('.master-showcase')).toHaveScreenshot('showcase-dark-mode.png')
+    await expect(page.locator('.playground__grid')).toHaveScreenshot('showcase-dark-mode.png')
   })
 
   test('HexColorPicker should match snapshot', async ({ page }: { page: Page }) => {

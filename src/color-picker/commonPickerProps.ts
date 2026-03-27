@@ -1,5 +1,5 @@
 import { PropType } from 'vue'
-import { AnyColor, ColorValueType, CopyFormat, PresetCollectionItem } from '../types'
+import { AnyColor, ColorValueType, PresetCollectionItem } from '../types'
 
 export const commonPickerProps = {
   modelValue: {
@@ -53,21 +53,5 @@ export const commonPickerProps = {
   valueType: {
     type: String as PropType<ColorValueType>,
     default: 'string',
-  },
-  showRecent: {
-    type: Boolean,
-    default: false,
-  },
-  maxRecentColors: {
-    type: Number,
-    default: 5,
-  },
-  copyFormats: {
-    type: Array as PropType<CopyFormat[]>,
-    default: () => [],
-  },
-  showContrast: {
-    type: Boolean,
-    default: false,
   },
 }

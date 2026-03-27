@@ -3,24 +3,15 @@ import { describe, expect, it } from 'vitest'
 import Presets from '../src/color-picker/Presets'
 
 describe('Presets', () => {
-  it('renders grouped presets with labels and recent colors', () => {
+  it('renders flat presets with labels', () => {
     const wrapper = mount(Presets, {
       props: {
-        recentColors: ['#000000'],
-        presets: [
-          '#ffffff',
-          {
-            label: 'Brand',
-            colors: [{ value: '#3b82f6', label: 'Primary' }],
-          },
-        ],
+        presets: ['#ffffff', { value: '#3b82f6', label: 'Primary' }],
         activeColor: '#3b82f6',
       },
     })
 
-    expect(wrapper.text()).toContain('Recent')
-    expect(wrapper.text()).toContain('Brand')
-    expect(wrapper.findAll('.vue3-colorful__preset')).toHaveLength(3)
+    expect(wrapper.findAll('.vue3-colorful__preset')).toHaveLength(2)
     expect(wrapper.find('[title="Primary"]').exists()).toBe(true)
     expect(wrapper.findAll('.vue3-colorful__preset--active')).toHaveLength(1)
   })
@@ -28,7 +19,7 @@ describe('Presets', () => {
   it('emits selected preset values', async () => {
     const wrapper = mount(Presets, {
       props: {
-        presets: [{ label: 'Brand', colors: ['#3b82f6'] }],
+        presets: [{ label: 'Brand', value: '#3b82f6' }],
         activeColor: '',
       },
     })
