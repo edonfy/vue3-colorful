@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils'
+import { h } from 'vue'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import ColorPickerPopover from '../src/color-picker/ColorPickerPopover'
 
@@ -26,7 +27,9 @@ const isOpen = (vm: unknown): boolean => (vm as PopoverExposed).isOpen
 
 describe('ColorPickerPopover', () => {
   afterEach(() => {
-    document.body.innerHTML = ''
+    if (typeof document !== 'undefined') {
+      document.body.innerHTML = ''
+    }
     vi.unstubAllGlobals()
     vi.restoreAllMocks()
   })
@@ -191,6 +194,22 @@ describe('ColorPickerPopover', () => {
     expect(isOpen(wrapper.vm)).toBe(false)
 
     wrapper.unmount()
+  })
+
+  it('renders safely through the popover entry during SSR', async () => {
+    vi.stubGlobal('window', undefined)
+    vi.stubGlobal('document', undefined)
+
+    try {
+      const { renderToString } = await import('@vue/server-renderer')
+      const { ColorPickerPopover: EntryPopover } = await import('../src/popover')
+
+      const html = await renderToString(h(EntryPopover, { modelValue: '#ffffff' }))
+
+      expect(html).toContain('vue3-colorful__popover-wrapper')
+    } finally {
+      vi.unstubAllGlobals()
+    }
   })
 
   describe('animation status', () => {

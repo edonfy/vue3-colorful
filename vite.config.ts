@@ -28,13 +28,13 @@ export default defineConfig({
     lib: {
       entry: {
         index: resolve(__dirname, './src/index.ts'),
-        tailwind: resolve(__dirname, './src/plugins/tailwind.ts'),
+        popover: resolve(__dirname, './src/popover.ts'),
       },
       name: 'vue3-colorful',
       formats: ['es', 'cjs'],
     },
     rollupOptions: {
-      external: ['vue', '@floating-ui/vue', 'tailwindcss/plugin'],
+      external: ['vue', '@floating-ui/vue'],
       output: {
         globals: {
           vue: 'Vue',

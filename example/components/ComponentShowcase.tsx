@@ -1,14 +1,15 @@
 import { defineComponent, ref } from 'vue'
 import {
   HexColorPicker,
+  HexColorInput,
   RgbColorPicker,
   HslColorPicker,
   HsvColorPicker,
   HwbColorPicker,
   CmykColorPicker,
   ColorPickerPanel,
-  ColorPickerPopover,
 } from '@/index'
+import { ColorPickerPopover } from '@/popover'
 import { COMPONENT_DEMOS, GROUP_ORDER, GROUP_LABELS } from '../constants'
 import ComponentCard from './ComponentCard'
 
@@ -16,6 +17,7 @@ export default defineComponent({
   name: 'ComponentShowcase',
   setup() {
     const hexColor = ref('#3b82f6')
+    const hexInputColor = ref('#3b82f6')
     const rgbColor = ref('rgba(16, 185, 129, 0.8)')
     const hslColor = ref('hsl(346, 84%, 61%)')
     const hsvColor = ref('hsv(38, 93%, 96%)')
@@ -30,6 +32,8 @@ export default defineComponent({
           return <HexColorPicker v-model={hexColor.value} style={{ width: '100%' }} />
         case 'rgb':
           return <RgbColorPicker v-model={rgbColor.value} showAlpha style={{ width: '100%' }} />
+        case 'hex-input':
+          return <HexColorInput v-model={hexInputColor.value} clearable />
         case 'hsl':
           return <HslColorPicker v-model={hslColor.value} style={{ width: '100%' }} />
         case 'hsv':

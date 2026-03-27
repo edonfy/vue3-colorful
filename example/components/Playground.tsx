@@ -15,6 +15,7 @@ export default defineComponent({
     const showInput = ref(true)
     const dark = ref(false)
     const vertical = ref(false)
+    const showRecent = ref(false)
     const showEyedropper = ref(true)
     const supportsEyedropper = typeof window !== 'undefined' && 'EyeDropper' in window
 
@@ -52,6 +53,7 @@ export default defineComponent({
       if (showInput.value) props.push('showInput')
       if (dark.value) props.push('dark')
       if (vertical.value) props.push('vertical')
+      if (showRecent.value) props.push('showRecent')
       if (showEyedropper.value) props.push('showEyedropper')
       return `<ColorPicker\n  ${props.join('\n  ')}\n/>`
     })
@@ -112,6 +114,10 @@ export default defineComponent({
                 Vertical
               </label>
               <label class="playground__checkbox">
+                <input type="checkbox" v-model={showRecent.value} />
+                Recent Colors
+              </label>
+              <label class="playground__checkbox">
                 <input type="checkbox" v-model={showEyedropper.value} />
                 Eyedropper{!supportsEyedropper ? ' (unsupported)' : ''}
               </label>
@@ -127,6 +133,7 @@ export default defineComponent({
               showInput={showInput.value}
               dark={dark.value}
               vertical={vertical.value}
+              showRecent={showRecent.value}
               showEyedropper={showEyedropper.value}
             />
           </div>

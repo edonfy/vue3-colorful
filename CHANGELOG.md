@@ -1,3 +1,16 @@
+## Unreleased
+
+### ⚠️ Breaking Changes
+
+- Removed the `vue3-colorful/tailwind` helper entry and its Tailwind-specific package support.
+- Moved `ColorPickerPopover` to the dedicated `vue3-colorful/popover` subpath so the root entry stays lightweight.
+
+### 🐛 Fixes
+
+- Added the in-memory `showRecent` / `maxRecentColors` flow for committed colors without coupling it to presets.
+- Ensured HEX output stays 6-digit when `showAlpha={false}`.
+- Added saturation slider range metadata and guarded popover floating setup for SSR-safe rendering.
+
 ## 0.5.0-alpha.2 (2026-03-26)
 
 ### 🧹 Internal Improvements
@@ -12,7 +25,7 @@
 
 - ✨ Added `disabled`, `readOnly`, `editable`, `clearable`, and `active-change` support across picker interactions, inputs, presets, eyedropper, and popover trigger flows.
 - 🧩 Added `ColorPickerPanel`, expanded `ColorPickerPopover` expose APIs, and introduced `HexColorInput` for triggerless and input-only integrations.
-- 🎨 Added object value mode, grouped presets, recent colors, copy actions, contrast hints, and `HWB` picker/model support.
+- 🎨 Added object value mode, recent colors, and `HWB` picker/model support.
 - 📚 Refreshed the README, example app, integration demos, and visual regression coverage for the new APIs and behaviors.
 
 ## 0.4.6

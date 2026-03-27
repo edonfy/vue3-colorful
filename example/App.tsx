@@ -1,6 +1,7 @@
 import { defineComponent, ref } from 'vue'
 
-import { CmykColorPicker, HexColorPicker, ColorPickerPanel, ColorPickerPopover } from '@/index'
+import { CmykColorPicker, ColorPickerPanel, HexColorPicker } from '@/index'
+import { ColorPickerPopover } from '@/popover'
 
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
@@ -13,7 +14,7 @@ import { PRESET_SWATCHES } from './constants'
 
 // --- Visual Regression View Router ---
 
-type DemoView = 'showcase' | 'hex' | 'popover' | 'cmyk' | 'panel' | 'disabled'
+type DemoView = 'showcase' | 'hex' | 'popover' | 'cmyk' | 'panel' | 'disabled' | 'recent'
 
 function getDemoView(): DemoView {
   if (typeof window === 'undefined') {
@@ -26,7 +27,8 @@ function getDemoView(): DemoView {
     view === 'popover' ||
     view === 'cmyk' ||
     view === 'panel' ||
-    view === 'disabled'
+    view === 'disabled' ||
+    view === 'recent'
   ) {
     return view
   }
@@ -45,6 +47,7 @@ export default defineComponent({
     const hexColor = ref('#3b82f6')
     const cmykColor = ref('cmyk(0%, 50%, 100%, 0%)')
     const popoverColor = ref('#8b5cf6')
+    const recentColor = ref('#6366f1')
 
     return () => {
       // Visual regression: ?view=hex
@@ -91,6 +94,24 @@ export default defineComponent({
           <div class={['demo-container', 'demo-container--visual']}>
             <section data-testid="panel-picker">
               <ColorPickerPanel v-model={hexColor.value} showInput clearable />
+            </section>
+          </div>
+        )
+      }
+
+      // Visual regression: ?view=recent
+      if (view === 'recent') {
+        return (
+          <div class={['demo-container', 'demo-container--visual']}>
+            <section data-testid="recent-picker">
+              <ColorPickerPanel
+                v-model={recentColor.value}
+                showInput
+                clearable
+                showRecent
+                maxRecentColors={4}
+                presets={PRESET_SWATCHES}
+              />
             </section>
           </div>
         )

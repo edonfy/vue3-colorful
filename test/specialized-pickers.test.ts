@@ -15,6 +15,7 @@ describe('Specialized Pickers', () => {
     const wrapper = mount(HexColorPicker, {
       props: {
         modelValue: '#ff0000',
+        showAlpha: true,
         'onUpdate:modelValue': (val: string) => (updatedValue = val),
       },
     })

@@ -99,7 +99,7 @@ export const isBlankColorValue = (color: AnyColor | null | undefined): boolean =
 const Converters: Record<ColorModel, Converter> = {
   hex: {
     parse: hexToHsva,
-    format: hsvaToHex,
+    format: (hsva, alpha) => hsvaToHex(alpha ? hsva : { ...hsva, a: 1 }),
   },
   rgb: {
     parse: rgbaStringToHsva,

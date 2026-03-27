@@ -63,6 +63,25 @@ test.describe('Visual Regression', () => {
     )
   })
 
+  test('ColorPickerPanel recent colors should match snapshot after commits', async ({
+    page,
+  }: {
+    page: Page
+  }) => {
+    await page.goto('/?view=recent')
+    const presets = page.locator(
+      '[data-testid="recent-picker"] .vue3-colorful__presets .vue3-colorful__preset'
+    )
+
+    await presets.nth(0).click()
+    await presets.nth(1).click()
+
+    await page.waitForSelector('[data-testid="recent-picker"] .vue3-colorful__recent')
+    await expect(page.locator('[data-testid="recent-picker"] .vue3-colorful')).toHaveScreenshot(
+      'panel-recent-colors.png'
+    )
+  })
+
   test('Disabled picker should match snapshot', async ({ page }: { page: Page }) => {
     await page.goto('/?view=disabled')
     await page.waitForSelector('[data-testid="disabled-picker"] .vue3-colorful')

@@ -38,8 +38,9 @@ describe('Public contracts', () => {
     expect(packageJson.exports['./style.css']).toBe('./dist/vue3-colorful.css')
   })
 
-  it('keeps only the tailwind helper as an optional subpath export', () => {
-    expect(packageJson.exports['./tailwind']).toBeDefined()
+  it('keeps only the popover helper as an optional subpath export', () => {
+    expect(packageJson.exports['./popover']).toBeDefined()
+    expect(packageJson.exports['./tailwind']).toBeUndefined()
     expect(packageJson.exports['./unocss']).toBeUndefined()
     expect(packageJson.exports['./nuxt']).toBeUndefined()
   })
@@ -78,10 +79,11 @@ describe('Public contracts', () => {
     expect(readme).not.toContain("import 'vue3-colorful/dist/vue3-colorful.css'")
   })
 
-  it('exports ColorPickerPanel from the source entry', () => {
+  it('exports panel components from the source entry without the popover helper', () => {
     expect(sourceIndex).toContain('export { default as ColorPickerPanel }')
     expect(sourceIndex).toContain('export { default as HexColorInput }')
     expect(sourceIndex).toContain('export { default as HwbColorPicker }')
+    expect(sourceIndex).not.toContain('export { default as ColorPickerPopover }')
   })
 
   it('does not document removed ecosystem entrypoints', () => {
@@ -112,5 +114,10 @@ describe('Public contracts', () => {
     expect(readme).toContain('Integration Examples')
     expect(readme).toContain('HexColorInput')
     expect(readme).toContain('HwbColorPicker')
+  })
+
+  it('documents popover imports from the dedicated subpath export', () => {
+    expect(readme).toContain("import { ColorPickerPopover } from 'vue3-colorful/popover'")
+    expect(readme).not.toContain("import { ColorPickerPopover } from 'vue3-colorful'")
   })
 })

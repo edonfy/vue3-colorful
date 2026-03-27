@@ -99,6 +99,18 @@ describe('Accessibility', () => {
   })
 
   describe('ARIA attributes', () => {
+    it('exposes saturation slider min/max metadata', () => {
+      const wrapper = mount(Saturation, {
+        props: { hsva: { h: 0, s: 50, v: 50, a: 1 } },
+      })
+
+      const slider = wrapper.find('[role="slider"]')
+
+      expect(slider.attributes('aria-valuemin')).toBe('0')
+      expect(slider.attributes('aria-valuemax')).toBe('100')
+      expect(slider.attributes('aria-valuenow')).toBe('50')
+    })
+
     it('has correct ARIA roles and labels', () => {
       const wrapper = mount(ColorPicker, {
         props: { showAlpha: true },

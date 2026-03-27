@@ -41,6 +41,12 @@ export const COMPONENT_DEMOS: ComponentDemo[] = [
     codeSnippet: `<RgbColorPicker v-model={color.value} showAlpha />`,
   },
   {
+    id: 'hex-input',
+    title: 'Hex Input',
+    group: 'specialized',
+    codeSnippet: `<HexColorInput v-model={color.value} clearable />`,
+  },
+  {
     id: 'hsl',
     title: 'HSL Picker',
     group: 'specialized',

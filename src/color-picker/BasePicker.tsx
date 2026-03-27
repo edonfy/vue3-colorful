@@ -3,6 +3,7 @@ import PickerBody from './PickerBody'
 import PickerActions from './PickerActions'
 import PickerInputSection from './PickerInputSection'
 import PickerPresetsSection from './PickerPresetsSection'
+import PickerRecentSection from './PickerRecentSection'
 import { ColorPickerLabels, HsvaColor, PresetCollectionItem } from '../types'
 
 export default defineComponent({
@@ -24,6 +25,14 @@ export default defineComponent({
     presets: {
       type: Array as PropType<PresetCollectionItem[]>,
       default: () => [],
+    },
+    recentColors: {
+      type: Array as PropType<string[]>,
+      default: () => [],
+    },
+    showRecent: {
+      type: Boolean,
+      default: false,
     },
     activeColor: {
       type: String,
@@ -142,6 +151,14 @@ export default defineComponent({
         )}
         <PickerPresetsSection
           presets={props.presets}
+          activeColor={props.activeColor}
+          disabled={props.disabled}
+          readOnly={props.readOnly}
+          onColorSelect={(color: string) => emit('colorSelect', color)}
+        />
+        <PickerRecentSection
+          showRecent={props.showRecent}
+          recentColors={props.recentColors}
           activeColor={props.activeColor}
           disabled={props.disabled}
           readOnly={props.readOnly}
