@@ -71,8 +71,17 @@ jobs:
       - name: Type check
         run: pnpm type-check
 
+      - name: Format check
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm exec eslint . --max-warnings 0
+
       - name: Run tests
         run: pnpm test:run
+
+      - name: Check test coverage
+        run: pnpm test:coverage
 
       - name: Build package
         run: pnpm build
