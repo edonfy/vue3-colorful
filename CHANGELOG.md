@@ -1,5 +1,15 @@
 ## Unreleased
 
+## 0.5.0
+
+### Minor Changes
+
+- 23f08ad: Remove the `vue3-colorful/tailwind` subpath and move `ColorPickerPopover` to
+  `vue3-colorful/popover` so the root entry stays focused on the core picker bundle.
+
+  Also add committed recent-color history, keep HEX output opaque when `showAlpha={false}`,
+  and harden popover rendering for SSR environments.
+
 ### ⚠️ Breaking Changes
 
 - Removed the `vue3-colorful/tailwind` helper entry and its Tailwind-specific package support.
