@@ -60,10 +60,13 @@ jobs:
             echo "is_prerelease=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Verify tagged commit is on main
+      - name: Verify tagged commit is on default branch
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          git fetch origin main --no-tags
-          git merge-base --is-ancestor "$GITHUB_SHA" "origin/main"
+          git fetch origin "$DEFAULT_BRANCH" --no-tags
+          TAG_COMMIT=$(git rev-list -n 1 "$GITHUB_REF_NAME")
+          git merge-base --is-ancestor "$TAG_COMMIT" "origin/$DEFAULT_BRANCH"
 
       - name: Type check
         run: pnpm type-check
