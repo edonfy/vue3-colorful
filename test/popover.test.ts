@@ -82,15 +82,25 @@ describe('ColorPickerPopover', () => {
     expect(isOpen(wrapper.vm)).toBe(false)
   })
 
-  it('uses custom slots for trigger', () => {
+  it('uses the custom slot root as the trigger element', async () => {
     const wrapper = mount(ColorPickerPopover, {
       props: { modelValue: '#ffffff' },
       slots: {
         default: '<button class="custom-trigger">Click me</button>',
       },
     })
-    expect(wrapper.find('.custom-trigger').exists()).toBe(true)
-    expect(wrapper.find('.vue3-colorful__popover-trigger').attributes('role')).toBe('button')
+
+    const trigger = wrapper.find('button.custom-trigger')
+
+    expect(trigger.exists()).toBe(true)
+    expect(trigger.classes()).toContain('vue3-colorful__popover-trigger')
+    expect(trigger.attributes('role')).toBeUndefined()
+    expect(trigger.attributes('type')).toBe('button')
+    expect(trigger.attributes('aria-haspopup')).toBe('dialog')
+    expect(wrapper.findAll('.vue3-colorful__popover-trigger')).toHaveLength(1)
+
+    await trigger.trigger('click')
+    expect(isOpen(wrapper.vm)).toBe(true)
   })
 
   it('does not open when disabled', async () => {

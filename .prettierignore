@@ -5,3 +5,10 @@ pnpm-lock.yaml
 *.min.css
 coverage
 .vite
+dist-example
+playwright-report
+storybook-static
+test-results
+.pnpm-store
+stats.html
+stats.json

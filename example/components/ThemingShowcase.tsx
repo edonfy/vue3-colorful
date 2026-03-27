@@ -1,4 +1,4 @@
-import { defineComponent, ref } from 'vue'
+import { CSSProperties, defineComponent, ref } from 'vue'
 import { HexColorPicker } from '@/index'
 import CodeBlock from './CodeBlock'
 
@@ -15,15 +15,54 @@ const CSS_VARIABLE_CODE = `.my-picker {
   --vc-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.2);
 }`
 
+const SATURATION_POINTER_STYLE: CSSProperties = {
+  position: 'absolute',
+  width: '20px',
+  height: '20px',
+  background: '#fff',
+  border: '4px solid var(--demo-accent)',
+  borderRadius: '9999px',
+  transform: 'translate(-50%, -50%)',
+  boxShadow: '0 0 8px rgba(0, 0, 0, 0.25)',
+}
+
+const HUE_POINTER_STYLE: CSSProperties = {
+  ...SATURATION_POINTER_STYLE,
+  width: '24px',
+  height: '24px',
+  borderColor: '#fff',
+  background: 'var(--demo-accent)',
+}
+
 const SLOT_CODE = [
+  'const saturationPointerStyle = {',
+  "  position: 'absolute',",
+  "  width: '20px',",
+  "  height: '20px',",
+  "  background: '#fff',",
+  "  border: '4px solid var(--demo-accent)',",
+  "  borderRadius: '9999px',",
+  "  transform: 'translate(-50%, -50%)',",
+  "  boxShadow: '0 0 8px rgba(0, 0, 0, 0.25)',",
+  '}',
+  '',
+  'const huePointerStyle = {',
+  '  ...saturationPointerStyle,',
+  "  width: '24px',",
+  "  height: '24px',",
+  "  borderColor: '#fff',",
+  "  background: 'var(--demo-accent)',",
+  '}',
+  '',
   '<HexColorPicker',
   '  v-model={color.value}',
   '  showInput',
   "  style={{ width: '100%' }}",
   '  v-slots={{',
   "    'saturation-pointer': ({ top, left, color }) => (",
-  '      <div class="theming__pointer"',
+  '      <div',
   '        style={{',
+  '          ...saturationPointerStyle,',
   '          top: `${top * 100}%`,',
   '          left: `${left * 100}%`,',
   '          borderColor: color,',
@@ -31,8 +70,12 @@ const SLOT_CODE = [
   '      />',
   '    ),',
   "    'hue-pointer': ({ top, left }) => (",
-  '      <div class="theming__pointer theming__pointer--hue"',
-  '        style={{ top: `${top * 100}%`, left: `${left * 100}%` }}',
+  '      <div',
+  '        style={{',
+  '          ...huePointerStyle,',
+  '          top: `${top * 100}%`,',
+  '          left: `${left * 100}%`,',
+  '        }}',
   '      />',
   '    ),',
   '  }}',
@@ -91,8 +134,8 @@ export default defineComponent({
                   v-slots={{
                     'saturation-pointer': ({ top, left, color }: PointerSlotProps) => (
                       <div
-                        class="theming__pointer"
                         style={{
+                          ...SATURATION_POINTER_STYLE,
                           top: `${top * 100}%`,
                           left: `${left * 100}%`,
                           borderColor: color,
@@ -101,8 +144,11 @@ export default defineComponent({
                     ),
                     'hue-pointer': ({ top, left }: PointerSlotProps) => (
                       <div
-                        class="theming__pointer theming__pointer--hue"
-                        style={{ top: `${top * 100}%`, left: `${left * 100}%` }}
+                        style={{
+                          ...HUE_POINTER_STYLE,
+                          top: `${top * 100}%`,
+                          left: `${left * 100}%`,
+                        }}
                       />
                     ),
                   }}

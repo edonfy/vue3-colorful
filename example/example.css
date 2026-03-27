@@ -511,24 +511,6 @@ button {
   justify-content: center;
 }
 
-.theming__pointer {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background: #fff;
-  border: 4px solid var(--demo-accent);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
-}
-
-.theming__pointer--hue {
-  border-color: #fff;
-  background: var(--demo-accent);
-  width: 24px;
-  height: 24px;
-}
-
 /* --- Quick Start --- */
 
 .quickstart__steps {

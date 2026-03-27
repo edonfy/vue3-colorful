@@ -1,4 +1,4 @@
-import { defineComponent, PropType, Ref } from 'vue'
+import { cloneVNode, defineComponent, isVNode, PropType, Ref, VNode } from 'vue'
 import { AnyColor } from '../types'
 
 export default defineComponent({
@@ -38,6 +38,14 @@ export default defineComponent({
   emits: ['toggle'],
 
   setup(props, { emit, slots }) {
+    const slotProps = () => ({
+      isOpen: props.isOpen,
+      color: props.color,
+      disabled: props.disabled,
+      readOnly: props.readOnly,
+      toggle: handleToggle,
+    })
+
     const handleToggle = () => {
       if (props.disabled) {
         return
@@ -57,32 +65,72 @@ export default defineComponent({
       }
     }
 
-    return () =>
-      slots.default ? (
-        <div
-          ref={props.referenceRef}
-          class={[
+    const renderLegacySlotTrigger = (nodes: VNode[]) => (
+      <div
+        ref={props.referenceRef}
+        class={[
+          'vue3-colorful__popover-trigger',
+          props.disabled && 'vue3-colorful__popover-trigger--disabled',
+        ]}
+        onClick={handleToggle}
+        onKeydown={handleKeydown}
+        role="button"
+        tabindex={props.disabled ? -1 : 0}
+        aria-haspopup="dialog"
+        aria-expanded={props.isOpen ? 'true' : 'false'}
+        aria-controls={props.panelId}
+        aria-disabled={props.disabled ? 'true' : undefined}
+        aria-readonly={props.readOnly ? 'true' : undefined}
+      >
+        {nodes}
+      </div>
+    )
+
+    const renderCustomTrigger = () => {
+      const nodes = slots.default?.(slotProps()) ?? []
+      const triggerNode = nodes.length === 1 && isVNode(nodes[0]) ? nodes[0] : null
+
+      if (!triggerNode || typeof triggerNode.type !== 'string') {
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn(
+            '[vue3-colorful] ColorPickerPopover custom trigger should return a single native element.'
+          )
+        }
+
+        return renderLegacySlotTrigger(nodes as VNode[])
+      }
+
+      const isButton = triggerNode.type === 'button'
+
+      return cloneVNode(
+        triggerNode,
+        {
+          ref: props.referenceRef,
+          class: [
             'vue3-colorful__popover-trigger',
             props.disabled && 'vue3-colorful__popover-trigger--disabled',
-          ]}
-          onClick={handleToggle}
-          onKeydown={handleKeydown}
-          role="button"
-          tabindex={props.disabled ? -1 : 0}
-          aria-haspopup="dialog"
-          aria-expanded={props.isOpen ? 'true' : 'false'}
-          aria-controls={props.panelId}
-          aria-disabled={props.disabled ? 'true' : undefined}
-          aria-readonly={props.readOnly ? 'true' : undefined}
-        >
-          {slots.default({
-            isOpen: props.isOpen,
-            color: props.color,
-            disabled: props.disabled,
-            readOnly: props.readOnly,
-            toggle: handleToggle,
-          })}
-        </div>
+          ],
+          onClick: handleToggle,
+          type: isButton
+            ? ((triggerNode.props?.type as string | undefined) ?? 'button')
+            : undefined,
+          disabled: isButton ? props.disabled : undefined,
+          role: isButton ? undefined : 'button',
+          tabindex: isButton ? undefined : props.disabled ? -1 : 0,
+          onKeydown: isButton ? undefined : handleKeydown,
+          'aria-haspopup': 'dialog',
+          'aria-expanded': props.isOpen ? 'true' : 'false',
+          'aria-controls': props.panelId,
+          'aria-disabled': props.disabled ? 'true' : undefined,
+          'aria-readonly': props.readOnly ? 'true' : undefined,
+        },
+        true
+      )
+    }
+
+    return () =>
+      slots.default ? (
+        renderCustomTrigger()
       ) : (
         <button
           ref={props.referenceRef}

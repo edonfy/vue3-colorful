@@ -203,7 +203,9 @@ const printTable = () => {
     `${row.totalMs} ms`,
     `${row.avgMs} ms`,
   ])
-  const widths = header.map((column, index) => Math.max(column.length, ...body.map((row) => row[index].length)))
+  const widths = header.map((column, index) =>
+    Math.max(column.length, ...body.map((row) => row[index].length))
+  )
 
   const formatRow = (row) => row.map((cell, index) => cell.padEnd(widths[index])).join('  ')
 

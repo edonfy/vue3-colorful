@@ -184,6 +184,9 @@ Custom trigger via the default slot:
 />
 ```
 
+Return a single native element from the slot so the popover can attach the trigger ref and dialog
+attributes to that element.
+
 Scoped slot data:
 
 | Binding    | Type               | Description                     |
@@ -192,6 +195,7 @@ Scoped slot data:
 | `color`    | `string \| object` | Current color value             |
 | `disabled` | `boolean`          | Whether the trigger is disabled |
 | `readOnly` | `boolean`          | Whether the panel is read-only  |
+| `toggle`   | `() => void`       | Toggles the popover state       |
 
 Expose API:
 

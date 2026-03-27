@@ -4,12 +4,12 @@ Baseline generated from the current `dist/` artifacts.
 
 | File                     |           Raw |          Gzip |        Brotli |
 | ------------------------ | ------------: | ------------: | ------------: |
-| `dist/index.cjs`         |     32.66 KiB |      8.76 KiB |      7.84 KiB |
-| `dist/index.js`          |     46.17 KiB |      9.93 KiB |      8.81 KiB |
+| `dist/index.cjs`         |     33.46 KiB |      8.94 KiB |      8.01 KiB |
+| `dist/index.js`          |     47.28 KiB |     10.17 KiB |      9.00 KiB |
 | `dist/tailwind.cjs`      |         887 B |         459 B |         388 B |
 | `dist/tailwind.js`       |        1005 B |         438 B |         387 B |
 | `dist/vue3-colorful.css` |      9.62 KiB |      2.34 KiB |      2.04 KiB |
-| **Total**                | **90.29 KiB** | **21.91 KiB** | **19.45 KiB** |
+| **Total**                | **92.20 KiB** | **22.33 KiB** | **19.80 KiB** |
 
 ## Refresh
 
