@@ -1,5 +1,6 @@
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import ColorInput from './ColorInput'
+import { ColorPickerLabels } from '../types'
 
 export default defineComponent({
   name: 'HexColorInput',
@@ -10,7 +11,11 @@ export default defineComponent({
     },
     label: {
       type: String,
-      default: 'HEX',
+      default: '',
+    },
+    labels: {
+      type: Object as PropType<Partial<ColorPickerLabels>>,
+      default: () => ({}),
     },
     disabled: {
       type: Boolean,

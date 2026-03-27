@@ -139,6 +139,7 @@ export default defineComponent({
           readOnly={props.readOnly}
           isOpen={isOpen.value}
           panelId={panelId}
+          labels={props.labels}
           onToggle={toggle}
           v-slots={{
             default: slots.default,

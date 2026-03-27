@@ -48,6 +48,7 @@ export default defineComponent({
         dark={props.dark}
         showInput={props.showInput}
         colorLabel={props.colorLabel}
+        labels={props.labels}
         vertical={props.vertical}
         disabled={props.disabled}
         readOnly={props.readOnly}

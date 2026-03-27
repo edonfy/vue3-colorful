@@ -1,5 +1,6 @@
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import ColorInput from './ColorInput'
+import { ColorPickerLabels } from '../types'
 
 export default defineComponent({
   name: 'PickerInputSection',
@@ -12,6 +13,10 @@ export default defineComponent({
     label: {
       type: String,
       default: '',
+    },
+    labels: {
+      type: Object as PropType<Partial<ColorPickerLabels>>,
+      default: () => ({}),
     },
     disabled: {
       type: Boolean,
@@ -38,6 +43,7 @@ export default defineComponent({
       <ColorInput
         modelValue={props.modelValue}
         label={props.label}
+        labels={props.labels}
         disabled={props.disabled}
         readOnly={props.readOnly}
         editable={props.editable}

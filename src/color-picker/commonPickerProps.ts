@@ -1,5 +1,5 @@
 import { PropType } from 'vue'
-import { AnyColor, ColorValueType, PresetCollectionItem } from '../types'
+import { AnyColor, ColorPickerLabels, ColorValueType, PresetCollectionItem } from '../types'
 
 export const commonPickerProps = {
   modelValue: {
@@ -29,6 +29,10 @@ export const commonPickerProps = {
   colorLabel: {
     type: String,
     default: '',
+  },
+  labels: {
+    type: Object as PropType<Partial<ColorPickerLabels>>,
+    default: () => ({}),
   },
   vertical: {
     type: Boolean,

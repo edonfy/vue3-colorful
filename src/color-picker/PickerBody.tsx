@@ -3,7 +3,7 @@ import Saturation from './Saturation'
 import Hue from './Hue'
 import Alpha from './Alpha'
 import Eyedropper from './Eyedropper'
-import { HsvaColor } from '../types'
+import { ColorPickerLabels, HsvaColor } from '../types'
 
 export default defineComponent({
   name: 'PickerBody',
@@ -20,6 +20,10 @@ export default defineComponent({
     showEyedropper: {
       type: Boolean,
       default: false,
+    },
+    labels: {
+      type: Object as PropType<Partial<ColorPickerLabels>>,
+      default: () => ({}),
     },
     vertical: {
       type: Boolean,
@@ -89,6 +93,7 @@ export default defineComponent({
           <Eyedropper
             disabled={props.disabled}
             readOnly={props.readOnly}
+            labels={props.labels}
             onSelect={(color) => emit('colorSelect', color)}
           />
         )}

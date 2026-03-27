@@ -9,6 +9,28 @@ describe('ColorPicker', () => {
       expect(wrapper.find('.vue3-colorful').exists()).toBe(true)
     })
 
+    it('uses custom accessible labels for icon-only clear actions', async () => {
+      const wrapper = mount(ColorPicker, {
+        props: {
+          modelValue: '#ff0000',
+          clearable: true,
+          labels: {
+            clearColor: '清空颜色',
+          },
+        },
+      })
+
+      const clearButton = wrapper.find('.vue3-colorful__clear')
+
+      expect(clearButton.exists()).toBe(true)
+      expect(clearButton.attributes('aria-label')).toBe('清空颜色')
+      expect(clearButton.text()).toBe('')
+
+      await clearButton.trigger('click')
+
+      expect(wrapper.emitted('update:modelValue')?.[0]?.[0]).toBe('')
+    })
+
     it('shows alpha slider when showAlpha is true', () => {
       const wrapper = mount(ColorPicker, {
         props: {

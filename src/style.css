@@ -416,13 +416,24 @@
 }
 
 .vue3-colorful__clear {
-  padding: 4px 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
   border: 1px solid var(--vc-border-color);
   border-radius: 4px;
   background: var(--vc-input-bg-color);
   color: var(--vc-text-color);
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.vue3-colorful__clear svg {
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
 }
 
 @media (hover: hover) {

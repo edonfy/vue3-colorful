@@ -52,6 +52,15 @@ export interface PresetSwatch {
 
 export type PresetCollectionItem = string | PresetSwatch
 
+export interface ColorPickerLabels {
+  colorInput: string
+  clearColor: string
+  invalidColorFormat: string
+  chooseColor: string
+  pickColorFromScreen: string
+  eyedropperUnsupported: string
+}
+
 export type ObjectColor =
   | RgbColor
   | HslColor

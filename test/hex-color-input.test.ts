@@ -3,6 +3,14 @@ import { describe, expect, it } from 'vitest'
 import HexColorInput from '../src/color-picker/HexColorInput'
 
 describe('HexColorInput', () => {
+  it('does not render a visible label by default', () => {
+    const wrapper = mount(HexColorInput, {
+      props: { modelValue: '#ff0000' },
+    })
+
+    expect(wrapper.find('.vue3-colorful__label-text').exists()).toBe(false)
+  })
+
   it('normalizes pasted hex values without a leading hash', async () => {
     const wrapper = mount(HexColorInput, {
       props: { modelValue: '#ff0000' },

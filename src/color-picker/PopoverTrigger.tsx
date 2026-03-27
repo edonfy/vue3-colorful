@@ -1,5 +1,6 @@
 import { cloneVNode, defineComponent, isVNode, PropType, Ref, VNode } from 'vue'
-import { AnyColor } from '../types'
+import { AnyColor, ColorPickerLabels } from '../types'
+import { getColorPickerLabel } from './labels'
 
 export default defineComponent({
   name: 'PopoverTrigger',
@@ -32,6 +33,10 @@ export default defineComponent({
     panelId: {
       type: String,
       required: true,
+    },
+    labels: {
+      type: Object as PropType<Partial<ColorPickerLabels>>,
+      default: () => ({}),
     },
   },
 
@@ -142,7 +147,7 @@ export default defineComponent({
           ]}
           style={{ backgroundColor: props.displayColor }}
           onClick={handleToggle}
-          aria-label="Choose color"
+          aria-label={getColorPickerLabel(props.labels, 'chooseColor')}
           aria-haspopup="dialog"
           aria-expanded={props.isOpen ? 'true' : 'false'}
           aria-controls={props.panelId}

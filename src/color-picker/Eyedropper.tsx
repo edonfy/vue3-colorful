@@ -1,4 +1,6 @@
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
+import { ColorPickerLabels } from '../types'
+import { getColorPickerLabel } from './labels'
 
 interface EyeDropperResult {
   sRGBHex: string
@@ -23,6 +25,10 @@ export default defineComponent({
     readOnly: {
       type: Boolean,
       default: false,
+    },
+    labels: {
+      type: Object as PropType<Partial<ColorPickerLabels>>,
+      default: () => ({}),
     },
   },
 
@@ -60,9 +66,11 @@ export default defineComponent({
         onClick={openDropper}
         disabled={!isSupported() || props.disabled || props.readOnly}
         aria-disabled={!isSupported() || props.disabled || props.readOnly ? 'true' : undefined}
-        aria-label="Pick color from screen"
+        aria-label={getColorPickerLabel(props.labels, 'pickColorFromScreen')}
         title={
-          isSupported() ? 'Pick color from screen' : 'EyeDropper not supported in this browser'
+          isSupported()
+            ? getColorPickerLabel(props.labels, 'pickColorFromScreen')
+            : getColorPickerLabel(props.labels, 'eyedropperUnsupported')
         }
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

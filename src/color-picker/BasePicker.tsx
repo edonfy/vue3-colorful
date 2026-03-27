@@ -3,7 +3,7 @@ import PickerBody from './PickerBody'
 import PickerActions from './PickerActions'
 import PickerInputSection from './PickerInputSection'
 import PickerPresetsSection from './PickerPresetsSection'
-import { HsvaColor, PresetCollectionItem } from '../types'
+import { ColorPickerLabels, HsvaColor, PresetCollectionItem } from '../types'
 
 export default defineComponent({
   name: 'BasePicker',
@@ -40,6 +40,10 @@ export default defineComponent({
     colorLabel: {
       type: String,
       default: '',
+    },
+    labels: {
+      type: Object as PropType<Partial<ColorPickerLabels>>,
+      default: () => ({}),
     },
     vertical: {
       type: Boolean,
@@ -94,6 +98,7 @@ export default defineComponent({
           hsva={props.hsva}
           showAlpha={props.showAlpha}
           showEyedropper={props.showEyedropper}
+          labels={props.labels}
           vertical={props.vertical}
           disabled={props.disabled}
           readOnly={props.readOnly}
@@ -117,6 +122,7 @@ export default defineComponent({
           <PickerInputSection
             modelValue={props.activeColor}
             label={props.colorLabel}
+            labels={props.labels}
             disabled={props.disabled}
             readOnly={props.readOnly}
             editable={props.editable}
@@ -130,6 +136,7 @@ export default defineComponent({
           <PickerActions
             disabled={props.disabled}
             readOnly={props.readOnly}
+            labels={props.labels}
             onClear={() => emit('clear')}
           />
         )}

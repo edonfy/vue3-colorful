@@ -1,6 +1,8 @@
 import { defineComponent, ref, watch, onUnmounted, PropType } from 'vue'
+import { ColorPickerLabels } from '../types'
 import { isBlankColor, parseColor } from '../utils/converter'
 import { hexToHsva } from '../utils/convert'
+import { getColorPickerLabel } from './labels'
 
 let colorInputId = 0
 
@@ -27,6 +29,10 @@ export default defineComponent({
     label: {
       type: String,
       default: '',
+    },
+    labels: {
+      type: Object as PropType<Partial<ColorPickerLabels>>,
+      default: () => ({}),
     },
     disabled: {
       type: Boolean,
@@ -230,7 +236,7 @@ export default defineComponent({
         <label class="vue3-colorful__input-label">
           <input
             role="textbox"
-            aria-label={props.label || 'Color Value'}
+            aria-label={props.label || getColorPickerLabel(props.labels, 'colorInput')}
             aria-invalid={isInvalid.value}
             aria-readonly={isInputReadOnly() ? 'true' : undefined}
             aria-describedby={errorId}
@@ -253,13 +259,22 @@ export default defineComponent({
               class="vue3-colorful__clear"
               onClick={handleClear}
               disabled={props.disabled || props.readOnly}
-              aria-label="Clear color"
+              aria-label={getColorPickerLabel(props.labels, 'clearColor')}
             >
-              Clear
+              <svg
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                aria-hidden="true"
+              >
+                <path d="M4 4l8 8" stroke-linecap="round" />
+                <path d="M12 4l-8 8" stroke-linecap="round" />
+              </svg>
             </button>
           )}
           <span id={errorId} class="vue3-colorful__error-text" aria-live="polite">
-            {isInvalid.value ? 'Invalid color format' : ''}
+            {isInvalid.value ? getColorPickerLabel(props.labels, 'invalidColorFormat') : ''}
           </span>
         </label>
       </div>

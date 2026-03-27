@@ -210,21 +210,22 @@ Expose API:
 
 All specialized pickers, `ColorPicker`, `ColorPickerPanel`, and `ColorPickerPopover` accept these props:
 
-| Prop             | Type                     | Default    | Description                                                   |
-| ---------------- | ------------------------ | ---------- | ------------------------------------------------------------- |
-| `modelValue`     | `string \| object`       | `''`       | Bound color string or typed object value                      |
-| `showAlpha`      | `boolean`                | `false`    | Shows the alpha slider                                        |
-| `showEyedropper` | `boolean`                | `false`    | Shows the native EyeDropper button                            |
-| `presets`        | `PresetCollectionItem[]` | `[]`       | Renders flat swatches or labeled swatches when provided       |
-| `dark`           | `boolean`                | `false`    | Applies the built-in dark theme                               |
-| `showInput`      | `boolean`                | `false`    | Shows the editable text input                                 |
-| `vertical`       | `boolean`                | `false`    | Switches hue and alpha sliders to vertical layout             |
-| `colorLabel`     | `string`                 | `''`       | Accessible label for the input                                |
-| `disabled`       | `boolean`                | `false`    | Disables the trigger, sliders, input, presets, and eyedropper |
-| `readOnly`       | `boolean`                | `false`    | Keeps the UI visible while preventing value changes           |
-| `editable`       | `boolean`                | `true`     | Controls whether the text input can be edited manually        |
-| `clearable`      | `boolean`                | `false`    | Shows a clear action and allows committing a blank color      |
-| `valueType`      | `'string' \| 'object'`   | `'string'` | Emits string values or typed object values                    |
+| Prop             | Type                         | Default    | Description                                                   |
+| ---------------- | ---------------------------- | ---------- | ------------------------------------------------------------- |
+| `modelValue`     | `string \| object`           | `''`       | Bound color string or typed object value                      |
+| `showAlpha`      | `boolean`                    | `false`    | Shows the alpha slider                                        |
+| `showEyedropper` | `boolean`                    | `false`    | Shows the native EyeDropper button                            |
+| `presets`        | `PresetCollectionItem[]`     | `[]`       | Renders flat swatches or labeled swatches when provided       |
+| `dark`           | `boolean`                    | `false`    | Applies the built-in dark theme                               |
+| `showInput`      | `boolean`                    | `false`    | Shows the editable text input                                 |
+| `vertical`       | `boolean`                    | `false`    | Switches hue and alpha sliders to vertical layout             |
+| `colorLabel`     | `string`                     | `''`       | Accessible label for the input                                |
+| `labels`         | `Partial<ColorPickerLabels>` | `{}`       | Overrides built-in accessible labels and status text          |
+| `disabled`       | `boolean`                    | `false`    | Disables the trigger, sliders, input, presets, and eyedropper |
+| `readOnly`       | `boolean`                    | `false`    | Keeps the UI visible while preventing value changes           |
+| `editable`       | `boolean`                    | `true`     | Controls whether the text input can be edited manually        |
+| `clearable`      | `boolean`                    | `false`    | Shows a clear action and allows committing a blank color      |
+| `valueType`      | `'string' \| 'object'`       | `'string'` | Emits string values or typed object values                    |
 
 ### Events
 
@@ -274,6 +275,21 @@ Read-only input with interactive panel:
 
 ```tsx
 <ColorPickerPanel v-model={color.value} showInput editable={false} />
+```
+
+Custom labels:
+
+```tsx
+<ColorPickerPanel
+  v-model={color.value}
+  showInput
+  clearable
+  labels={{
+    colorInput: '颜色值',
+    clearColor: '清空颜色',
+    invalidColorFormat: '颜色格式错误',
+  }}
+/>
 ```
 
 ### Accepted `modelValue` Formats

@@ -236,6 +236,31 @@ describe('ColorInput', () => {
       expect(wrapper.emitted('update:modelValue')?.[0]?.[0]).toBe('')
       expect(wrapper.emitted('clear')).toBeTruthy()
     })
+
+    it('renders icon-only clear control and allows overriding accessibility labels', async () => {
+      const wrapper = mount(ColorInput, {
+        props: {
+          modelValue: '#ff0000',
+          clearable: true,
+          labels: {
+            colorInput: '颜色值',
+            clearColor: '清空颜色',
+            invalidColorFormat: '颜色格式错误',
+          },
+        },
+      })
+
+      const input = wrapper.find('input')
+      const clearButton = wrapper.find('.vue3-colorful__clear')
+
+      expect(input.attributes('aria-label')).toBe('颜色值')
+      expect(clearButton.attributes('aria-label')).toBe('清空颜色')
+      expect(clearButton.text()).toBe('')
+
+      await input.setValue('invalid')
+
+      expect(wrapper.find('.vue3-colorful__error-text').text()).toBe('颜色格式错误')
+    })
   })
 
   describe('external modelValue sync', () => {
