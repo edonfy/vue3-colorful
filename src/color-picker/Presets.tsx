@@ -28,6 +28,14 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    sectionClass: {
+      type: String,
+      default: 'vue3-colorful__presets',
+    },
+    sectionLabel: {
+      type: String,
+      default: undefined,
+    },
   },
 
   emits: ['select'],
@@ -77,7 +85,7 @@ export default defineComponent({
     })
 
     return () => (
-      <div class="vue3-colorful__presets">
+      <div class={props.sectionClass} aria-label={props.sectionLabel}>
         <div class="vue3-colorful__preset-grid">
           {normalizedPresets.value.map((item, index) => (
             <button

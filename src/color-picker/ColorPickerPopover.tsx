@@ -31,6 +31,7 @@ export default defineComponent({
   },
   emits: ['update:modelValue', 'active-change'],
   setup(props, { emit, slots, expose, attrs }) {
+    const canUseDom = typeof window !== 'undefined' && typeof document !== 'undefined'
     const isOpen = ref(false)
     const reference = ref<HTMLElement | null>(null)
     const floating = ref<HTMLElement | null>(null)
@@ -38,13 +39,15 @@ export default defineComponent({
     popoverPanelId += 1
     const panelId = `vue3-colorful-popover-panel-${popoverPanelId}`
 
-    const { floatingStyles } = useFloating(reference, floating, {
-      placement: 'bottom-start',
-      strategy: 'fixed',
-      middleware: [offset(8), flip(), shift()],
-      whileElementsMounted: autoUpdate,
-      transform: false,
-    })
+    const floatingStyles = canUseDom
+      ? useFloating(reference, floating, {
+          placement: 'bottom-start',
+          strategy: 'fixed',
+          middleware: [offset(8), flip(), shift()],
+          whileElementsMounted: autoUpdate,
+          transform: false,
+        }).floatingStyles
+      : ref({})
 
     const { status, isMounted, onTransitionEnd } = useTransitionStatus(isOpen)
 
@@ -101,11 +104,19 @@ export default defineComponent({
     }
 
     onMounted(() => {
+      if (!canUseDom) {
+        return
+      }
+
       document.addEventListener('mousedown', handleClickOutside)
       document.addEventListener('keydown', handleKeydown)
     })
 
     onUnmounted(() => {
+      if (!canUseDom) {
+        return
+      }
+
       document.removeEventListener('mousedown', handleClickOutside)
       document.removeEventListener('keydown', handleKeydown)
     })

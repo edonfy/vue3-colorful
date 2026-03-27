@@ -275,7 +275,8 @@
 }
 
 /* Presets */
-.vue3-colorful__presets {
+.vue3-colorful__presets,
+.vue3-colorful__recent {
   padding: 12px;
   background: var(--vc-bg-color);
   border-top: 1px solid var(--vc-border-color);

@@ -29,14 +29,14 @@
         "default": "./dist/index.cjs"
       }
     },
-    "./tailwind": {
+    "./popover": {
       "import": {
-        "types": "./dist/plugins/tailwind.d.ts",
-        "default": "./dist/tailwind.js"
+        "types": "./dist/popover.d.ts",
+        "default": "./dist/popover.js"
       },
       "require": {
-        "types": "./dist/plugins/tailwind.d.ts",
-        "default": "./dist/tailwind.cjs"
+        "types": "./dist/popover.d.ts",
+        "default": "./dist/popover.cjs"
       }
     },
     "./style.css": "./dist/vue3-colorful.css"
@@ -87,6 +87,7 @@
     "@floating-ui/vue": "^1.1.11",
     "@playwright/test": "^1.58.2",
     "@types/node": "^22.0.0",
+    "@vue/server-renderer": "^3.5.0",
     "@typescript-eslint/eslint-plugin": "^8.57.2",
     "@typescript-eslint/parser": "^8.57.2",
     "@vitejs/plugin-vue-jsx": "^4.0.0",
@@ -103,7 +104,6 @@
     "playwright": "^1.58.2",
     "prettier": "^3.8.1",
     "rollup-plugin-visualizer": "^7.0.1",
-    "tailwindcss": "^4.2.2",
     "typescript": "^5.8.0",
     "typescript-eslint": "^8.57.2",
     "vite": "^6.0.0",

@@ -24,9 +24,9 @@ interface UseColorStateReturn {
   handleHueChange: (value: number) => void
   handleAlphaChange: (value: number) => void
   handleSaturation: (val: { s: number; v: number }) => void
-  handleSelect: (color: string, options?: { commit?: boolean }) => void
-  clearColor: () => void
-  commitCurrentValue: () => void
+  handleSelect: (color: string, options?: { commit?: boolean }) => AnyColor | null
+  clearColor: () => AnyColor
+  commitCurrentValue: () => AnyColor
 }
 
 export function useColorState(options: UseColorStateOptions): UseColorStateReturn {
@@ -124,14 +124,17 @@ export function useColorState(options: UseColorStateOptions): UseColorStateRetur
     })
   }
 
-  const handleSelect = (color: string, selectionOptions: { commit?: boolean } = {}) => {
+  const handleSelect = (
+    color: string,
+    selectionOptions: { commit?: boolean } = {}
+  ): AnyColor | null => {
     if (isBlankColorValue(color)) {
       isBlank.value = true
       emitActiveValue('')
       if (selectionOptions.commit) {
         commitValue('')
       }
-      return
+      return ''
     }
 
     try {
@@ -143,19 +146,26 @@ export function useColorState(options: UseColorStateOptions): UseColorStateRetur
       if (selectionOptions.commit) {
         commitValue(nextValue)
       }
+
+      return nextValue
     } catch {
       console.warn(`[vue3-colorful] Invalid selection color: ${color.trim()}`)
     }
+
+    return null
   }
 
-  const clearColor = () => {
+  const clearColor = (): AnyColor => {
     isBlank.value = true
     emitActiveValue('')
     commitValue('')
+    return ''
   }
 
-  const commitCurrentValue = () => {
-    commitValue(formatOutputValue())
+  const commitCurrentValue = (): AnyColor => {
+    const nextValue = formatOutputValue()
+    commitValue(nextValue)
+    return nextValue
   }
 
   return {

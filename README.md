@@ -59,11 +59,11 @@ import 'vue3-colorful/style.css'
 
 ## Why This Library
 
-- Tree-shakable specialized pickers for `hex`, `rgb`, `hsl`, `hsv`, and `cmyk`
+- Tree-shakable specialized pickers for `hex`, `rgb`, `hsl`, `hsv`, `hwb`, and `cmyk`
 - Accessible sliders, inputs, and popovers with keyboard support
 - TSX-first Vue 3 API that fits composable-heavy codebases
 - CSS variable theming with optional dark mode and custom slots
-- Tailwind helper and CSS-variable theming hooks
+- Optional popover entrypoint that keeps the core picker bundle lighter
 
 ---
 
@@ -74,7 +74,7 @@ import 'vue3-colorful/style.css'
 | `HexColorPicker`                                                           | Your app stores HEX strings                     | Best default for simple product UIs                                                    |
 | `RgbColorPicker` / `HslColorPicker` / `HsvColorPicker` / `CmykColorPicker` | Your app already uses one fixed format          | Smallest, clearest API for that model                                                  |
 | `ColorPicker` / `ColorPickerPanel`                                         | You want the raw panel without a trigger        | `ColorPicker` is a compatibility alias; add `colorModel` to control parsing and output |
-| `ColorPickerPopover`                                                       | You need a compact picker opened from a trigger | Requires `@floating-ui/vue`                                                            |
+| `ColorPickerPopover`                                                       | You need a compact picker opened from a trigger | Import from `vue3-colorful/popover` and install `@floating-ui/vue`                     |
 
 If the color model is fixed, prefer a specialized picker for the simplest bundle and API surface.
 
@@ -156,7 +156,7 @@ Popover mode is useful for buttons, dropdown forms, inspectors, and design tools
 
 ```tsx
 import { defineComponent, ref } from 'vue'
-import { ColorPickerPopover } from 'vue3-colorful'
+import { ColorPickerPopover } from 'vue3-colorful/popover'
 
 export default defineComponent({
   name: 'ExamplePopoverPicker',
@@ -210,22 +210,24 @@ Expose API:
 
 All specialized pickers, `ColorPicker`, `ColorPickerPanel`, and `ColorPickerPopover` accept these props:
 
-| Prop             | Type                         | Default    | Description                                                   |
-| ---------------- | ---------------------------- | ---------- | ------------------------------------------------------------- |
-| `modelValue`     | `string \| object`           | `''`       | Bound color string or typed object value                      |
-| `showAlpha`      | `boolean`                    | `false`    | Shows the alpha slider                                        |
-| `showEyedropper` | `boolean`                    | `false`    | Shows the native EyeDropper button                            |
-| `presets`        | `PresetCollectionItem[]`     | `[]`       | Renders flat swatches or labeled swatches when provided       |
-| `dark`           | `boolean`                    | `false`    | Applies the built-in dark theme                               |
-| `showInput`      | `boolean`                    | `false`    | Shows the editable text input                                 |
-| `vertical`       | `boolean`                    | `false`    | Switches hue and alpha sliders to vertical layout             |
-| `colorLabel`     | `string`                     | `''`       | Accessible label for the input                                |
-| `labels`         | `Partial<ColorPickerLabels>` | `{}`       | Overrides built-in accessible labels and status text          |
-| `disabled`       | `boolean`                    | `false`    | Disables the trigger, sliders, input, presets, and eyedropper |
-| `readOnly`       | `boolean`                    | `false`    | Keeps the UI visible while preventing value changes           |
-| `editable`       | `boolean`                    | `true`     | Controls whether the text input can be edited manually        |
-| `clearable`      | `boolean`                    | `false`    | Shows a clear action and allows committing a blank color      |
-| `valueType`      | `'string' \| 'object'`       | `'string'` | Emits string values or typed object values                    |
+| Prop              | Type                         | Default    | Description                                                   |
+| ----------------- | ---------------------------- | ---------- | ------------------------------------------------------------- |
+| `modelValue`      | `string \| object`           | `''`       | Bound color string or typed object value                      |
+| `showAlpha`       | `boolean`                    | `false`    | Shows the alpha slider                                        |
+| `showEyedropper`  | `boolean`                    | `false`    | Shows the native EyeDropper button                            |
+| `presets`         | `PresetCollectionItem[]`     | `[]`       | Renders flat swatches or labeled swatches when provided       |
+| `showRecent`      | `boolean`                    | `false`    | Shows a recent-colors section after the first committed color |
+| `maxRecentColors` | `number`                     | `8`        | Limits the in-memory recent color history                     |
+| `dark`            | `boolean`                    | `false`    | Applies the built-in dark theme                               |
+| `showInput`       | `boolean`                    | `false`    | Shows the editable text input                                 |
+| `vertical`        | `boolean`                    | `false`    | Switches hue and alpha sliders to vertical layout             |
+| `colorLabel`      | `string`                     | `''`       | Accessible label for the input                                |
+| `labels`          | `Partial<ColorPickerLabels>` | `{}`       | Overrides built-in accessible labels and status text          |
+| `disabled`        | `boolean`                    | `false`    | Disables the trigger, sliders, input, presets, and eyedropper |
+| `readOnly`        | `boolean`                    | `false`    | Keeps the UI visible while preventing value changes           |
+| `editable`        | `boolean`                    | `true`     | Controls whether the text input can be edited manually        |
+| `clearable`       | `boolean`                    | `false`    | Shows a clear action and allows committing a blank color      |
+| `valueType`       | `'string' \| 'object'`       | `'string'` | Emits string values or typed object values                    |
 
 ### Events
 
@@ -233,6 +235,9 @@ All specialized pickers, `ColorPicker`, `ColorPickerPanel`, and `ColorPickerPopo
 | ------------------- | ------------------ | ------------------------------------------------ |
 | `update:modelValue` | `string \| object` | Fires when a change is committed                 |
 | `active-change`     | `string \| object` | Fires while sliders move or valid input previews |
+
+`showRecent` is independent from `presets`. Recent colors are tracked per component instance,
+only after committed changes, never for blank clears, and they are not persisted to `localStorage`.
 
 ### Controlled and Uncontrolled Patterns
 
@@ -371,6 +376,7 @@ export default defineComponent({
 | Disabled / readOnly | Yes                | Yes                  | Yes                 | Yes             |
 | Clearable           | Yes                | Yes                  | Yes                 | Yes             |
 | Presets             | Yes                | Yes                  | Yes                 | No              |
+| Recent colors       | Yes                | Yes                  | Yes                 | No              |
 | Object value mode   | Yes                | Yes                  | Yes                 | No              |
 
 ### Presets
@@ -382,6 +388,16 @@ export default defineComponent({
   presets={['#6366f1', { label: 'Accent', value: '#ec4899' }, '#10b981', '#3b82f6']}
 />
 ```
+
+### Recent Colors
+
+```tsx
+<ColorPickerPanel v-model={color.value} showInput showRecent maxRecentColors={6} />
+```
+
+Recent colors render in a dedicated bottom section once the user commits a non-empty color.
+Selecting a recent swatch behaves like selecting a preset, while repeated colors move to the front
+instead of being duplicated.
 
 ### Integration Examples
 
@@ -497,30 +513,6 @@ Use the `dark` prop to switch to the bundled dark theme:
 
 `showEyedropper` uses the native [EyeDropper API](https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API). It works in Chromium-based browsers and degrades gracefully elsewhere.
 
----
-
-## Ecosystem Integration
-
-### Tailwind CSS
-
-```js
-// tailwind.config.js
-import tailwindPlugin from 'vue3-colorful/tailwind'
-
-export default {
-  theme: {
-    vue3Colorful: {
-      accentColor: '#3b82f6',
-      borderRadius: '12px',
-      // Also supports width, height, pointerSize, sliderHeight, bgColor, textColor,
-      // borderColor, inputBgColor, pointerBorderColor, focusRingColor, errorColor,
-      // errorRingColor, presetActiveRingColor, and shadow.
-    },
-  },
-  plugins: [tailwindPlugin],
-}
-```
-
 ## Browser Support
 
 - Vue: `^3.2.0`
@@ -541,10 +533,14 @@ import 'vue3-colorful/style.css'
 
 **Popover does not render**
 
-Install the popover peer dependency:
+Install the popover peer dependency and import from the subpath entry:
 
 ```bash
 pnpm add @floating-ui/vue
+```
+
+```tsx
+import { ColorPickerPopover } from 'vue3-colorful/popover'
 ```
 
 **EyeDropper is disabled**

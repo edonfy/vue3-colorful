@@ -111,6 +111,8 @@ export default defineComponent({
           disabled={props.disabled}
           readOnly={props.readOnly}
           aria-label="Saturation and Value"
+          aria-valuemin="0"
+          aria-valuemax="100"
           aria-valuenow={Math.round(props.hsva.s)}
           aria-valuetext={`Saturation ${Math.round(props.hsva.s)}%, Value ${Math.round(props.hsva.v)}%`}
         >

@@ -18,6 +18,14 @@ export const commonPickerProps = {
     type: Array as PropType<PresetCollectionItem[]>,
     default: () => [],
   },
+  showRecent: {
+    type: Boolean,
+    default: false,
+  },
+  maxRecentColors: {
+    type: Number,
+    default: 8,
+  },
   dark: {
     type: Boolean,
     default: false,

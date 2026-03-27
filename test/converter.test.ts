@@ -44,6 +44,11 @@ describe('ColorConverter', () => {
       expect(formatColor(hsva, 'hex', false)).toBe('#ffffff')
     })
 
+    it('omits alpha from hex strings when showAlpha is false', () => {
+      expect(formatColor({ h: 0, s: 100, v: 100, a: 0.5 }, 'hex', false)).toBe('#ff0000')
+      expect(formatColor({ h: 240, s: 100, v: 100, a: 0.25 }, 'hex', false)).toBe('#0000ff')
+    })
+
     it('should format to rgb/rgba', () => {
       expect(formatColor(hsva, 'rgb', false)).toBe('rgb(255, 255, 255)')
       expect(formatColor(hsva, 'rgb', true)).toBe('rgba(255, 255, 255, 1)')
