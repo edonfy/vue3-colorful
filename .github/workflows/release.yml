@@ -98,9 +98,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           PACKAGE_VERSION: ${{ needs.verify-tag.outputs.package_version }}
         run: |
-          CURRENT_VERSION=$(pnpm view vue3-colorful version 2>/dev/null || true)
-
-          if [ "$CURRENT_VERSION" = "$PACKAGE_VERSION" ]; then
+          if pnpm view "vue3-colorful@$PACKAGE_VERSION" version >/dev/null 2>&1; then
             echo "Version $PACKAGE_VERSION is already published; skipping publish."
             exit 0
           fi
