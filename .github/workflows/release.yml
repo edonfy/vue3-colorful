@@ -6,9 +6,7 @@ on:
       - 'v*'
 
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+  contents: read
 
 concurrency:
   group: release-${{ github.ref }}
@@ -20,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       package_version: ${{ steps.version.outputs.package_version }}
+      is_prerelease: ${{ steps.version.outputs.is_prerelease }}
 
     steps:
       - name: Checkout tagged commit
@@ -55,10 +54,22 @@ jobs:
 
           echo "package_version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
 
+          if [[ "$PACKAGE_VERSION" == *-* ]]; then
+            echo "is_prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Verify tagged commit is on main
         run: |
           git fetch origin main --no-tags
           git merge-base --is-ancestor "$GITHUB_SHA" "origin/main"
+
+      - name: Type check
+        run: pnpm type-check
+
+      - name: Run tests
+        run: pnpm test:run
 
       - name: Build package
         run: pnpm build
@@ -69,6 +80,7 @@ jobs:
   publish-npm:
     name: Publish npm package
     needs: verify-tag
+    if: needs.verify-tag.outputs.is_prerelease != 'true'
     runs-on: ubuntu-latest
 
     permissions:
@@ -123,11 +135,16 @@ jobs:
 
   deploy-example:
     name: Deploy example site
-    needs: publish-npm
+    needs: [verify-tag, publish-npm]
+    if: needs.verify-tag.outputs.is_prerelease != 'true'
     runs-on: ubuntu-latest
     concurrency:
       group: pages
       cancel-in-progress: false
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
 
     environment:
       name: github-pages
@@ -171,8 +188,11 @@ jobs:
 
   create-github-release:
     name: Create GitHub release
-    needs: [publish-npm, deploy-example]
+    needs: [verify-tag, publish-npm, deploy-example]
+    if: needs.verify-tag.outputs.is_prerelease != 'true'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout tagged commit
