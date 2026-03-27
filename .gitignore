@@ -32,3 +32,6 @@ stats.html
 stats.json
 
 coverage
+.pnpm-store
+test-results
+playwright-report
