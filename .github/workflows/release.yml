@@ -2,56 +2,191 @@ name: Release
 
 on:
   push:
-    branches:
-      - main
-      - master
+    tags:
+      - 'v*'
 
 permissions:
   contents: write
-  pull-requests: write
+  pages: write
+  id-token: write
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  release:
-    name: Release
+  verify-tag:
+    name: Verify tag
     runs-on: ubuntu-latest
+    outputs:
+      package_version: ${{ steps.version.outputs.package_version }}
+
     steps:
-      # Checkout the repository
-      - name: Checkout Repo
+      - name: Checkout tagged commit
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GH_TOKEN || github.token }}
 
-      - name: Install pnpm
+      - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10.32.1
 
-      # Setup Node.js
-      - name: Setup Node
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+          registry-url: https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify tag matches package version
+        id: version
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+
+          if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $PACKAGE_VERSION" >&2
+            exit 1
+          fi
+
+          echo "package_version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Verify tagged commit is on main
+        run: |
+          git fetch origin main --depth=1
+          git merge-base --is-ancestor "$GITHUB_SHA" "origin/main"
+
+      - name: Build package
+        run: pnpm build
+
+      - name: Build example
+        run: pnpm build:example
+
+  publish-npm:
+    name: Publish npm package
+    needs: verify-tag
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout tagged commit
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.32.1
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+          registry-url: https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Publish package when version is not on npm yet
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          PACKAGE_VERSION: ${{ needs.verify-tag.outputs.package_version }}
+        run: |
+          CURRENT_VERSION=$(pnpm view vue3-colorful version 2>/dev/null || true)
+
+          if [ "$CURRENT_VERSION" = "$PACKAGE_VERSION" ]; then
+            echo "Version $PACKAGE_VERSION is already published; skipping publish."
+            exit 0
+          fi
+
+          pnpm publish --no-git-checks
+
+  deploy-example:
+    name: Deploy example site
+    needs: publish-npm
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout tagged commit
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.32.1
+
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
           cache: pnpm
 
-      # Install dependencies with frozen lockfile to ensure exact versions
-      - name: Install Dependencies
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Build the project
-      - name: Build
+      - name: Build package
         run: pnpm build
 
-      # Create release pull request or publish to npm
-      - name: Create Release Pull Request or Publish to npm
-        id: changesets
-        uses: changesets/action@v1
+      - name: Build example
+        run: pnpm build:example
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload example artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          publish: pnpm changeset publish
+          path: dist-example
+
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  create-github-release:
+    name: Create GitHub release
+    needs: [publish-npm, deploy-example]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout tagged commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract release notes from CHANGELOG
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          awk -v version="$VERSION" '
+            $0 ~ ("^## " version "([[:space:]]|$|\\()") { capture=1; next }
+            capture && $0 ~ "^## " { exit }
+            capture { print }
+          ' CHANGELOG.md > RELEASE_NOTES.md
+
+          if [ ! -s RELEASE_NOTES.md ]; then
+            echo "Could not find changelog entry for $VERSION" >&2
+            exit 1
+          fi
+
+      - name: Create or update GitHub release
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release edit "$GITHUB_REF_NAME" \
+              --title "$GITHUB_REF_NAME" \
+              --notes-file RELEASE_NOTES.md
+          else
+            gh release create "$GITHUB_REF_NAME" \
+              --title "$GITHUB_REF_NAME" \
+              --notes-file RELEASE_NOTES.md
+          fi
