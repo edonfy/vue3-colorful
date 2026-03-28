@@ -141,6 +141,7 @@ describe('Public contracts', () => {
     expect(readme).toContain("Blank values still use `''`")
     expect(readme).toContain('showRecent')
     expect(readme).toContain('clearable')
+    expect(readme).toContain('disabled')
     expect(readme).toContain('readOnly')
     expect(readme).toContain('editable')
   })

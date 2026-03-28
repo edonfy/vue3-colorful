@@ -37,19 +37,23 @@ pnpm add @floating-ui/vue
 
 ```tsx
 import { defineComponent, ref } from 'vue'
-import { ColorPickerPanel } from 'vue3-colorful'
+import { HexColorPicker } from 'vue3-colorful'
 
 export default defineComponent({
-  name: 'QuickStartPicker',
+  name: 'QuickStartHexPicker',
   setup() {
     const color = ref('#3b82f6')
 
-    return () => <ColorPickerPanel v-model={color.value} />
+    return () => <HexColorPicker v-model={color.value} />
   },
 })
 ```
 
-Default styles are imported automatically; add `import 'vue3-colorful/style.css'` only if your toolchain strips CSS side effects.
+Default styles are imported automatically; add the stylesheet explicitly if your toolchain strips CSS side effects:
+
+```tsx
+import 'vue3-colorful/style.css'
+```
 
 ---
 
