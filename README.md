@@ -27,7 +27,7 @@ Lightweight, accessible color pickers for Vue 3, built with TSX render functions
 pnpm add vue3-colorful
 ```
 
-If you use the popover component, install its peer dependency too:
+If you use `ColorPickerPopover`, install its optional peer dependency too:
 
 ```bash
 pnpm add @floating-ui/vue
@@ -37,23 +37,19 @@ pnpm add @floating-ui/vue
 
 ```tsx
 import { defineComponent, ref } from 'vue'
-import { HexColorPicker } from 'vue3-colorful'
+import { ColorPickerPanel } from 'vue3-colorful'
 
 export default defineComponent({
-  name: 'ExampleHexPicker',
+  name: 'QuickStartPicker',
   setup() {
     const color = ref('#3b82f6')
 
-    return () => <HexColorPicker v-model={color.value} />
+    return () => <ColorPickerPanel v-model={color.value} />
   },
 })
 ```
 
-Default styles are imported automatically from the package entry. If your setup strips CSS side effects, import the stylesheet explicitly:
-
-```tsx
-import 'vue3-colorful/style.css'
-```
+Default styles are imported automatically; add `import 'vue3-colorful/style.css'` only if your toolchain strips CSS side effects.
 
 ---
 
@@ -76,7 +72,7 @@ import 'vue3-colorful/style.css'
 | `ColorPicker` / `ColorPickerPanel`                                         | You want the raw panel without a trigger        | `ColorPicker` is a compatibility alias; add `colorModel` to control parsing and output |
 | `ColorPickerPopover`                                                       | You need a compact picker opened from a trigger | Import from `vue3-colorful/popover` and install `@floating-ui/vue`                     |
 
-If the color model is fixed, prefer a specialized picker for the simplest bundle and API surface.
+ColorPicker is a compatibility alias for `ColorPickerPanel`. ColorPickerPanel is the clearer triggerless API when you mount the panel directly. If the color model is fixed, prefer a specialized picker for the simplest bundle and API surface.
 
 ---
 
@@ -110,7 +106,7 @@ Available specialized pickers:
 
 ### Generic `ColorPicker`
 
-Use the generic picker when you want the triggerless panel API and the active color model is user-configurable. `ColorPicker` and `ColorPickerPanel` share the same implementation; `ColorPickerPanel` is the clearer name when you are mounting the panel directly.
+Use the generic picker when you want the triggerless panel API and the active color model is user-configurable. `ColorPicker` and `ColorPickerPanel` share the same implementation.
 
 ```tsx
 import { defineComponent, ref } from 'vue'
@@ -209,6 +205,8 @@ Expose API:
 ## Common Props
 
 All specialized pickers, `ColorPicker`, `ColorPickerPanel`, and `ColorPickerPopover` accept these props:
+
+Common interaction props such as `showRecent`, `clearable`, `disabled`, `readOnly`, and `editable` keep the experience consistent across release-ready scenarios.
 
 | Prop              | Type                         | Default    | Description                                                   |
 | ----------------- | ---------------------------- | ---------- | ------------------------------------------------------------- |

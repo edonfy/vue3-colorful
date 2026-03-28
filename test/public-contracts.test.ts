@@ -123,6 +123,28 @@ describe('Public contracts', () => {
     expect(readme).toContain('HwbColorPicker')
   })
 
+  it('keeps the quick-start install path aligned with the popover entrypoint', () => {
+    expect(readme).toContain('## Quick Start')
+    expect(readme).toContain('pnpm add vue3-colorful')
+    expect(readme).toContain('pnpm add @floating-ui/vue')
+    expect(readme).toContain("import { ColorPickerPopover } from 'vue3-colorful/popover'")
+  })
+
+  it('documents how to choose between the panel, generic picker, and specialized pickers', () => {
+    expect(readme).toContain('## Pick The Right Component')
+    expect(readme).toContain('ColorPickerPanel')
+    expect(readme).toContain('ColorPicker is a compatibility alias')
+    expect(readme).toContain('If the color model is fixed, prefer a specialized picker')
+  })
+
+  it('documents release-ready value behavior and common interaction props', () => {
+    expect(readme).toContain("Blank values still use `''`")
+    expect(readme).toContain('showRecent')
+    expect(readme).toContain('clearable')
+    expect(readme).toContain('readOnly')
+    expect(readme).toContain('editable')
+  })
+
   it('documents popover imports from the dedicated subpath export', () => {
     expect(readme).toContain("import { ColorPickerPopover } from 'vue3-colorful/popover'")
     expect(readme).not.toContain("import { ColorPickerPopover } from 'vue3-colorful'")
