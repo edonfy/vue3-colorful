@@ -1,0 +1,71 @@
+name: Deploy Example
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Stable release tag that triggered this deployment
+        required: true
+        type: string
+      release_sha:
+        description: Commit SHA to build and publish
+        required: true
+        type: string
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-example:
+    name: Deploy example site
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout released commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.release_sha }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.32.1
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build package
+        run: pnpm build
+
+      - name: Build example
+        run: pnpm build:example
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload example artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist-example
+
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
