@@ -256,11 +256,9 @@ export default defineComponent({
               </svg>
             </button>
           )}
-          {isInvalid.value && (
-            <span class="vue3-colorful__error-text" aria-live="polite">
-              {getColorPickerLabel(props.labels, 'invalidColorFormat')}
-            </span>
-          )}
+          <span class="vue3-colorful__error-text" aria-live="polite">
+            {isInvalid.value ? getColorPickerLabel(props.labels, 'invalidColorFormat') : ''}
+          </span>
         </label>
       </div>
     )

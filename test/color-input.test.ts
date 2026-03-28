@@ -33,9 +33,12 @@ describe('ColorInput', () => {
       })
 
       const input = wrapper.find('input')
+      const errorText = wrapper.find('.vue3-colorful__error-text')
 
       expect(input.attributes('aria-describedby')).toBeUndefined()
-      expect(wrapper.find('.vue3-colorful__error-text').exists()).toBe(false)
+      expect(errorText.exists()).toBe(true)
+      expect(errorText.attributes('aria-live')).toBe('polite')
+      expect(errorText.text()).toBe('')
 
       await input.setValue('not-a-color')
       vi.advanceTimersByTime(100)
