@@ -15,6 +15,19 @@ const readme = readFileSync('./README.md', 'utf-8')
 const contributing = readFileSync('./CONTRIBUTING.md', 'utf-8')
 const sourceIndex = readFileSync('./src/index.ts', 'utf-8')
 
+const getReadmeSection = (heading: string): string => {
+  const sectionHeading = `## ${heading}`
+  const startIndex = readme.indexOf(sectionHeading)
+
+  if (startIndex === -1) {
+    throw new Error(`Missing README section: ${heading}`)
+  }
+
+  const nextIndex = readme.indexOf('\n## ', startIndex + sectionHeading.length)
+
+  return readme.slice(startIndex, nextIndex === -1 ? undefined : nextIndex)
+}
+
 const collectDeclarationFiles = (directoryPath: string): string[] => {
   const declarationFiles: string[] = []
 
@@ -124,26 +137,39 @@ describe('Public contracts', () => {
   })
 
   it('keeps the quick-start install path aligned with the popover entrypoint', () => {
-    expect(readme).toContain('## Quick Start')
-    expect(readme).toContain('pnpm add vue3-colorful')
-    expect(readme).toContain('pnpm add @floating-ui/vue')
-    expect(readme).toContain("import { ColorPickerPopover } from 'vue3-colorful/popover'")
+    const quickStartSection = getReadmeSection('Quick Start')
+
+    expect(quickStartSection).toContain('### Install')
+    expect(quickStartSection).toContain('pnpm add vue3-colorful')
+    expect(quickStartSection).toContain('ColorPickerPopover')
+    expect(quickStartSection).toContain('pnpm add @floating-ui/vue')
+    expect(quickStartSection).toContain("import { HexColorPicker } from 'vue3-colorful'")
+    expect(quickStartSection).toContain("import 'vue3-colorful/style.css'")
   })
 
   it('documents how to choose between the panel, generic picker, and specialized pickers', () => {
-    expect(readme).toContain('## Pick The Right Component')
-    expect(readme).toContain('ColorPickerPanel')
-    expect(readme).toContain('ColorPicker is a compatibility alias')
-    expect(readme).toContain('If the color model is fixed, prefer a specialized picker')
+    const chooserSection = getReadmeSection('Pick The Right Component')
+
+    expect(chooserSection).toContain('`RgbColorPicker`')
+    expect(chooserSection).toContain('`HslColorPicker`')
+    expect(chooserSection).toContain('`HsvColorPicker`')
+    expect(chooserSection).toContain('`HwbColorPicker`')
+    expect(chooserSection).toContain('`CmykColorPicker`')
+    expect(chooserSection).toContain('`ColorPicker` / `ColorPickerPanel`')
+    expect(chooserSection).toContain('ColorPicker is a compatibility alias')
+    expect(chooserSection).toContain('`ColorPickerPopover`')
+    expect(chooserSection).toContain('vue3-colorful/popover')
   })
 
   it('documents release-ready value behavior and common interaction props', () => {
-    expect(readme).toContain("Blank values still use `''`")
-    expect(readme).toContain('showRecent')
-    expect(readme).toContain('clearable')
-    expect(readme).toContain('disabled')
-    expect(readme).toContain('readOnly')
-    expect(readme).toContain('editable')
+    const commonPropsSection = getReadmeSection('Common Props')
+
+    expect(commonPropsSection).toContain("Blank values still use `''`")
+    expect(commonPropsSection).toContain('showRecent')
+    expect(commonPropsSection).toContain('clearable')
+    expect(commonPropsSection).toContain('disabled')
+    expect(commonPropsSection).toContain('readOnly')
+    expect(commonPropsSection).toContain('editable')
   })
 
   it('documents popover imports from the dedicated subpath export', () => {

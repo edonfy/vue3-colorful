@@ -69,12 +69,12 @@ import 'vue3-colorful/style.css'
 
 ## Pick The Right Component
 
-| Component                                                                  | Use it when                                     | Notes                                                                                  |
-| -------------------------------------------------------------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `HexColorPicker`                                                           | Your app stores HEX strings                     | Best default for simple product UIs                                                    |
-| `RgbColorPicker` / `HslColorPicker` / `HsvColorPicker` / `CmykColorPicker` | Your app already uses one fixed format          | Smallest, clearest API for that model                                                  |
-| `ColorPicker` / `ColorPickerPanel`                                         | You want the raw panel without a trigger        | `ColorPicker` is a compatibility alias; add `colorModel` to control parsing and output |
-| `ColorPickerPopover`                                                       | You need a compact picker opened from a trigger | Import from `vue3-colorful/popover` and install `@floating-ui/vue`                     |
+| Component                                                                                     | Use it when                                     | Notes                                                                                  |
+| --------------------------------------------------------------------------------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `HexColorPicker`                                                                              | Your app stores HEX strings                     | Best default for simple product UIs                                                    |
+| `RgbColorPicker` / `HslColorPicker` / `HsvColorPicker` / `HwbColorPicker` / `CmykColorPicker` | Your app already uses one fixed format          | Smallest, clearest API for that model                                                  |
+| `ColorPicker` / `ColorPickerPanel`                                                            | You want the raw panel without a trigger        | `ColorPicker` is a compatibility alias; add `colorModel` to control parsing and output |
+| `ColorPickerPopover`                                                                          | You need a compact picker opened from a trigger | Import from `vue3-colorful/popover` and install `@floating-ui/vue`                     |
 
 ColorPicker is a compatibility alias for `ColorPickerPanel`. ColorPickerPanel is the clearer triggerless API when you mount the panel directly. If the color model is fixed, prefer a specialized picker for the simplest bundle and API surface.
 
