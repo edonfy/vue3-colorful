@@ -5,6 +5,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 0.5.3 (2026-03-28)
+
+### Patch Changes
+
+- Preserve the picker body's saturation area when input, presets, and recent-color sections are shown by treating the interactive body height independently from the overall component height.
+- Stabilize active preset and recent swatch indicators with an SVG checkmark to avoid visual snapshot drift across environments.
+
 ## 0.5.2 (2026-03-28)
 
 ### Patch Changes

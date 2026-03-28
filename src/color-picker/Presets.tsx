@@ -107,7 +107,9 @@ export default defineComponent({
             >
               {item.normalized === activeNormalized.value && (
                 <span class="vue3-colorful__preset-indicator" aria-hidden="true">
-                  ✓
+                  <svg viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M6.4 11.15L3.75 8.5L2.8 9.45L6.4 13.05L13.2 6.25L12.25 5.3L6.4 11.15Z" />
+                  </svg>
                 </span>
               )}
             </button>

@@ -326,12 +326,12 @@ button {
 
 .playground__picker {
   --vc-width: 100%;
-  --vc-height: 350px;
+  --vc-body-height: 350px;
   flex-shrink: 0;
 }
 
 .playground__picker.vue3-colorful--vertical {
-  --vc-height: 300px;
+  --vc-body-height: 300px;
 }
 
 .playground__code {

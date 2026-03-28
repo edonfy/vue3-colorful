@@ -59,7 +59,7 @@ export default defineComponent({
                 v-model={hexColor.value}
                 presets={PRESET_SWATCHES}
                 showInput
-                style={{ '--vc-height': '268px' }}
+                style={{ '--vc-body-height': '268px' }}
               />
             </section>
           </div>

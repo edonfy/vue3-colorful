@@ -63,6 +63,43 @@ test.describe('Visual Regression', () => {
     )
   })
 
+  test('ColorPickerPanel keeps body height when presets and recent colors are shown', async ({
+    page,
+  }: {
+    page: Page
+  }) => {
+    await page.goto('/?view=panel')
+    await page.waitForSelector('[data-testid="panel-picker"] .vue3-colorful')
+
+    const panelRootHeight =
+      (await page.locator('[data-testid="panel-picker"] .vue3-colorful').boundingBox())?.height ?? 0
+    const panelBodyHeight =
+      (await page.locator('[data-testid="panel-picker"] .vue3-colorful__body').boundingBox())
+        ?.height ?? 0
+
+    await page.goto('/?view=recent')
+    await page.waitForSelector('[data-testid="recent-picker"] .vue3-colorful')
+
+    const presets = page.locator(
+      '[data-testid="recent-picker"] .vue3-colorful__presets .vue3-colorful__preset'
+    )
+    await presets.nth(0).click()
+    await presets.nth(1).click()
+
+    await page.waitForSelector('[data-testid="recent-picker"] .vue3-colorful__recent')
+
+    const recentRootHeight =
+      (await page.locator('[data-testid="recent-picker"] .vue3-colorful').boundingBox())?.height ??
+      0
+    const recentBodyHeight =
+      (await page.locator('[data-testid="recent-picker"] .vue3-colorful__body').boundingBox())
+        ?.height ?? 0
+
+    expect(recentRootHeight).toBeGreaterThan(panelRootHeight)
+    expect(recentBodyHeight).toBeGreaterThanOrEqual(panelBodyHeight - 1)
+    expect(recentBodyHeight).toBeLessThanOrEqual(panelBodyHeight + 1)
+  })
+
   test('ColorPickerPanel recent colors should match snapshot after commits', async ({
     page,
   }: {
