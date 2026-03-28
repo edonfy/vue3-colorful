@@ -1,4 +1,16 @@
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
 ## Unreleased
+
+## 0.5.1 (2026-03-28)
+
+### Patch Changes
+
+- Remove module-level generated ARIA IDs from `ColorInput` and `ColorPickerPopover` so the package does not depend on render-order-based accessibility wiring.
+- Refresh the README around component selection, popover setup, object value mode, and common picker behaviors.
 
 ## 0.5.0
 
@@ -164,36 +176,6 @@
   - 🦋 Initialize Changesets for professional versioning and changelog management
   - ⚡ Upgrade core dependencies (Vite 6, Vitest 3, UnoCSS) and optimize build configuration
   - 🛠 Added build analysis tool (rollup-plugin-visualizer) and .npmignore for smaller bundle size
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [Unreleased]
-
-### Added
-
-- Test coverage configuration with @vitest/coverage-v8
-- GitHub Actions CI/CD workflows
-- Prettier code formatting
-- Husky pre-commit hooks
-- EditorConfig for consistent editor settings
-- LICENSE file
-- CONTRIBUTING guide
-
-### Changed
-
-- Upgraded Vue to ^3.5.0
-- Upgraded TypeScript to ^5.8.0
-- Upgraded Vite to ^6.0.0
-- Upgraded Vitest to ^3.0.0
-- Switched from npm to pnpm package manager
-- Updated peer dependency to Vue 3.5+
-
-### Fixed
-
-- ESLint configuration with Prettier integration
 
 ## [0.1.1] - 2024-03-20
 
