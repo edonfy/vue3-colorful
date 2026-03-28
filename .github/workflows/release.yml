@@ -2,6 +2,8 @@ name: Release
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
 
@@ -13,8 +15,99 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  sync-latest-stable-assets:
+    name: Sync latest stable release assets
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: write
+
+    steps:
+      - name: Checkout default branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve latest stable release
+        id: release
+        run: |
+          RELEASE_TAG=$(
+            git tag --list 'v*' --sort=-v:refname \
+              | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' \
+              | head -n 1 \
+              || true
+          )
+
+          if [ -z "$RELEASE_TAG" ]; then
+            echo "No stable release tag found; skipping sync."
+            echo "has_stable_release=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          RELEASE_SHA=$(git rev-list -n 1 "$RELEASE_TAG")
+          git merge-base --is-ancestor "$RELEASE_SHA" "HEAD"
+
+          echo "has_stable_release=true" >> "$GITHUB_OUTPUT"
+          echo "release_tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+          echo "release_sha=$RELEASE_SHA" >> "$GITHUB_OUTPUT"
+          echo "release_version=${RELEASE_TAG#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract release notes from CHANGELOG
+        if: steps.release.outputs.has_stable_release == 'true'
+        run: |
+          VERSION="${{ steps.release.outputs.release_version }}"
+          awk -v version="$VERSION" '
+            $0 ~ ("^## " version "([[:space:]]|$|\\()") { capture=1; next }
+            capture && $0 ~ "^## " { exit }
+            capture { print }
+          ' CHANGELOG.md > RELEASE_NOTES.md
+
+          if [ ! -s RELEASE_NOTES.md ]; then
+            echo "Could not find changelog entry for $VERSION" >&2
+            exit 1
+          fi
+
+      - name: Create or update GitHub release
+        if: steps.release.outputs.has_stable_release == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.release_tag }}
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release edit "$RELEASE_TAG" \
+              --title "$RELEASE_TAG" \
+              --notes-file RELEASE_NOTES.md
+          else
+            gh release create "$RELEASE_TAG" \
+              --title "$RELEASE_TAG" \
+              --notes-file RELEASE_NOTES.md
+          fi
+
+      - name: Dispatch example deployment workflow
+        if: steps.release.outputs.has_stable_release == 'true'
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.release_tag }}
+          RELEASE_SHA: ${{ steps.release.outputs.release_sha }}
+        run: |
+          PAYLOAD=$(printf '{"ref":"%s","inputs":{"release_tag":"%s","release_sha":"%s"}}' \
+            "$DEFAULT_BRANCH" \
+            "$RELEASE_TAG" \
+            "$RELEASE_SHA")
+
+          curl --fail --silent --show-error \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy-example.yml/dispatches" \
+            -d "$PAYLOAD"
+
   verify-tag:
     name: Verify tag
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     outputs:
       package_version: ${{ steps.version.outputs.package_version }}
