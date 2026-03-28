@@ -177,6 +177,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - ⚡ Upgrade core dependencies (Vite 6, Vitest 3, UnoCSS) and optimize build configuration
   - 🛠 Added build analysis tool (rollup-plugin-visualizer) and .npmignore for smaller bundle size
 
+### Added
+
+- Test coverage configuration with @vitest/coverage-v8
+- GitHub Actions CI/CD workflows
+- Prettier code formatting
+- Husky pre-commit hooks
+- EditorConfig for consistent editor settings
+- LICENSE file
+- CONTRIBUTING guide
+
+### Changed
+
+- Upgraded Vue to ^3.5.0
+- Upgraded TypeScript to ^5.8.0
+- Upgraded Vite to ^6.0.0
+- Upgraded Vitest to ^3.0.0
+- Switched from npm to pnpm package manager
+- Updated peer dependency to Vue 3.5+
+
+### Fixed
+
+- ESLint configuration with Prettier integration
+
 ## [0.1.1] - 2024-03-20
 
 ### Added
