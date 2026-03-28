@@ -25,20 +25,27 @@ describe('ColorInput', () => {
       expect(wrapper.find('input').element.value).toBe('#ff0000')
     })
 
-    it('creates unique error ids for repeated labels', () => {
-      const firstWrapper = mount(ColorInput, {
-        props: { modelValue: '#ff0000', label: 'HEX Value' },
-      })
-      const secondWrapper = mount(ColorInput, {
-        props: { modelValue: '#00ff00', label: 'HEX Value' },
+    it('only links error messaging when the field is actually invalid', async () => {
+      vi.useFakeTimers()
+
+      const wrapper = mount(ColorInput, {
+        props: { modelValue: '#ff0000' },
       })
 
-      const firstErrorId = firstWrapper.find('input').attributes('aria-describedby')
-      const secondErrorId = secondWrapper.find('input').attributes('aria-describedby')
+      const input = wrapper.find('input')
 
-      expect(firstErrorId).toContain('hex-value-error')
-      expect(secondErrorId).toContain('hex-value-error')
-      expect(firstErrorId).not.toBe(secondErrorId)
+      expect(input.attributes('aria-describedby')).toBeUndefined()
+      expect(wrapper.find('.vue3-colorful__error-text').exists()).toBe(false)
+
+      await input.setValue('not-a-color')
+      vi.advanceTimersByTime(100)
+      await wrapper.vm.$nextTick()
+
+      expect(input.attributes('aria-invalid')).toBe('true')
+      expect(input.attributes('aria-describedby')).toBeUndefined()
+      expect(wrapper.find('.vue3-colorful__error-text').text()).toBe('Invalid color format')
+
+      vi.useRealTimers()
     })
   })
 

@@ -4,21 +4,6 @@ import { isBlankColor, parseColor } from '../utils/converter'
 import { hexToHsva } from '../utils/convert'
 import { getColorPickerLabel } from './labels'
 
-let colorInputId = 0
-
-const getErrorId = (label: string): string => {
-  colorInputId += 1
-  const normalizedLabel = label
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-
-  return normalizedLabel
-    ? `vue3-colorful-${normalizedLabel}-error-${colorInputId}`
-    : `vue3-colorful-color-error-${colorInputId}`
-}
-
 export default defineComponent({
   name: 'ColorInput',
   props: {
@@ -62,7 +47,6 @@ export default defineComponent({
     const lastCommittedValue = ref(props.modelValue)
     const lastActiveValue = ref(props.modelValue)
     let debounceTimer: ReturnType<typeof setTimeout> | null = null
-    const errorId = getErrorId(props.label)
     const isInputReadOnly = () => props.readOnly || !props.editable
 
     watch(
@@ -239,7 +223,6 @@ export default defineComponent({
             aria-label={props.label || getColorPickerLabel(props.labels, 'colorInput')}
             aria-invalid={isInvalid.value}
             aria-readonly={isInputReadOnly() ? 'true' : undefined}
-            aria-describedby={errorId}
             class={[
               'vue3-colorful__input',
               isInvalid.value && 'vue3-colorful__input--invalid',
@@ -273,9 +256,11 @@ export default defineComponent({
               </svg>
             </button>
           )}
-          <span id={errorId} class="vue3-colorful__error-text" aria-live="polite">
-            {isInvalid.value ? getColorPickerLabel(props.labels, 'invalidColorFormat') : ''}
-          </span>
+          {isInvalid.value && (
+            <span class="vue3-colorful__error-text" aria-live="polite">
+              {getColorPickerLabel(props.labels, 'invalidColorFormat')}
+            </span>
+          )}
         </label>
       </div>
     )

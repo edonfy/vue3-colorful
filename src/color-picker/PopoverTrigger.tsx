@@ -30,10 +30,6 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
-    panelId: {
-      type: String,
-      required: true,
-    },
     labels: {
       type: Object as PropType<Partial<ColorPickerLabels>>,
       default: () => ({}),
@@ -83,7 +79,6 @@ export default defineComponent({
         tabindex={props.disabled ? -1 : 0}
         aria-haspopup="dialog"
         aria-expanded={props.isOpen ? 'true' : 'false'}
-        aria-controls={props.panelId}
         aria-disabled={props.disabled ? 'true' : undefined}
         aria-readonly={props.readOnly ? 'true' : undefined}
       >
@@ -129,7 +124,6 @@ export default defineComponent({
           onKeydown: isButton ? undefined : handleKeydown,
           'aria-haspopup': 'dialog',
           'aria-expanded': props.isOpen ? 'true' : 'false',
-          'aria-controls': props.panelId,
           'aria-disabled': props.disabled ? 'true' : undefined,
           'aria-readonly': props.readOnly ? 'true' : undefined,
         },
@@ -154,7 +148,6 @@ export default defineComponent({
           aria-label={getColorPickerLabel(props.labels, 'chooseColor')}
           aria-haspopup="dialog"
           aria-expanded={props.isOpen ? 'true' : 'false'}
-          aria-controls={props.panelId}
           aria-disabled={props.disabled ? 'true' : undefined}
           aria-readonly={props.readOnly ? 'true' : undefined}
           disabled={props.disabled}

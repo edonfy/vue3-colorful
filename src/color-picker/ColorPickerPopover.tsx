@@ -17,8 +17,6 @@ import { AnyColor, ColorModel } from '../types'
 import { getColorDisplayValue } from '../utils/converter'
 import { useTransitionStatus } from '../composables/useTransitionStatus'
 
-let popoverPanelId = 0
-
 export default defineComponent({
   name: 'ColorPickerPopover',
   inheritAttrs: false,
@@ -36,8 +34,6 @@ export default defineComponent({
     const reference = ref<HTMLElement | null>(null)
     const floating = ref<HTMLElement | null>(null)
     const triggerColor = computed(() => getColorDisplayValue(props.modelValue))
-    popoverPanelId += 1
-    const panelId = `vue3-colorful-popover-panel-${popoverPanelId}`
 
     const floatingStyles = canUseDom
       ? useFloating(reference, floating, {
@@ -149,7 +145,6 @@ export default defineComponent({
           disabled={props.disabled}
           readOnly={props.readOnly}
           isOpen={isOpen.value}
-          panelId={panelId}
           labels={props.labels}
           onToggle={toggle}
           v-slots={{
@@ -160,7 +155,6 @@ export default defineComponent({
         <Teleport to="body">
           {isMounted.value && (
             <div
-              id={panelId}
               ref={floating}
               style={floatingStyles.value}
               class={[

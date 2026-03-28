@@ -140,22 +140,22 @@ describe('ColorPickerPopover', () => {
     expect(wrapper.find('.vue3-colorful__popover-trigger').attributes('aria-disabled')).toBe('true')
   })
 
-  it('links the default trigger and panel with dialog semantics', async () => {
+  it('only exposes mounted dialog semantics after the popover opens', async () => {
     const wrapper = mount(ColorPickerPopover, {
       props: { modelValue: '#ffffff' },
       attachTo: document.body,
     })
 
     const trigger = wrapper.find('.vue3-colorful__popover-trigger')
-    expect(trigger.element.tagName).toBe('BUTTON')
     expect(trigger.attributes('aria-haspopup')).toBe('dialog')
+    expect(trigger.attributes('aria-controls')).toBeUndefined()
 
     await trigger.trigger('click')
     await wrapper.vm.$nextTick()
 
     const content = document.body.querySelector('.vue3-colorful__popover-content')
     expect(content?.getAttribute('role')).toBe('dialog')
-    expect(content?.getAttribute('id')).toBe(trigger.attributes('aria-controls'))
+    expect(content?.hasAttribute('id')).toBe(false)
   })
 
   it('applies theme host classes to wrapper and teleported content', async () => {
