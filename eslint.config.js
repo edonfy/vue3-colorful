@@ -31,6 +31,7 @@ export default ts.config(
       'storybook-static/**',
       'playwright-report/**',
       'test-results/**',
+      'docs/superpowers/**',
     ],
   },
   {
