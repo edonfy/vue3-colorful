@@ -74,6 +74,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    consumeBlurCommitSuppression: {
+      type: Function as PropType<() => boolean>,
+      default: undefined,
+    },
   },
 
   emits: [
@@ -83,9 +87,12 @@ export default defineComponent({
     'alphaChangeComplete',
     'saturationChange',
     'saturationChangeComplete',
+    'colorSelectStart',
     'colorSelect',
     'colorActiveChange',
     'clear',
+    'inputFocus',
+    'inputBlur',
   ],
 
   setup(props, { emit, slots }) {
@@ -136,9 +143,12 @@ export default defineComponent({
             readOnly={props.readOnly}
             editable={props.editable}
             clearable={props.clearable}
+            consumeBlurCommitSuppression={props.consumeBlurCommitSuppression}
             onColorActiveChange={(value: string) => emit('colorActiveChange', value)}
             onColorSelect={(value: string) => emit('colorSelect', value)}
             onClear={() => emit('clear')}
+            onFocus={() => emit('inputFocus')}
+            onBlur={() => emit('inputBlur')}
           />
         )}
         {!props.showInput && props.clearable && (
@@ -154,6 +164,7 @@ export default defineComponent({
           activeColor={props.activeColor}
           disabled={props.disabled}
           readOnly={props.readOnly}
+          onColorSelectStart={() => emit('colorSelectStart')}
           onColorSelect={(color: string) => emit('colorSelect', color)}
         />
         <PickerRecentSection
@@ -162,6 +173,7 @@ export default defineComponent({
           activeColor={props.activeColor}
           disabled={props.disabled}
           readOnly={props.readOnly}
+          onColorSelectStart={() => emit('colorSelectStart')}
           onColorSelect={(color: string) => emit('colorSelect', color)}
         />
       </div>

@@ -24,7 +24,7 @@ export default defineComponent({
     },
   },
 
-  emits: ['colorSelect'],
+  emits: ['colorSelect', 'colorSelectStart'],
 
   setup(props, { emit }) {
     return () => {
@@ -38,6 +38,7 @@ export default defineComponent({
           activeColor={props.activeColor}
           disabled={props.disabled}
           readOnly={props.readOnly}
+          onSelectStart={() => emit('colorSelectStart')}
           onSelect={(color) => emit('colorSelect', color)}
         />
       )

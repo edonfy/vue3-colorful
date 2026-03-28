@@ -27,7 +27,7 @@ export default defineComponent({
     },
   },
 
-  emits: ['colorSelect'],
+  emits: ['colorSelect', 'colorSelectStart'],
 
   setup(props, { emit }) {
     return () => {
@@ -43,6 +43,7 @@ export default defineComponent({
           readOnly={props.readOnly}
           sectionClass="vue3-colorful__recent"
           sectionLabel="Recent colors"
+          onSelectStart={() => emit('colorSelectStart')}
           onSelect={(color) => emit('colorSelect', color)}
         />
       )

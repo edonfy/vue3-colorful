@@ -87,4 +87,46 @@ describe('ColorPickerPanel recent colors', () => {
     expect(wrapper.emitted('update:modelValue')?.at(-1)?.[0]).toBe('')
     expect(getRecentTitles(wrapper)).toEqual(['#ff0000'])
   })
+
+  it('does not record a recent color when a change completes without a new commit', async () => {
+    const wrapper = mount(ColorPickerPanel, {
+      props: {
+        modelValue: '#3b82f6',
+        showRecent: true,
+      },
+    })
+
+    await wrapper.findComponent({ name: 'Hue' }).vm.$emit('changeComplete')
+
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    expect(wrapper.find('.vue3-colorful__recent').exists()).toBe(false)
+  })
+
+  it('does not commit the draft input before selecting a recent swatch', async () => {
+    const wrapper = mount(ColorPickerPanel, {
+      props: {
+        modelValue: '#111111',
+        showRecent: true,
+        showInput: true,
+      },
+    })
+
+    const input = wrapper.find('input')
+
+    await input.setValue('#ff0000')
+    await input.trigger('blur')
+
+    const recent = wrapper.find('.vue3-colorful__recent .vue3-colorful__preset')
+
+    await input.trigger('focus')
+    await input.setValue('#123456')
+    await recent.trigger('pointerdown')
+    input.element.dispatchEvent(new FocusEvent('blur', { relatedTarget: recent.element }))
+    await wrapper.vm.$nextTick()
+    await recent.trigger('click')
+
+    expect(wrapper.emitted('update:modelValue')).toEqual([['#ff0000']])
+    expect((input.element as HTMLInputElement).value).toBe('#ff0000')
+    expect(getRecentTitles(wrapper)).toEqual(['#ff0000'])
+  })
 })

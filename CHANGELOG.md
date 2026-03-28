@@ -5,6 +5,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 0.5.2 (2026-03-28)
+
+### Patch Changes
+
+- Prevent recent-color history from updating when an interaction ends without emitting a new committed value.
+- Prevent preset and recent swatch clicks from committing an in-progress text-input draft before applying the selected color.
+
 ## 0.5.1 (2026-03-28)
 
 ### Patch Changes

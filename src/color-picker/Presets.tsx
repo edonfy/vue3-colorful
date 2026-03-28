@@ -38,7 +38,7 @@ export default defineComponent({
     },
   },
 
-  emits: ['select'],
+  emits: ['select', 'selectStart'],
 
   setup(props, { emit }) {
     const getNormalizedColor = (color: string, context: 'preset' | 'active'): string => {
@@ -96,6 +96,7 @@ export default defineComponent({
                 item.normalized === activeNormalized.value && 'vue3-colorful__preset--active',
               ]}
               style={{ backgroundColor: item.original }}
+              onPointerdown={() => emit('selectStart')}
               onClick={() => emit('select', item.original)}
               aria-label={
                 item.label ? `${item.label} ${item.original}` : `Select color ${item.original}`

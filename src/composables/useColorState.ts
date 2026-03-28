@@ -26,7 +26,7 @@ interface UseColorStateReturn {
   handleSaturation: (val: { s: number; v: number }) => void
   handleSelect: (color: string, options?: { commit?: boolean }) => AnyColor | null
   clearColor: () => AnyColor
-  commitCurrentValue: () => AnyColor
+  commitCurrentValue: () => AnyColor | null
 }
 
 export function useColorState(options: UseColorStateOptions): UseColorStateReturn {
@@ -60,11 +60,14 @@ export function useColorState(options: UseColorStateOptions): UseColorStateRetur
     }
   }
 
-  const commitValue = (value: AnyColor) => {
+  const commitValue = (value: AnyColor): boolean => {
     if (!isEqualColorValue(value, lastCommittedValue.value)) {
       lastCommittedValue.value = value
       emit('update:modelValue', value)
+      return true
     }
+
+    return false
   }
 
   watch(modelValue, (newValue) => {
@@ -144,7 +147,7 @@ export function useColorState(options: UseColorStateOptions): UseColorStateRetur
       emitActiveValue(nextValue)
 
       if (selectionOptions.commit) {
-        commitValue(nextValue)
+        return commitValue(nextValue) ? nextValue : null
       }
 
       return nextValue
@@ -162,10 +165,9 @@ export function useColorState(options: UseColorStateOptions): UseColorStateRetur
     return ''
   }
 
-  const commitCurrentValue = (): AnyColor => {
+  const commitCurrentValue = (): AnyColor | null => {
     const nextValue = formatOutputValue()
-    commitValue(nextValue)
-    return nextValue
+    return commitValue(nextValue) ? nextValue : null
   }
 
   return {

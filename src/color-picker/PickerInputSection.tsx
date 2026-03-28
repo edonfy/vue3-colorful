@@ -34,9 +34,13 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    consumeBlurCommitSuppression: {
+      type: Function as PropType<() => boolean>,
+      default: undefined,
+    },
   },
 
-  emits: ['colorSelect', 'colorActiveChange', 'clear'],
+  emits: ['colorSelect', 'colorActiveChange', 'clear', 'focus', 'blur'],
 
   setup(props, { emit }) {
     return () => (
@@ -48,9 +52,12 @@ export default defineComponent({
         readOnly={props.readOnly}
         editable={props.editable}
         clearable={props.clearable}
+        consumeBlurCommitSuppression={props.consumeBlurCommitSuppression}
         onActive-change={(value: string) => emit('colorActiveChange', value)}
         onUpdate:modelValue={(value: string) => emit('colorSelect', value)}
         onClear={() => emit('clear')}
+        onFocus={() => emit('focus')}
+        onBlur={() => emit('blur')}
       />
     )
   },

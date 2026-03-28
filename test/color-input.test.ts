@@ -221,6 +221,19 @@ describe('ColorInput', () => {
       vi.useRealTimers()
     })
 
+    it('skips blur commits when an external swatch selection has already started', async () => {
+      const wrapper = mount(ColorInput, {
+        props: { modelValue: '#ff0000', consumeBlurCommitSuppression: () => true },
+      })
+
+      const input = wrapper.find('input')
+      await input.setValue('#00ff00')
+      await input.trigger('blur')
+
+      expect(wrapper.emitted('active-change')?.[0]?.[0]).toBe('#00ff00')
+      expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    })
+
     it('restores the last valid value when cleared and blurred', async () => {
       const wrapper = mount(ColorInput, {
         props: { modelValue: '#ff0000' },

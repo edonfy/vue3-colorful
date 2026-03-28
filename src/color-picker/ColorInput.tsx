@@ -35,12 +35,16 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    consumeBlurCommitSuppression: {
+      type: Function as PropType<() => boolean>,
+      default: undefined,
+    },
     format: {
       type: String as PropType<'color' | 'hex'>,
       default: 'color',
     },
   },
-  emits: ['update:modelValue', 'active-change', 'clear'],
+  emits: ['update:modelValue', 'active-change', 'clear', 'focus', 'blur'],
   setup(props, { emit }) {
     const internalValue = ref(props.modelValue)
     const isInvalid = ref(false)
@@ -179,10 +183,20 @@ export default defineComponent({
       tryCommit(final)
     }
 
+    const handleFocus = () => {
+      emit('focus')
+    }
+
     const handleBlur = () => {
       if (debounceTimer) {
         clearTimeout(debounceTimer)
         debounceTimer = null
+      }
+
+      emit('blur')
+
+      if (props.consumeBlurCommitSuppression?.()) {
+        return
       }
 
       const trimmed = internalValue.value.trim()
@@ -230,6 +244,7 @@ export default defineComponent({
             ]}
             value={internalValue.value}
             onInput={handleChange}
+            onFocus={handleFocus}
             onBlur={handleBlur}
             onPaste={handlePaste}
             spellcheck={false}

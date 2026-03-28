@@ -38,6 +38,8 @@ export default defineComponent({
 
     const isLocked = computed(() => props.disabled || props.readOnly)
     const isInputLocked = computed(() => isLocked.value || !props.editable)
+    const isInputFocused = ref(false)
+    const pendingBlurCommitSuppressions = ref(0)
     const recentColors = ref<string[]>([])
 
     const trimRecentColors = (colors: string[]): string[] => {
@@ -67,6 +69,23 @@ export default defineComponent({
       }
     )
 
+    const handleSwatchSelectionStart = () => {
+      if (!isInputFocused.value) {
+        return
+      }
+
+      pendingBlurCommitSuppressions.value += 1
+    }
+
+    const consumeBlurCommitSuppression = () => {
+      if (pendingBlurCommitSuppressions.value === 0) {
+        return false
+      }
+
+      pendingBlurCommitSuppressions.value -= 1
+      return true
+    }
+
     return () => (
       <BasePicker
         hsva={hsva.value}
@@ -85,6 +104,7 @@ export default defineComponent({
         readOnly={props.readOnly}
         editable={props.editable}
         clearable={props.clearable}
+        consumeBlurCommitSuppression={consumeBlurCommitSuppression}
         onHueChange={(h) => {
           if (isLocked.value) return
           handleHueChange(h)
@@ -113,8 +133,16 @@ export default defineComponent({
           if (isInputLocked.value) return
           handleSelect(color, { commit: false })
         }}
+        onInputFocus={() => {
+          isInputFocused.value = true
+        }}
+        onInputBlur={() => {
+          isInputFocused.value = false
+        }}
+        onColorSelectStart={handleSwatchSelectionStart}
         onColorSelect={(color) => {
           if (isLocked.value) return
+          pendingBlurCommitSuppressions.value = 0
           rememberRecentColor(handleSelect(color, { commit: true }))
         }}
         onClear={() => {
