@@ -5,6 +5,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 0.5.4 (2026-03-31)
+
+### Patch Changes
+
+- Replace `--vc-body-height` CSS variable with `aspect-ratio: 1 / 1` on the saturation area to prevent height collapse when addon sections are present. The `--vc-height` variable now controls both width and the saturation panel's natural height.
+
 ## 0.5.3 (2026-03-28)
 
 ### Patch Changes
