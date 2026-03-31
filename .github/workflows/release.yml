@@ -56,17 +56,10 @@ jobs:
       - name: Extract release notes from CHANGELOG
         if: steps.release.outputs.has_stable_release == 'true'
         run: |
-          VERSION="${{ steps.release.outputs.release_version }}"
-          awk -v version="$VERSION" '
-            $0 ~ ("^## " version "([[:space:]]|$|\\()") { capture=1; next }
-            capture && $0 ~ "^## " { exit }
-            capture { print }
-          ' CHANGELOG.md > RELEASE_NOTES.md
-
-          if [ ! -s RELEASE_NOTES.md ]; then
-            echo "Could not find changelog entry for $VERSION" >&2
-            exit 1
-          fi
+          node ./scripts/extract-release-notes.mjs \
+            --version "${{ steps.release.outputs.release_version }}" \
+            --source CHANGELOG.md \
+            --output RELEASE_NOTES.md
 
       - name: Create or update GitHub release
         if: steps.release.outputs.has_stable_release == 'true'
@@ -281,18 +274,17 @@ jobs:
           fetch-depth: 0
 
       - name: Extract release notes from CHANGELOG
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-          awk -v version="$VERSION" '
-            $0 ~ ("^## " version "([[:space:]]|$|\\()") { capture=1; next }
-            capture && $0 ~ "^## " { exit }
-            capture { print }
-          ' CHANGELOG.md > RELEASE_NOTES.md
+          git fetch origin "$DEFAULT_BRANCH" --depth=1 --no-tags
+          git show "origin/$DEFAULT_BRANCH:CHANGELOG.md" > DEFAULT_BRANCH_CHANGELOG.md
 
-          if [ ! -s RELEASE_NOTES.md ]; then
-            echo "Could not find changelog entry for $VERSION" >&2
-            exit 1
-          fi
+          node ./scripts/extract-release-notes.mjs \
+            --version "${GITHUB_REF_NAME#v}" \
+            --source CHANGELOG.md \
+            --fallback-source DEFAULT_BRANCH_CHANGELOG.md \
+            --output RELEASE_NOTES.md
 
       - name: Create or update GitHub release
         env:
