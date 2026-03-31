@@ -325,13 +325,13 @@ button {
 }
 
 .playground__picker {
-  --vc-width: 100%;
-  --vc-body-height: 350px;
+  --vc-width: 240px;
   flex-shrink: 0;
 }
 
 .playground__picker.vue3-colorful--vertical {
-  --vc-body-height: 300px;
+  --vc-width: 200px;
+  --vc-height: 280px;
 }
 
 .playground__code {

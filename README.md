@@ -458,8 +458,7 @@ Override CSS variables on a wrapper element to theme the picker:
 | Variable                        | Default                         |
 | ------------------------------- | ------------------------------- |
 | `--vc-width`                    | `200px`                         |
-| `--vc-height`                   | `200px` (legacy alias)          |
-| `--vc-body-height`              | `var(--vc-height)`              |
+| `--vc-height`                   | `200px`                         |
 | `--vc-border-radius`            | `8px`                           |
 | `--vc-pointer-size`             | `28px`                          |
 | `--vc-slider-height`            | `24px`                          |
@@ -479,7 +478,8 @@ Override CSS variables on a wrapper element to theme the picker:
 ```css
 .brand-picker {
   --vc-accent-color: #0ea5e9;
-  --vc-body-height: 240px;
+  --vc-width: 240px;
+  --vc-height: 240px;
   --vc-border-radius: 16px;
   --vc-shadow: 0 18px 50px rgba(14, 165, 233, 0.18);
 }
