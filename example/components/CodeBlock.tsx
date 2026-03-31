@@ -1,4 +1,5 @@
 import { defineComponent, ref, PropType } from 'vue'
+import { copyText } from '../utils/copyText'
 
 export default defineComponent({
   name: 'CodeBlock',
@@ -11,7 +12,12 @@ export default defineComponent({
 
     const handleCopy = async () => {
       try {
-        await navigator.clipboard.writeText(props.code)
+        const copiedSuccessfully = await copyText(props.code)
+
+        if (!copiedSuccessfully) {
+          throw new Error('copy failed')
+        }
+
         copied.value = true
         setTimeout(() => {
           copied.value = false

@@ -4,6 +4,7 @@ import { ColorPicker } from '@/index'
 import type { ColorModel } from '@/types'
 import { formatColor, parseColor } from '@/utils/converter'
 import { COLOR_MODELS } from '../constants'
+import { copyText } from '../utils/copyText'
 import CodeBlock from './CodeBlock'
 
 export default defineComponent({
@@ -60,7 +61,11 @@ export default defineComponent({
 
     const copyColor = async () => {
       try {
-        await navigator.clipboard.writeText(color.value)
+        const copiedSuccessfully = await copyText(color.value)
+
+        if (!copiedSuccessfully) {
+          throw new Error('copy failed')
+        }
       } catch {
         console.warn('[vue3-colorful] Failed to copy color')
       }
