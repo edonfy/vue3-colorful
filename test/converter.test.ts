@@ -49,6 +49,12 @@ describe('ColorConverter', () => {
       expect(formatColor({ h: 240, s: 100, v: 100, a: 0.25 }, 'hex', false)).toBe('#0000ff')
     })
 
+    it('preserves nearby hex colors through parse and format round-trips', () => {
+      expect(formatColor(parseColor('#6366f1'), 'hex', false)).toBe('#6366f1')
+      expect(formatColor(parseColor('#6366f2'), 'hex', false)).toBe('#6366f2')
+      expect(formatColor(parseColor('#3b82f6'), 'hex', false)).toBe('#3b82f6')
+    })
+
     it('should format to rgb/rgba', () => {
       expect(formatColor(hsva, 'rgb', false)).toBe('rgb(255, 255, 255)')
       expect(formatColor(hsva, 'rgb', true)).toBe('rgba(255, 255, 255, 1)')

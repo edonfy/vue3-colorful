@@ -173,7 +173,7 @@ const memoize = <T extends RgbaColor | HslaColor>(
   hsva: HsvaColor,
   fn: (hsva: HsvaColor) => T
 ): T => {
-  const key = `${keyPrefix}_${round(hsva.h)}_${round(hsva.s)}_${round(hsva.v)}_${round(hsva.a, 2)}`
+  const key = `${keyPrefix}_${round(hsva.h, 4)}_${round(hsva.s, 4)}_${round(hsva.v, 4)}_${round(hsva.a, 4)}`
   if (cache.has(key)) {
     const cached = cache.get(key) as T
     cache.delete(key)
@@ -328,9 +328,9 @@ export const rgbaToHsva = ({ r, g, b, a }: RgbaColor): HsvaColor => {
     : 0
 
   return {
-    h: round(60 * (hh < 0 ? hh + 6 : hh)),
-    s: round(max ? (delta / max) * 100 : 0),
-    v: round((max / 255) * 100),
+    h: 60 * (hh < 0 ? hh + 6 : hh),
+    s: max ? (delta / max) * 100 : 0,
+    v: (max / 255) * 100,
     a,
   }
 }
