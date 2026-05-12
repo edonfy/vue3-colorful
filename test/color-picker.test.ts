@@ -242,6 +242,17 @@ describe('ColorPicker', () => {
       // Invalid initial value should NOT emit (stays at default or just logs error)
       expect(wrapper.emitted('update:modelValue')).toBeFalsy()
     })
+
+    it('does not display the default red value for an invalid initial input', () => {
+      const wrapper = mount(ColorPicker, {
+        props: {
+          modelValue: 'invalid-color',
+          showInput: true,
+        },
+      })
+
+      expect((wrapper.find('input').element as HTMLInputElement).value).toBe('')
+    })
   })
 
   describe('events', () => {

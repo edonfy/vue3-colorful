@@ -5,6 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 0.5.5 (2026-05-12)
+
+### Patch Changes
+
+- Reject color strings with trailing invalid characters across RGB, HSL, HSV, HWB, and CMYK parsing.
+- Keep invalid initial `modelValue` inputs blank instead of showing the default red preview.
+- Refresh the size baseline for the current public runtime entries and add visual snapshot tolerance for minor rendering drift.
+
 ## 0.5.4 (2026-03-31)
 
 ### Patch Changes

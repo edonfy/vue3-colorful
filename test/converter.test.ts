@@ -35,6 +35,14 @@ describe('ColorConverter', () => {
       expect(parseColor('')).toEqual(DEFAULT_HSVA)
       expect(() => parseColor('invalid')).toThrow()
     })
+
+    it('rejects colors with trailing invalid characters', () => {
+      expect(() => parseColor('rgb(255, 0, 0)junk')).toThrow()
+      expect(() => parseColor('hsl(0, 100%, 50%)junk')).toThrow()
+      expect(() => parseColor('hsv(0, 100%, 100%)junk')).toThrow()
+      expect(() => parseColor('hwb(0 0% 0%)junk')).toThrow()
+      expect(() => parseColor('cmyk(0%, 100%, 100%, 0%)junk')).toThrow()
+    })
   })
 
   describe('formatColor', () => {

@@ -44,6 +44,8 @@ export function useColorState(options: UseColorStateOptions): UseColorStateRetur
     try {
       hsva.value = parseColorValue(modelValue.value)
     } catch {
+      hsva.value = createDefaultHsva()
+      isBlank.value = true
       console.warn(`[vue3-colorful] Initial color value is invalid: ${modelValue.value}`)
     }
   }
